@@ -8,12 +8,11 @@
 unsigned int utils_genseed()
 {
     unsigned int data;
+
     FILE *urandom;
     urandom = fopen("/dev/urandom", "r");
-    int fread_size = fread(&data, sizeof(data), 1, urandom);
 
-    printf("fread_size: %i\n", fread_size);
-    printf("fread_size: %u\n", data);
+    int fread_size = fread(&data, sizeof(data), 1, urandom);
 
     fclose(urandom);
 
@@ -21,6 +20,8 @@ unsigned int utils_genseed()
         time_t current;
         time(&current);
 
+        data += current;
+        data *= current;
         data += current;
         data *= current;
         data += current;

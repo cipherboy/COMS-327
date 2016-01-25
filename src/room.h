@@ -21,6 +21,6 @@ typedef struct
 } room;
 
 bool room_overlaps(room* first, room* second);
-bool room_contains(int x, int y, room* place);
+bool room_contains_room(int x, int y, room* place);
 
-#endif        
+#endif

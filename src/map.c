@@ -15,22 +15,22 @@ void map_init(map *current)
 {
     map_blank(current);
     map_fill(current);
-    map_layer(current);
+    map_layers(current);
 }
 
 void map_blank(map *current)
 {
-    current->cols = 80;
-    current->rows = 21;
+    current->cols = 83;
+    current->rows = 22;
 
     current->seed = utils_genseed();
     srand(current->seed);
 
-    current->rooms_layer = malloc(sizeof(char) * current->rows);
-    for (int x = 0; x < current->rows; x++) {
-        current->rooms_layer[x] = malloc(sizeof(char) * current->cols);
-        for (int y = 0; y < current->cols; y++) {
-            current->rooms_layer[x][y] = ' ';
+    current->rooms_layer = malloc(sizeof(char) * current->rows * current->cols);
+    for (int y = 0; y < current->rows; y++) {
+        current->rooms_layer[y] = malloc(sizeof(char) * current->cols);
+        for (int x = 0; x < current->cols; x++) {
+            current->rooms_layer[y][x] = ' ';
         }
     }
 
@@ -60,8 +60,8 @@ void map_fill(map *current)
     for (int i = 0; i < r_rooms_generated; i++) {
         int r_pos_x = 3;
         int r_pos_y = 1;
-        int r_width = 3;
-        int r_height = 2;
+        int r_width = 5;
+        int r_height = 4;
 
         r_pos_x += rand() % 68;
         r_pos_y += rand() % 14;
@@ -97,18 +97,21 @@ void map_fill(map *current)
             choices[i] = (((rand() + rand()) % r_rooms_generated) + r_rooms_generated) % r_rooms_generated;
 
             has_intersection = false;
+            room current = candidates[choices[i]];
             for (int j = 0; j < i; j++) {
-                room current = candidates[choices[i]];
                 room past = candidates[choices[j]];
 
-                has_intersection = has_intersection || room_overlaps(&current, &past);
+                has_intersection = room_overlaps(&current, &past);
+                if (has_intersection) {
+                    choices[i] = (((rand() + rand()) % r_rooms_generated) + r_rooms_generated) % r_rooms_generated;
+                    break;
+                }
             }
 
             tries += 1;
 
             if (tries >= r_rooms_generated) {
-                printf("Redoing last tile placement on rooms %i:%i with %i choices...\n", i, r_num_rooms, r_rooms_generated);
-                i = -1;
+                i = 0;
                 tries = 0;
                 break;
             }
@@ -125,6 +128,65 @@ void map_fill(map *current)
     current->ready = 11387;
 }
 
-void map_layer(map* current) {
-    if (
+void map_layers(map* current)
+{
+    if (current->ready < 11387) {
+        map_fill(current);
+    }
+
+    if (current->ready >= 12845) {
+        return;
+    }
+
+    for (int i = 0; i < current->room_count; i++) {
+        room current_room = current->rooms[i];
+
+        for (int y = current_room.pos_y; y <= current_room.max_y; y++) {
+            for (int x = current_room.pos_x; x < current_room.max_x; x++) {
+                if (current->rooms_layer[y][x] != ' ') {
+                    printf("%i,%i\n", x, y);
+                }
+
+                current->rooms_layer[y][x] = 'X';
+            }
+        }
+    }
+}
+
+/**
+ *
+
+                                  XXXXX
+                                XXXXXXXXX
+                                XXXXXXXXX
+                                XXXXXXXXX
+                                XXXXXXXXX
+   XXXXXX                       XXXXXXXXX             XXXXXXXXXXXXXX XXXXX
+   XXXXXX                                             XXXXXXXXXXXXXX XXXXX
+   XXXXXX                                             XXXXXXXXXXXXXX XXXXX
+   XXXXXX                                             XXXXXXXXXXXXXX XXXXX
+                                                      XXXXXXXXXXXXXX XXXXX
+                                                      XXXXXXXXXXXXXX XXXXX
+
+
+                     XXXXXXXXXXXXXXX
+                     XXXXXXXXXXXXXXX
+                     XXXXXXXXXXXXXXX
+                     XXXXXXXXXXXXXXX
+
+
+
+
+
+**/
+
+void map_print(map* current)
+{
+    for (int y = 0; y < current->rows; y++) {
+        for (int x = 0; x < current->cols; x++) {
+            printf("%c", current->rooms_layer[y][x]);
+        }
+        printf("\n");
+    }
+    printf("\n\n");
 }

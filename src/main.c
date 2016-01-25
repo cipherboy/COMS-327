@@ -6,4 +6,5 @@ int main(int argc, char* argv[])
     map r;
     map_init(&r);
     printf("Seed: %u\n", r.seed);
+    map_print(&r);
 }

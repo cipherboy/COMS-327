@@ -12,12 +12,22 @@
 
 bool room_overlaps(room* first, room* second)
 {
-    return room_contains(first->pos_x, first->pos_y, second) || room_contains(first->max_x, first->max_y, second) || false;
+    for (int y = first->pos_y; y <= first->max_y; y++) {
+        for (int x = first->pos_x; x <= first->max_x; x++) {
+            if (room_contains_room(x, y, second)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
-bool room_contains(int x, int y, room* place)
+bool room_contains_room(int x, int y, room* place)
 {
-    if ((x >= place->pos_x && x <= place->max_x) && (y >= place->pos_y && y <= place->max_y)) {
+    int overlap = 5;
+
+    if ((x >= place->pos_x-overlap && x <= place->max_x+overlap) && (y >= place->pos_y-overlap && y <= place->max_y+overlap)) {
         return true;
     }
 

@@ -19,7 +19,7 @@ typedef struct
 
     int rows; // max_x
     int cols; // max_y
-    
+
     unsigned int seed;
 
     int room_count;
@@ -27,9 +27,10 @@ typedef struct
     char** rooms_layer;
 } map;
 
-void map_init(map *current);
-void map_blank(map *current);
-void map_fill(map *current);
-
+void map_init(map* current);
+void map_blank(map* current);
+void map_fill(map* current);
+void map_layers(map* current);
+void map_print(map* current);
 
 #endif

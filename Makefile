@@ -1,5 +1,5 @@
 #Possible targets:
-# 
+#
 # all:			recompiles code, runs tests
 # format: 		formats source files
 # build:		builds and compiles code
@@ -10,7 +10,7 @@
 # test: 		runs unit test samples
 
 ELF = mapgen
-CFLAGS = -O2 -march=native -Wall -std=c11 -ggdb
+CFLAGS = -O0 -march=native -Wall -std=c11 -ggdb
 
 # Default target
 run: all execute
