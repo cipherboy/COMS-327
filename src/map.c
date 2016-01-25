@@ -153,33 +153,6 @@ void map_layers(map* current)
     }
 }
 
-/**
- *
-
-                                  XXXXX
-                                XXXXXXXXX
-                                XXXXXXXXX
-                                XXXXXXXXX
-                                XXXXXXXXX
-   XXXXXX                       XXXXXXXXX             XXXXXXXXXXXXXX XXXXX
-   XXXXXX                                             XXXXXXXXXXXXXX XXXXX
-   XXXXXX                                             XXXXXXXXXXXXXX XXXXX
-   XXXXXX                                             XXXXXXXXXXXXXX XXXXX
-                                                      XXXXXXXXXXXXXX XXXXX
-                                                      XXXXXXXXXXXXXX XXXXX
-
-
-                     XXXXXXXXXXXXXXX
-                     XXXXXXXXXXXXXXX
-                     XXXXXXXXXXXXXXX
-                     XXXXXXXXXXXXXXX
-
-
-
-
-
-**/
-
 void map_print(map* current)
 {
     for (int y = 0; y < current->rows; y++) {
