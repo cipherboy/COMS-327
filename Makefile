@@ -10,7 +10,7 @@
 # test: 		runs unit test samples
 
 ELF = mapgen
-CFLAGS = -O2 -march=native -Wall -std=c11
+CFLAGS = -O2 -march=native -Wall -std=c11 -ggdb
 
 # Default target
 run: all execute
@@ -21,7 +21,7 @@ clean:
 	rm -f ./src/*.o
 
 format:
-	astyle --style=linux ./src/*.c
+	astyle --style=linux ./src/*.c || true
 	rm -f ./src/*.c.orig
 
 changelog:
@@ -33,7 +33,7 @@ test:
 build: mapgen
 
 mapgen:
-	gcc ${CFLAGS} -o bin/${ELF} src/mapgen.c src/maps.c
+	gcc ${CFLAGS} -o bin/${ELF} src/*.c
 
 execute:
 	./bin/mapgen
