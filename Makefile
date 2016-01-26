@@ -18,7 +18,7 @@ run: all execute
 all: clean format changelog build test
 
 clean:
-	rm -f ./src/*.o
+	rm -rf ./src/*.o ./bin/mapgen.dSYM ./autom4te.cache
 
 format:
 	astyle --style=linux ./src/*.c || true
