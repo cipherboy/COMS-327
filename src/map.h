@@ -22,6 +22,8 @@ typedef struct
     int room_count;
     room* rooms;
     char** rooms_layer;
+
+    char** hallways_layer;
 } map;
 
 void map_init(map* current);

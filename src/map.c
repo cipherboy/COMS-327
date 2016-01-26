@@ -34,6 +34,14 @@ void map_blank(map *current)
         }
     }
 
+    current->hallways_layer = malloc(sizeof(char) * current->rows * current->cols);
+    for (int y = 0; y < current->rows; y++) {
+        current->hallways_layer[y] = malloc(sizeof(char) * current->cols);
+        for (int x = 0; x < current->cols; x++) {
+            current->hallways_layer[y][x] = ' ';
+        }
+    }
+
     current->ready = 10321;
 }
 
@@ -174,39 +182,60 @@ void map_layers_hallways(map* current)
     // Adjacency matrix for rooms...
     bool connected[current->room_count][current->room_count];
     for (int i = 0; i < current->room_count; i++) {
+        for (int j = 0; j < current->room_count; j++) {
+            connected[i][j] = false;
+        }
+    }
+
+    for (int i = 0; i < current->room_count; i++) {
         room current_room = current->rooms[i];
-        int distances_to[current->room_count];
 
         for (int j = 0; j < current->room_count; j++) {
-            room working_room = current->rooms[j];
-            distances_to[j] = room_lazy_distance(&current_room, &working_room);
-            if (j == i) {
-                distances_to[j] = pow(80, 2) + pow(21, 2);
+            if (connected[i][j]) {
+                break;
             }
-        }
 
-        // Yeah yeah, lazy code....
-        int first_min = i;
-        int second_min = i;
+            room referenced_room = current->rooms[j];
+            int cy = current_room.pos_y + (current_room.height/2);
+            int cx = current_room.pos_x + (current_room.width/2);
+            int ry = referenced_room.pos_y + (referenced_room.height/2);
+            int rx = referenced_room.pos_x + (referenced_room.width/2);
 
-        for (int j = 0; j < current->room_count; j++) {
-            if (distances_to[j] < distances_to[first_min]) {
-                second_min = first_min;
-                first_min = j;
-            } else if (distances_to[j] < distances_to[second_min]) {
-                second_min = j;
+            int direction_x = (rx-cx);
+            if (direction_x < 0) {
+                direction_x = -1;
+            } else if (direction_x > 0) {
+                direction_x = 1;
             }
-        }
 
-        // connect rooms...
-        if (!connected[i][first_min]) {
-            connected[i][first_min] = true;
-            connected[first_min][i] = true;
-        }
+            int direction_y = (ry-cy);
+            if (direction_y < 0) {
+                direction_y = -1;
+            } else if (direction_y > 0) {
+                direction_y = 1;
+            }
 
-        if (!connected[i][second_min]) {
-            connected[i][second_min] = true;
-            connected[second_min][i] = true;
+            int y = cy;
+            int x = cx;
+
+            if (rand() % (current->room_count-2)) {
+                for (x = cx; x != rx; x += direction_x) {
+                    current->hallways_layer[y][x] = '#';
+                }
+                for (y = cy; y != ry; y += direction_y) {
+                    current->hallways_layer[y][x] = '#';
+                }
+            } else {
+                for (y = cy; y != ry; y += direction_y) {
+                    current->hallways_layer[y][x] = '#';
+                }
+                for (x = cx; x != rx; x += direction_x) {
+                    current->hallways_layer[y][x] = '#';
+                }
+            }
+
+            connected[i][j] = true;
+            connected[j][i] = true;
         }
     }
 
@@ -223,7 +252,11 @@ void map_print(map* current)
     for (int y = 0; y < current->rows; y++) {
         printf("|");
         for (int x = 0; x < current->cols; x++) {
-            printf("%c", current->rooms_layer[y][x]);
+            if (current->rooms_layer[y][x] != ' ') {
+                printf("%c", current->rooms_layer[y][x]);
+            } else {
+                printf("%c", current->hallways_layer[y][x]);
+            }
         }
         printf("|\n");
     }
