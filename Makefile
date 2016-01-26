@@ -10,7 +10,7 @@
 # test: 		runs unit test samples
 
 ELF = mapgen
-CFLAGS = -O0 -march=native -Wall -std=c11 -ggdb
+CFLAGS = -O2 -march=native -Wall -std=c99 -ggdb -lm
 
 # Default target
 run: all execute
@@ -28,7 +28,7 @@ changelog:
 	git log --full-history > CHANGELOG
 
 test:
-	./tests/mapgen.sh
+	true
 
 build: mapgen
 

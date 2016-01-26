@@ -2,10 +2,10 @@
  * Copyright 2016 Alexander Scheel
 **/
 
-#include <linux/random.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
 
 #include "room.h"
 #include "map.h"
@@ -171,6 +171,45 @@ void map_layers_hallways(map* current)
         return;
     }
 
+    // Adjacency matrix for rooms...
+    bool connected[current->room_count][current->room_count];
+    for (int i = 0; i < current->room_count; i++) {
+        room current_room = current->rooms[i];
+        int distances_to[current->room_count];
+
+        for (int j = 0; j < current->room_count; j++) {
+            room working_room = current->rooms[j];
+            distances_to[j] = room_lazy_distance(&current_room, &working_room);
+            if (j == i) {
+                distances_to[j] = pow(80, 2) + pow(21, 2);
+            }
+        }
+
+        // Yeah yeah, lazy code....
+        int first_min = i;
+        int second_min = i;
+
+        for (int j = 0; j < current->room_count; j++) {
+            if (distances_to[j] < distances_to[first_min]) {
+                second_min = first_min;
+                first_min = j;
+            } else if (distances_to[j] < distances_to[second_min]) {
+                second_min = j;
+            }
+        }
+
+        // connect rooms...
+        if (!connected[i][first_min]) {
+            connected[i][first_min] = true;
+            connected[first_min][i] = true;
+        }
+
+        if (!connected[i][second_min]) {
+            connected[i][second_min] = true;
+            connected[second_min][i] = true;
+        }
+    }
+
     current->ready = 13921;
 }
 
@@ -179,6 +218,7 @@ void map_print(map* current)
     if (current->ready < 13921) {
         map_blank(current);
     }
+
     printf("*--------------------------------------------------------------------------------*\n");
     for (int y = 0; y < current->rows; y++) {
         printf("|");

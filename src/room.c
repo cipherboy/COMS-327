@@ -2,10 +2,10 @@
  * Copyright 2016 Alexander Scheel
 **/
 
-#include <linux/random.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
 
 #include "room.h"
 #include "map.h"
@@ -32,4 +32,18 @@ bool room_contains_room(int x, int y, room* place)
     }
 
     return false;
+}
+
+int room_lazy_distance(room* first, room* second)
+{
+    int min_distance = pow(80, 2) + pow(21, 2); // Long diagonal of map
+
+    int fy = first->pos_y + (first->height/2);
+    int fx = first->pos_x + (first->width/2);
+    int sy = second->pos_y + (second->height/2);
+    int sx = second->pos_x + (second    ->width/2);
+
+    min_distance = pow((sx - fx), 2) + pow((sy - fy), 2);
+
+    return (int) min_distance; // return squared distance
 }

@@ -22,5 +22,6 @@ typedef struct
 
 bool room_overlaps(room* first, room* second);
 bool room_contains_room(int x, int y, room* place);
+int room_lazy_distance(room* first, room* second);
 
 #endif

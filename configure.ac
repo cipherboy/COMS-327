@@ -1,5 +1,11 @@
 AC_INIT(config, version-1.0)
 AC_PROG_CC
 AC_LANG(C)
-AC_CHECK_HEADERS(openssl/rand.h)
-AC_CHECK_HEADERS(linux/random.h)
+AC_PROG_CC_STDC
+AC_CHECK_HEADERS(math.h)
+AC_CHECK_HEADERS(stdbool.h)
+AC_CHECK_HEADERS(stdio.h)
+AC_CHECK_HEADERS(stdlib.h)
+AC_CHECK_HEADERS(time.h)
+AC_CHECK_FILES(/dev/urandom)
+AC_CHECK_FILES(/dev/random)

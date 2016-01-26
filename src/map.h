@@ -4,9 +4,6 @@
  * Main room structure header file
 **/
 
-#include <stdlib.h>
-#include <linux/random.h>
-
 #include "room.h"
 
 #pragma once
