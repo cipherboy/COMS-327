@@ -20,8 +20,8 @@ void map_init(map *current)
 
 void map_blank(map *current)
 {
-    current->cols = 83;
-    current->rows = 22;
+    current->cols = 80;
+    current->rows = 21;
 
     current->seed = utils_genseed();
     srand(current->seed);
@@ -130,8 +130,14 @@ void map_fill(map *current)
 
 void map_layers(map* current)
 {
+    map_layers_rooms(current);
+    map_layers_hallways(current);
+}
+
+void map_layers_rooms(map* current)
+{
     if (current->ready < 11387) {
-        map_fill(current);
+        map_blank(current);
     }
 
     if (current->ready >= 12845) {
@@ -147,19 +153,40 @@ void map_layers(map* current)
                     printf("%i,%i\n", x, y);
                 }
 
-                current->rooms_layer[y][x] = 'X';
+                current->rooms_layer[y][x] = '.';
             }
         }
     }
+
+    current->ready = 12845;
+}
+
+void map_layers_hallways(map* current)
+{
+    if (current->ready < 12845) {
+        map_blank(current);
+    }
+
+    if (current->ready >= 13921) {
+        return;
+    }
+
+    current->ready = 13921;
 }
 
 void map_print(map* current)
 {
+    if (current->ready < 13921) {
+        map_blank(current);
+    }
+    printf("*--------------------------------------------------------------------------------*\n");
     for (int y = 0; y < current->rows; y++) {
+        printf("|");
         for (int x = 0; x < current->cols; x++) {
             printf("%c", current->rooms_layer[y][x]);
         }
-        printf("\n");
+        printf("|\n");
     }
-    printf("\n\n");
+    printf("*--------------------------------------------------------------------------------*\n");
+    printf("\n\n\n");
 }

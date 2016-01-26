@@ -31,6 +31,8 @@ void map_init(map* current);
 void map_blank(map* current);
 void map_fill(map* current);
 void map_layers(map* current);
+void map_layers_rooms(map* current);
+void map_layers_hallways(map* current);
 void map_print(map* current);
 
 #endif
