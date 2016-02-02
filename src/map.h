@@ -35,5 +35,6 @@ void map_layers(map* current);
 void map_layers_rooms(map* current);
 void map_layers_hallways(map* current);
 void map_print(map* current);
+void map_write(map* current, char* path);
 
 #endif

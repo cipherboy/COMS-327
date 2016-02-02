@@ -29,13 +29,18 @@ void map_read(map* current, char* path)
     int fread_size = 0;
 
     f_ptr = fopen(path, "r");
+    if (f_ptr == NULL) {
+        printf("Unable to read file!\n");
+        return;
+     }
+
     fread_size = fread(&magic, sizeof(char), 6, f_ptr);
     if (fread_size != 6 || strcmp(magic, "RLG327") != 0) {
         printf("Invalid magic bytes: %s\n", magic);
         return;
     }
 
-    unsigned int version;
+    uint32_t version;
     fread_size = fread(&version, sizeof(version), 1, f_ptr);
     version = be32toh(version);
     if (fread_size != 1 || version != 0) {
@@ -43,7 +48,7 @@ void map_read(map* current, char* path)
         return;
     }
 
-    unsigned int file_size;
+    uint32_t file_size;
     fread_size = fread(&file_size, sizeof(file_size), 1, f_ptr);
     file_size = be32toh(file_size);
     if (fread_size != 1) {
@@ -160,7 +165,7 @@ void map_fill(map* current)
 {
     for (int y = 1; y < current->rows-1; y++) {
         for (int x = 1; x < current->cols-1; x++) {
-            current->rock_hardness[y][x] = rand() % 256;
+            current->rock_hardness[y][x] = 1 + (rand() % 255);
         }
     }
 
@@ -275,6 +280,7 @@ void map_layers_rooms(map* current)
         for (int y = current_room.pos_y; y <= current_room.max_y; y++) {
             for (int x = current_room.pos_x; x < current_room.max_x; x++) {
                 current->rooms_layer[y][x] = '.';
+                current->rock_hardness[y][x] = 0;
             }
         }
     }
@@ -334,16 +340,20 @@ void map_layers_hallways(map* current)
             if (rand() % (current->room_count-2)) {
                 for (x = cx; x != rx; x += direction_x) {
                     current->hallways_layer[y][x] = '#';
+                    current->rock_hardness[y][x] = 0;
                 }
                 for (y = cy; y != ry; y += direction_y) {
                     current->hallways_layer[y][x] = '#';
+                    current->rock_hardness[y][x] = 0;
                 }
             } else {
                 for (y = cy; y != ry; y += direction_y) {
                     current->hallways_layer[y][x] = '#';
+                    current->rock_hardness[y][x] = 0;
                 }
                 for (x = cx; x != rx; x += direction_x) {
                     current->hallways_layer[y][x] = '#';
+                    current->rock_hardness[y][x] = 0;
                 }
             }
 
@@ -375,4 +385,75 @@ void map_print(map* current)
     }
     printf("*--------------------------------------------------------------------------------*\n");
     printf("\n\n\n");
+}
+
+void map_write(map* current, char* path)
+{
+    char magic[7] = "RLG327";
+    uint32_t version = htobe32(0);
+    uint32_t file_size = htobe32(6+4+4+1482+(4*current->room_count));
+
+    FILE* f_ptr;
+    int fwrite_size = 0;
+
+    f_ptr = fopen(path, "w");
+
+    fwrite_size = fwrite(&magic, sizeof(char), 6, f_ptr);
+    if (fwrite_size != 6) {
+       printf("Unable to write magic bytes: %i != 6\n", fwrite_size);
+       return;
+    }
+
+    fwrite_size = fwrite(&version, sizeof(version), 1, f_ptr);
+    if (fwrite_size != 1) {
+      printf("Unable to write version: %i != 1\n", fwrite_size);
+      return;
+    }
+
+    fwrite_size = fwrite(&file_size, sizeof(file_size), 1, f_ptr);
+    if (fwrite_size != 1) {
+      printf("Unable to write file size: %i != 1\n", fwrite_size);
+      return;
+    }
+
+    for (int y = 1; y < current->rows-1; y++) {
+        for (int x = 1; x < current->cols-1; x++) {
+            fwrite_size = fwrite(&current->rock_hardness[y][x], sizeof(current->rock_hardness[y][x]), 1, f_ptr);
+            if (fwrite_size != 1) {
+              printf("Unable to write hardness[%i][%i]: %i != 1\n", y, x, fwrite_size);
+              return;
+            }
+        }
+    }
+
+    for (int room_counter = 0; room_counter < current->room_count; room_counter++) {
+        uint8_t r_pos_x = current->rooms[room_counter].pos_x;
+        uint8_t r_pos_y = current->rooms[room_counter].pos_y;
+        uint8_t r_width = current->rooms[room_counter].width;
+        uint8_t r_height = current->rooms[room_counter].height;
+
+        fwrite_size = fwrite(&r_pos_x, sizeof(r_pos_x), 1, f_ptr);
+        if (fwrite_size != 1) {
+          printf("Unable to write r_pos_x[%i]: %i != 1\n", room_counter, fwrite_size);
+          return;
+        }
+
+        fwrite_size = fwrite(&r_pos_y, sizeof(r_pos_y), 1, f_ptr);
+        if (fwrite_size != 1) {
+          printf("Unable to write r_pos_y[%i]: %i != 1\n", room_counter, fwrite_size);
+          return;
+        }
+
+        fwrite_size = fwrite(&r_width, sizeof(r_width), 1, f_ptr);
+        if (fwrite_size != 1) {
+          printf("Unable to write r_width[%i]: %i != 1\n", room_counter, fwrite_size);
+          return;
+        }
+
+        fwrite_size = fwrite(&r_height, sizeof(r_height), 1, f_ptr);
+        if (fwrite_size != 1) {
+          printf("Unable to write r_height[%i]: %i != 1\n", room_counter, fwrite_size);
+          return;
+        }
+    }
 }
