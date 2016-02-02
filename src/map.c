@@ -4,21 +4,92 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <machine/endian.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <math.h>
 
 #include "room.h"
 #include "map.h"
 #include "utils.h"
 
-void map_init(map *current)
+void map_init(map* current)
 {
     map_blank(current);
     map_fill(current);
     map_layers(current);
 }
 
-void map_blank(map *current)
+void map_read(map* current)
+{
+    char magic[7];
+    magic[6] = '\0';
+    FILE* f_ptr;
+    int fread_size = 0;
+
+    f_ptr = fopen(current->path, "r");
+    fread_size = fread(&magic, sizeof(char), 6, f_ptr);
+    if (fread_size != 6 || strcmp(magic, "RLG327") != 0) {
+        printf("Invalid magic bytes: %s\n", magic);
+        return;
+    }
+
+    unsigned int version;
+    fread_size = fread(&version, sizeof(version), 1, f_ptr);
+    version = be32toh(version);
+    if (fread_size != 1 || version != 0) {
+        printf("Invalid version number: %u\n", version);
+        return;
+    }
+
+    unsigned int file_size;
+    fread_size = fread(&file_size, sizeof(file_size), 1, f_ptr);
+    file_size = be32toh(file_size);
+    if (fread_size != 1) {
+        printf("Unable to read file size: %u\n", file_size);
+        return;
+    }
+
+    fprintf("File size: %u\n" file_size);
+
+    int y = 0;
+    int x = 0;
+
+    current->cols = 80;
+    current->rows = 21;
+
+    current->seed = utils_genseed();
+    srand(current->seed);
+    current->rock_hardness = malloc(sizeof(uint8_t) * current->rows * current->cols);
+    current->rooms_layer = malloc(sizeof(char) * current->rows * current->cols);
+
+    for (int i = 0; i < 1482; i++) {
+        uint8_t hardness;
+        fread_size = fread(&hardness, sizeof(hardness), 1, f_ptr);
+
+        if (fread_size != 1) {
+            printf("Unable to read hardness %i\n", hardness);
+        }
+
+        current->rock_hardness[y][x] = hardness;
+        x += 1;
+        if (x >= 80) {
+            x = 0;
+            y += 1;
+        }
+    }
+
+    current->room_count = (file_size-1495)/4;
+
+    for (int i = 1495; i < file_size; i++) {
+
+    }
+
+    current->ready = 13921;
+}
+
+void map_blank(map* current)
 {
     current->cols = 80;
     current->rows = 21;
@@ -26,6 +97,7 @@ void map_blank(map *current)
     current->seed = utils_genseed();
     srand(current->seed);
 
+    current->rock_hardness = malloc(sizeof(uint8_t) * current->rows * current->cols);
     current->rooms_layer = malloc(sizeof(char) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
         current->rooms_layer[y] = malloc(sizeof(char) * current->cols);
@@ -45,7 +117,7 @@ void map_blank(map *current)
     current->ready = 10321;
 }
 
-void map_fill(map *current)
+void map_fill(map* current)
 {
     if (current->ready < 10321) {
         map_blank(current);
@@ -66,10 +138,10 @@ void map_fill(map *current)
     // 2 <= height <= 5 ; pos_y + height < current->rows
 
     for (int i = 0; i < r_rooms_generated; i++) {
-        int r_pos_x = 3;
-        int r_pos_y = 1;
-        int r_width = 5;
-        int r_height = 4;
+        uint8_t r_pos_x = 3;
+        uint8_t r_pos_y = 1;
+        uint8_t r_width = 5;
+        uint8_t r_height = 4;
 
         r_pos_x += rand() % 68;
         r_pos_y += rand() % 14;

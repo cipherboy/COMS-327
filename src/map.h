@@ -4,6 +4,7 @@
  * Main room structure header file
 **/
 
+#include <stdint.h>
 #include "room.h"
 
 #pragma once
@@ -13,11 +14,14 @@
 typedef struct
 {
     short ready;
+    char* path;
 
     int rows; // max_x
     int cols; // max_y
 
     unsigned int seed;
+
+    uint8_t** rock_hardness;
 
     int room_count;
     room* rooms;
@@ -27,6 +31,7 @@ typedef struct
 } map;
 
 void map_init(map* current);
+void map_read(map* current);
 void map_blank(map* current);
 void map_fill(map* current);
 void map_layers(map* current);

@@ -3,6 +3,7 @@
 **/
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #pragma once
 #ifndef ROOM_H
@@ -10,14 +11,14 @@
 
 typedef struct
 {
-    int pos_x;
-    int pos_y;
+    uint8_t pos_x;
+    uint8_t pos_y;
 
-    int max_x;
-    int max_y;
+    uint8_t width;
+    uint8_t height;
 
-    int width;
-    int height;
+    uint8_t max_x;
+    uint8_t max_y;
 } room;
 
 bool room_overlaps(room* first, room* second);

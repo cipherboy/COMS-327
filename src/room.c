@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <math.h>
 
 #include "room.h"
@@ -12,8 +13,8 @@
 
 bool room_overlaps(room* first, room* second)
 {
-    for (int y = first->pos_y; y <= first->max_y; y++) {
-        for (int x = first->pos_x; x <= first->max_x; x++) {
+    for (uint8_t y = first->pos_y; y <= first->max_y; y++) {
+        for (uint8_t x = first->pos_x; x <= first->max_x; x++) {
             if (room_contains_room(x, y, second)) {
                 return true;
             }
@@ -23,7 +24,7 @@ bool room_overlaps(room* first, room* second)
     return false;
 }
 
-bool room_contains_room(int x, int y, room* place)
+bool room_contains_room(uint8_t x, uint8_t y, room* place)
 {
     int overlap = 5;
 
