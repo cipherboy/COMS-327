@@ -25,7 +25,9 @@ format:
 	rm -f ./src/*.c.orig
 
 changelog:
-	git log --full-history > CHANGELOG
+	git log --source --log-size --all --cherry --decorate=full --full-history \
+		--date-order --show-notes --relative-date  --abbrev-commit --children \
+		--stat --no-color > CHANGELOG
 
 test:
 	true
