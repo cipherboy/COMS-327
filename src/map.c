@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <machine/endian.h>
+#include <endian.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <math.h>
@@ -21,14 +21,15 @@ void map_init(map* current)
     map_layers(current);
 }
 
-void map_read(map* current)
+void map_read(map* current, char* path)
 {
     char magic[7];
     magic[6] = '\0';
     FILE* f_ptr;
     int fread_size = 0;
 
-    f_ptr = fopen(current->path, "r");
+    printf("File for reading: %s\n", path);
+    f_ptr = fopen(path, "r");
     fread_size = fread(&magic, sizeof(char), 6, f_ptr);
     if (fread_size != 6 || strcmp(magic, "RLG327") != 0) {
         printf("Invalid magic bytes: %s\n", magic);
@@ -51,32 +52,44 @@ void map_read(map* current)
         return;
     }
 
-    fprintf("File size: %u\n" file_size);
-
-    int y = 0;
-    int x = 0;
+    printf("File size: %u\n", file_size);
 
     current->cols = 80;
     current->rows = 21;
 
-    current->seed = utils_genseed();
-    srand(current->seed);
+    srand(utils_genseed());
+
     current->rock_hardness = malloc(sizeof(uint8_t) * current->rows * current->cols);
     current->rooms_layer = malloc(sizeof(char) * current->rows * current->cols);
-
-    for (int i = 0; i < 1482; i++) {
-        uint8_t hardness;
-        fread_size = fread(&hardness, sizeof(hardness), 1, f_ptr);
-
-        if (fread_size != 1) {
-            printf("Unable to read hardness %i\n", hardness);
+    current->hallways_layer = malloc(sizeof(char) * current->rows * current->cols);
+    for (int y = 0; y < current->rows; y++) {
+        current->rock_hardness[y] = malloc(sizeof(uint8_t) * current->cols);
+        current->rooms_layer[y] = malloc(sizeof(char) * current->cols);
+        current->hallways_layer[y] = malloc(sizeof(char) * current->cols);
+        for (int x = 0; x < current->cols; x++) {
+            current->rock_hardness[y][x] = 255;
+            current->rooms_layer[y][x] = ' ';
+            current->hallways_layer[y][x] = ' ';
         }
+    }
 
-        current->rock_hardness[y][x] = hardness;
-        x += 1;
-        if (x >= 80) {
-            x = 0;
-            y += 1;
+    for (int y = 1; y < current->rows-1; y++) {
+        for (int x = 1; x < current->cols-1; x++) {
+            current->rooms_layer[y][x] = ' ';
+            current->hallways_layer[y][x] = ' ';
+
+            uint8_t hardness;
+            fread_size = fread(&hardness, sizeof(hardness), 1, f_ptr);
+
+            if (fread_size != 1) {
+                printf("Unable to read hardness %i\n", hardness);
+            }
+
+            current->rock_hardness[y][x] = hardness;
+
+            if (hardness == 0) {
+                current->hallways_layer[y][x] = '#';
+            }
         }
     }
 
@@ -94,22 +107,18 @@ void map_blank(map* current)
     current->cols = 80;
     current->rows = 21;
 
-    current->seed = utils_genseed();
-    srand(current->seed);
+    srand(utils_genseed());
 
     current->rock_hardness = malloc(sizeof(uint8_t) * current->rows * current->cols);
     current->rooms_layer = malloc(sizeof(char) * current->rows * current->cols);
-    for (int y = 0; y < current->rows; y++) {
-        current->rooms_layer[y] = malloc(sizeof(char) * current->cols);
-        for (int x = 0; x < current->cols; x++) {
-            current->rooms_layer[y][x] = ' ';
-        }
-    }
-
     current->hallways_layer = malloc(sizeof(char) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
+        current->rock_hardness[y] = malloc(sizeof(uint8_t) * current->cols);
+        current->rooms_layer[y] = malloc(sizeof(char) * current->cols);
         current->hallways_layer[y] = malloc(sizeof(char) * current->cols);
         for (int x = 0; x < current->cols; x++) {
+            current->rock_hardness[y][x] = 255;
+            current->rooms_layer[y][x] = ' ';
             current->hallways_layer[y][x] = ' ';
         }
     }
@@ -119,6 +128,12 @@ void map_blank(map* current)
 
 void map_fill(map* current)
 {
+    for (int y = 1; y < current->rows-1; y++) {
+        for (int x = 1; x < current->cols-1; x++) {
+            current->rock_hardness[y][x] = rand() % 256;
+        }
+    }
+
     if (current->ready < 10321) {
         map_blank(current);
     }
@@ -335,3 +350,4 @@ void map_print(map* current)
     printf("*--------------------------------------------------------------------------------*\n");
     printf("\n\n\n");
 }
+                                                                                                                                                                                                                           

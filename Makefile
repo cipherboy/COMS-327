@@ -10,7 +10,7 @@
 # test: 		runs unit test samples
 
 ELF = mapgen
-CFLAGS = -O2 -march=native -Wall -std=c99 -ggdb -lm
+CFLAGS = -O0 -march=native -Wall -std=gnu99 -ggdb -lm
 
 # Default target
 run: all execute
