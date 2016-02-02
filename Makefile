@@ -18,7 +18,7 @@ run: all execute
 all: clean format changelog build test
 
 clean:
-	rm -rf ./src/*.o ./bin/mapgen.dSYM ./autom4te.cache
+	rm -rf ./src/*.o ./bin/mapgen.dSYM ./autom4te.cache ./configure
 
 format:
 	astyle --style=linux ./src/*.c || true
@@ -36,4 +36,4 @@ mapgen:
 	gcc ${CFLAGS} -o bin/${ELF} src/*.c
 
 execute:
-	./bin/mapgen
+	./bin/mapgen || true

@@ -32,7 +32,7 @@ void map_read(map* current, char* path)
     if (f_ptr == NULL) {
         printf("Unable to read file!\n");
         return;
-     }
+    }
 
     fread_size = fread(&magic, sizeof(char), 6, f_ptr);
     if (fread_size != 6 || strcmp(magic, "RLG327") != 0) {
@@ -400,28 +400,28 @@ void map_write(map* current, char* path)
 
     fwrite_size = fwrite(&magic, sizeof(char), 6, f_ptr);
     if (fwrite_size != 6) {
-       printf("Unable to write magic bytes: %i != 6\n", fwrite_size);
-       return;
+        printf("Unable to write magic bytes: %i != 6\n", fwrite_size);
+        return;
     }
 
     fwrite_size = fwrite(&version, sizeof(version), 1, f_ptr);
     if (fwrite_size != 1) {
-      printf("Unable to write version: %i != 1\n", fwrite_size);
-      return;
+        printf("Unable to write version: %i != 1\n", fwrite_size);
+        return;
     }
 
     fwrite_size = fwrite(&file_size, sizeof(file_size), 1, f_ptr);
     if (fwrite_size != 1) {
-      printf("Unable to write file size: %i != 1\n", fwrite_size);
-      return;
+        printf("Unable to write file size: %i != 1\n", fwrite_size);
+        return;
     }
 
     for (int y = 1; y < current->rows-1; y++) {
         for (int x = 1; x < current->cols-1; x++) {
             fwrite_size = fwrite(&current->rock_hardness[y][x], sizeof(current->rock_hardness[y][x]), 1, f_ptr);
             if (fwrite_size != 1) {
-              printf("Unable to write hardness[%i][%i]: %i != 1\n", y, x, fwrite_size);
-              return;
+                printf("Unable to write hardness[%i][%i]: %i != 1\n", y, x, fwrite_size);
+                return;
             }
         }
     }
@@ -434,26 +434,26 @@ void map_write(map* current, char* path)
 
         fwrite_size = fwrite(&r_pos_x, sizeof(r_pos_x), 1, f_ptr);
         if (fwrite_size != 1) {
-          printf("Unable to write r_pos_x[%i]: %i != 1\n", room_counter, fwrite_size);
-          return;
+            printf("Unable to write r_pos_x[%i]: %i != 1\n", room_counter, fwrite_size);
+            return;
         }
 
         fwrite_size = fwrite(&r_pos_y, sizeof(r_pos_y), 1, f_ptr);
         if (fwrite_size != 1) {
-          printf("Unable to write r_pos_y[%i]: %i != 1\n", room_counter, fwrite_size);
-          return;
+            printf("Unable to write r_pos_y[%i]: %i != 1\n", room_counter, fwrite_size);
+            return;
         }
 
         fwrite_size = fwrite(&r_width, sizeof(r_width), 1, f_ptr);
         if (fwrite_size != 1) {
-          printf("Unable to write r_width[%i]: %i != 1\n", room_counter, fwrite_size);
-          return;
+            printf("Unable to write r_width[%i]: %i != 1\n", room_counter, fwrite_size);
+            return;
         }
 
         fwrite_size = fwrite(&r_height, sizeof(r_height), 1, f_ptr);
         if (fwrite_size != 1) {
-          printf("Unable to write r_height[%i]: %i != 1\n", room_counter, fwrite_size);
-          return;
+            printf("Unable to write r_height[%i]: %i != 1\n", room_counter, fwrite_size);
+            return;
         }
     }
 }

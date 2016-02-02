@@ -2,10 +2,13 @@ AC_INIT(config, version-1.0)
 AC_PROG_CC
 AC_LANG(C)
 AC_PROG_CC_STDC
+AC_CHECK_HEADERS(endian.h)
 AC_CHECK_HEADERS(math.h)
 AC_CHECK_HEADERS(stdbool.h)
+AC_CHECK_HEADERS(stdint.h)
 AC_CHECK_HEADERS(stdio.h)
 AC_CHECK_HEADERS(stdlib.h)
+AC_CHECK_HEADERS(string.h)
 AC_CHECK_HEADERS(time.h)
 AC_CHECK_FILES(/dev/urandom)
 AC_CHECK_FILES(/dev/random)
