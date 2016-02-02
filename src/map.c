@@ -28,7 +28,6 @@ void map_read(map* current, char* path)
     FILE* f_ptr;
     int fread_size = 0;
 
-    printf("File for reading: %s\n", path);
     f_ptr = fopen(path, "r");
     fread_size = fread(&magic, sizeof(char), 6, f_ptr);
     if (fread_size != 6 || strcmp(magic, "RLG327") != 0) {
@@ -51,8 +50,6 @@ void map_read(map* current, char* path)
         printf("Unable to read file size: %u\n", file_size);
         return;
     }
-
-    printf("File size: %u\n", file_size);
 
     current->cols = 80;
     current->rows = 21;
@@ -94,11 +91,44 @@ void map_read(map* current, char* path)
     }
 
     current->room_count = (file_size-1495)/4;
+    current->rooms = malloc(sizeof(room) * current->room_count);
 
-    for (int i = 1495; i < file_size; i++) {
+    for (int i = 0; i < current->room_count; i++) {
+        room current_room;
 
+        uint8_t r_pos_x = 0;
+        uint8_t r_pos_y = 0;
+        uint8_t r_width = 0;
+        uint8_t r_height = 0;
+        fread_size = fread(&r_pos_x, sizeof(r_pos_x), 1, f_ptr);
+        if (fread_size != 1) {
+            printf("Unable to read r_pos_x: %i\n", r_pos_x);
+        }
+        fread_size = fread(&r_pos_y, sizeof(r_pos_y), 1, f_ptr);
+        if (fread_size != 1) {
+            printf("Unable to read r_pos_y: %i\n", r_pos_y);
+        }
+        fread_size = fread(&r_width, sizeof(r_width), 1, f_ptr);
+        if (fread_size != 1) {
+            printf("Unable to read r_width: %i\n", r_width);
+        }
+        fread_size = fread(&r_height, sizeof(r_height), 1, f_ptr);
+        if (fread_size != 1) {
+            printf("Unable to read r_height: %i\n", r_height);
+        }
+
+        current_room.pos_x = r_pos_x;
+        current_room.pos_y = r_pos_y;
+        current_room.height = r_height;
+        current_room.width = r_width;
+        current_room.max_x = r_pos_x + r_width;
+        current_room.max_y = r_pos_y + r_height;
+
+        current->rooms[i] = current_room;
     }
 
+    current->ready = 11387;
+    map_layers_rooms(current);
     current->ready = 13921;
 }
 
@@ -244,10 +274,6 @@ void map_layers_rooms(map* current)
 
         for (int y = current_room.pos_y; y <= current_room.max_y; y++) {
             for (int x = current_room.pos_x; x < current_room.max_x; x++) {
-                if (current->rooms_layer[y][x] != ' ') {
-                    printf("%i,%i\n", x, y);
-                }
-
                 current->rooms_layer[y][x] = '.';
             }
         }
@@ -350,4 +376,3 @@ void map_print(map* current)
     printf("*--------------------------------------------------------------------------------*\n");
     printf("\n\n\n");
 }
-                                                                                                                                                                                                                           
