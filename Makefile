@@ -22,7 +22,8 @@ clean:
 
 format:
 	astyle --style=linux ./src/*.c || true
-	rm -f ./src/*.c.orig
+	astyle --style=linux ./src/*.h || true
+	rm -f ./src/*.orig
 
 changelog:
 	git log --source --log-size --all --cherry --decorate=full --full-history \

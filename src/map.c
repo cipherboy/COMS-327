@@ -5,7 +5,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#ifdef __APPLE__
+#include "endian.h"
+#else
 #include <endian.h>
+#endif
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <math.h>

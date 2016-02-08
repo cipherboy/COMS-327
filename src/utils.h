@@ -8,4 +8,4 @@
 
 unsigned int utils_genseed();
 
-#endif        
+#endif

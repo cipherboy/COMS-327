@@ -9,8 +9,7 @@
 #ifndef ROOM_H
 #define ROOM_H
 
-typedef struct
-{
+typedef struct {
     uint8_t pos_x;
     uint8_t pos_y;
 
