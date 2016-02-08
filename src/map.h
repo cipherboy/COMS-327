@@ -17,6 +17,8 @@ typedef struct {
     int rows; // max_x
     int cols; // max_y
 
+    player character;
+
     uint8_t** rock_hardness;
 
     int room_count;
@@ -24,6 +26,9 @@ typedef struct {
     char** rooms_layer;
 
     char** hallways_layer;
+
+    char** player_distances;
+    char** all_distances;
 } map;
 
 void map_init(map* current);
