@@ -13,8 +13,6 @@
 #include "room.h"
 
 typedef struct {
-    short ready;
-
     int rows; // max_x
     int cols; // max_y
 

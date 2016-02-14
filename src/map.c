@@ -142,9 +142,7 @@ void map_read(map* current, char* path)
 
     fclose(f_ptr);
 
-    current->ready = 11387;
     map_layers_rooms(current);
-    current->ready = 13921;
 }
 
 void map_blank(map* current)
@@ -167,8 +165,6 @@ void map_blank(map* current)
             current->hallways_layer[y][x] = ' ';
         }
     }
-
-    current->ready = 10321;
 }
 
 void map_fill(map* current)
@@ -177,14 +173,6 @@ void map_fill(map* current)
         for (int x = 1; x < current->cols-1; x++) {
             current->rock_hardness[y][x] = 1 + (rand() % 255);
         }
-    }
-
-    if (current->ready < 10321) {
-        map_blank(current);
-    }
-
-    if (current->ready >= 11387) {
-        return;
     }
 
     int r_rooms_generated = ((rand() % (5*current->rows*current->cols)) + (5*current->rows*current->cols)) % (5*current->rows*current->cols);
@@ -264,8 +252,6 @@ void map_fill(map* current)
     for (int i = 0; i < r_num_rooms; i++) {
         current->rooms[i] = candidates[choices[i]];
     }
-
-    current->ready = 11387;
 }
 
 void map_layers(map* current)
@@ -276,14 +262,6 @@ void map_layers(map* current)
 
 void map_layers_rooms(map* current)
 {
-    if (current->ready < 11387) {
-        map_blank(current);
-    }
-
-    if (current->ready >= 12845) {
-        return;
-    }
-
     for (int i = 0; i < current->room_count; i++) {
         room current_room = current->rooms[i];
 
@@ -294,20 +272,10 @@ void map_layers_rooms(map* current)
             }
         }
     }
-
-    current->ready = 12845;
 }
 
 void map_layers_hallways(map* current)
 {
-    if (current->ready < 12845) {
-        map_blank(current);
-    }
-
-    if (current->ready >= 13921) {
-        return;
-    }
-
     // Adjacency matrix for rooms...
     bool connected[current->room_count][current->room_count];
     for (int i = 0; i < current->room_count; i++) {
@@ -371,16 +339,10 @@ void map_layers_hallways(map* current)
             connected[j][i] = true;
         }
     }
-
-    current->ready = 13921;
 }
 
 void map_print(map* current)
 {
-    if (current->ready < 13921) {
-        map_blank(current);
-    }
-
     printf("*--------------------------------------------------------------------------------*\n");
     for (int y = 0; y < current->rows; y++) {
         printf("|");
