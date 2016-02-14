@@ -22,6 +22,8 @@ int main(int argc, char* argv[])
         if (strcmp(argv[i], "--load") == 0) {
             printf("Loading...\n");
             map_read(&r, path);
+            map_player_init(&r);
+            map_player_distances(&r);
             map_print(&r);
             init = true;
         }
@@ -29,6 +31,8 @@ int main(int argc, char* argv[])
             printf("Saving...\n");
             if (init == false) {
                 map_init(&r);
+                map_player_init(&r);
+                map_player_distances(&r);
                 map_print(&r);
                 init = true;
             }
@@ -36,6 +40,13 @@ int main(int argc, char* argv[])
         }
     }
 
+    if (!init) {
+        printf("Usage: %s [--save] [--load]\n\t--save\t- create a new world and save state\n\t--load\t-load an existing world\n", argv[0]);
+        return 1;
+    }
+
+
     map_deinit(&r);
+    free(path);
     return 0;
 }

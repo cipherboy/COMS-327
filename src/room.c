@@ -15,7 +15,7 @@ bool room_overlaps(room* first, room* second)
 {
     for (uint8_t y = first->pos_y; y <= first->max_y; y++) {
         for (uint8_t x = first->pos_x; x <= first->max_x; x++) {
-            if (room_contains_room(x, y, second)) {
+            if (room_contains_point_overlap(x, y, second, 5)) {
                 return true;
             }
         }
@@ -24,10 +24,13 @@ bool room_overlaps(room* first, room* second)
     return false;
 }
 
-bool room_contains_room(uint8_t x, uint8_t y, room* place)
+bool room_contains_point(uint8_t x, uint8_t y, room* place)
 {
-    int overlap = 5;
+    return room_contains_point_overlap(x, y, place, 0);
+}
 
+bool room_contains_point_overlap(uint8_t x, uint8_t y, room* place, int overlap)
+{
     if ((x >= place->pos_x-overlap && x <= place->max_x+overlap) && (y >= place->pos_y-overlap && y <= place->max_y+overlap)) {
         return true;
     }

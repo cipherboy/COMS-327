@@ -9,13 +9,19 @@
 # execute:		runs current executable
 # test: 		runs unit test samples
 
-ELF = mapgen
-CFLAGS = -O0 -march=native -Wall -std=gnu99 -ggdb -lm
+NAME = rlg327
+CC ?= gcc
+CFLAGS = -O0 -march=native -Wall -std=gnu99 -ggdb
+
+SOURCES = $(wildcard src/*.c)
+OBJECTS = $(SOURCES:.c=.o)
+
+
 
 # Default target
 run: all execute
 
-all: clean format changelog build test
+all: format changelog build test
 
 clean:
 	rm -rf ./src/*.o ./bin/mapgen.dSYM ./autom4te.cache ./configure
@@ -33,10 +39,14 @@ changelog:
 test:
 	true
 
-build: mapgen
+build: main
 
-mapgen:
-	gcc ${CFLAGS} -o bin/${ELF} src/*.c
+main: $(OBJECTS)
+	$(CC) $(OBJECTS) -o bin/$(NAME)
+
+%.o: %.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
 
 execute:
 	./bin/mapgen || true

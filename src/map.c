@@ -64,24 +64,7 @@ void map_read(map* current, char* path)
         return;
     }
 
-    current->cols = 80;
-    current->rows = 21;
-
-    srand(utils_genseed());
-
-    current->rock_hardness = malloc(sizeof(uint8_t) * current->rows * current->cols);
-    current->rooms_layer = malloc(sizeof(char) * current->rows * current->cols);
-    current->hallways_layer = malloc(sizeof(char) * current->rows * current->cols);
-    for (int y = 0; y < current->rows; y++) {
-        current->rock_hardness[y] = malloc(sizeof(uint8_t) * current->cols);
-        current->rooms_layer[y] = malloc(sizeof(char) * current->cols);
-        current->hallways_layer[y] = malloc(sizeof(char) * current->cols);
-        for (int x = 0; x < current->cols; x++) {
-            current->rock_hardness[y][x] = 255;
-            current->rooms_layer[y][x] = ' ';
-            current->hallways_layer[y][x] = ' ';
-        }
-    }
+    map_blank(current);
 
     for (int y = 1; y < current->rows-1; y++) {
         for (int x = 1; x < current->cols-1; x++) {
@@ -153,14 +136,17 @@ void map_blank(map* current)
     srand(utils_genseed());
 
     current->rock_hardness = malloc(sizeof(uint8_t) * current->rows * current->cols);
+    current->characters_layer = malloc(sizeof(char) * current->rows * current->cols);
     current->rooms_layer = malloc(sizeof(char) * current->rows * current->cols);
     current->hallways_layer = malloc(sizeof(char) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
         current->rock_hardness[y] = malloc(sizeof(uint8_t) * current->cols);
+        current->characters_layer[y] = malloc(sizeof(char) * current->cols);
         current->rooms_layer[y] = malloc(sizeof(char) * current->cols);
         current->hallways_layer[y] = malloc(sizeof(char) * current->cols);
         for (int x = 0; x < current->cols; x++) {
             current->rock_hardness[y][x] = 255;
+            current->characters_layer[y][x] = ' ';
             current->rooms_layer[y][x] = ' ';
             current->hallways_layer[y][x] = ' ';
         }
@@ -253,6 +239,7 @@ void map_fill(map* current)
         current->rooms[i] = candidates[choices[i]];
     }
 }
+
 
 void map_layers(map* current)
 {
@@ -347,7 +334,9 @@ void map_print(map* current)
     for (int y = 0; y < current->rows; y++) {
         printf("|");
         for (int x = 0; x < current->cols; x++) {
-            if (current->rooms_layer[y][x] != ' ') {
+            if (current->characters_layer[y][x] != ' ') {
+                printf("%c", current->characters_layer[y][x]);
+            } else if (current->rooms_layer[y][x] != ' ') {
                 printf("%c", current->rooms_layer[y][x]);
             } else {
                 printf("%c", current->hallways_layer[y][x]);
@@ -448,4 +437,6 @@ void map_deinit(map* current)
     free(current->rooms_layer);
     free(current->hallways_layer);
     free(current->rooms);
+
+    map_player_deinit(current);
 }

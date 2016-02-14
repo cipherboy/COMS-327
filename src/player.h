@@ -13,6 +13,9 @@
 typedef struct {
     int pos_x;
     int pos_y;
+
+    char** player_distances;
+    char** all_distances;
 } player;
 
 #endif

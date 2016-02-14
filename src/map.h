@@ -16,18 +16,15 @@ typedef struct {
     int rows; // max_x
     int cols; // max_y
 
-    player character;
+    player main_character;
 
     uint8_t** rock_hardness;
 
     int room_count;
     room* rooms;
+    char** characters_layer;
     char** rooms_layer;
-
     char** hallways_layer;
-
-    char** player_distances;
-    char** all_distances;
 } map;
 
 void map_init(map* current);
@@ -43,7 +40,11 @@ void map_deinit(map* current);
 
 void map_player_init(map* current);
 void map_player_distances(map* current);
-void map_player_wall_distances(map* current);
-void map_player_entire_distances(map* current);
+void map_player_distances_blank(map* current);
+void map_player_distances_bounded(map* current);
+void map_player_distances_unbounded(map* current);
+void map_player_deinit(map* current);
+
+void map_rooms_contains_point(map* current, int x, int y);
 
 #endif

@@ -21,7 +21,8 @@ typedef struct {
 } room;
 
 bool room_overlaps(room* first, room* second);
-bool room_contains_room(uint8_t x, uint8_t y, room* place);
+bool room_contains_point(uint8_t x, uint8_t y, room* place);
+bool room_contains_point_overlap(uint8_t x, uint8_t y, room* place, int overlap);
 int room_lazy_distance(room* first, room* second);
 
 #endif
