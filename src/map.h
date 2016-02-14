@@ -4,12 +4,13 @@
  * Main room structure header file
 **/
 
-#include <stdint.h>
-#include "room.h"
-
 #pragma once
 #ifndef MAP_H
 #define MAP_H
+
+#include <stdint.h>
+#include "player.h"
+#include "room.h"
 
 typedef struct {
     short ready;
@@ -40,5 +41,10 @@ void map_layers_rooms(map* current);
 void map_layers_hallways(map* current);
 void map_print(map* current);
 void map_write(map* current, char* path);
+
+void player_init(map* current);
+void player_distances(map* current);
+void player_wall_distances(map* current);
+void player_entire_distances(map* current);
 
 #endif

@@ -2,12 +2,12 @@
  * Copyright 2016 Alexander Scheel
 **/
 
-#include <stdbool.h>
-#include <stdint.h>
-
 #pragma once
 #ifndef ROOM_H
 #define ROOM_H
+
+#include <stdbool.h>
+#include <stdint.h>
 
 typedef struct {
     uint8_t pos_x;

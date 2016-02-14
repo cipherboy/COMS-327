@@ -19,6 +19,7 @@
 #include "room.h"
 #include "map.h"
 #include "utils.h"
+#include "player.h"
 
 void map_init(map* current)
 {
