@@ -41,10 +41,11 @@ void map_layers_rooms(map* current);
 void map_layers_hallways(map* current);
 void map_print(map* current);
 void map_write(map* current, char* path);
+void map_deinit(map* current);
 
-void player_init(map* current);
-void player_distances(map* current);
-void player_wall_distances(map* current);
-void player_entire_distances(map* current);
+void map_player_init(map* current);
+void map_player_distances(map* current);
+void map_player_wall_distances(map* current);
+void map_player_entire_distances(map* current);
 
 #endif

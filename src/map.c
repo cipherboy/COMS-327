@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
 #include <string.h>
 
 #ifdef __APPLE__
@@ -138,6 +139,8 @@ void map_read(map* current, char* path)
 
         current->rooms[i] = current_room;
     }
+
+    fclose(f_ptr);
 
     current->ready = 11387;
     map_layers_rooms(current);
@@ -404,6 +407,10 @@ void map_write(map* current, char* path)
     int fwrite_size = 0;
 
     f_ptr = fopen(path, "w");
+    if (f_ptr == NULL) {
+        printf("Opening file for writing failed with code %d, %s\n", errno, strerror(errno));
+        return;
+    }
 
     fwrite_size = fwrite(&magic, sizeof(char), 6, f_ptr);
     if (fwrite_size != 6) {
@@ -463,4 +470,20 @@ void map_write(map* current, char* path)
             return;
         }
     }
+
+    fclose(f_ptr);
+}
+
+void map_deinit(map* current)
+{
+    for (int y = 0; y < current->rows; y++) {
+        free(current->rock_hardness[y]);
+        free(current->rooms_layer[y]);
+        free(current->hallways_layer[y]);
+    }
+
+    free(current->rock_hardness);
+    free(current->rooms_layer);
+    free(current->hallways_layer);
+    free(current->rooms);
 }
