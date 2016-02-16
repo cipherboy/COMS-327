@@ -1,4 +1,7 @@
 #include <stdlib.h>
+#include <stdbool.h>
+#include <stdio.h>
+
 #include "player.h"
 #include "map.h"
 #include "utils.h"
@@ -41,15 +44,110 @@ void map_player_distances_blank(map* current)
 
 void map_player_distances_bounded(map* current)
 {
-    point start = {current->main_character.pos_x, current->main_character.pos_y};
     binheap_t queue;
-    binheap_init(&queue, point_distance, NULL);
+    binheap_init(&queue, distances_distance, NULL);
 
-    current->main_character.player_distances[start.y][start.x] = 0;
+    distances** objects = malloc(sizeof(distances) * current->rows * current->cols);
+    binheap_node_t*** bh_ptr = malloc(sizeof(binheap_node_t) * current->rows * current->cols);
+
+    // No need to add character: he starts in a room
+    for (int y = 0; y < current->rows; y++) {
+        objects[y] = malloc(sizeof(distances) * current->cols);
+        bh_ptr[y] = malloc(sizeof(binheap_node_t) * current->cols);
+        for (int x = 0; x < current->cols; x++) {
+            objects[y][x].x = x;
+            objects[y][x].y = y;
+            if (y != current->main_character.pos_y || x != current->main_character.pos_x) {
+                objects[y][x].distance = 255;
+            } else {
+                objects[y][x].distance = 0;
+            }
+            bh_ptr[y][x] = binheap_insert(&queue, &objects[y][x]);
+        }
+    }
+
+    distances* c;
+
+    while ((c = (distances*) binheap_remove_min(&queue))) {
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                int x = c->x + dx;
+                int y = c->y + dy;
+                int dist = 1 + objects[c->y][c->x].distance;
+
+                if ((dx != dy) && x > 0 && y > 0 && x < current->cols && y < current->rows) {
+                    if ((map_rooms_contains_point(current, x, y) || current->hallways_layer[y][x] == '#') && (dist < objects[y][x].distance || objects[y][x].distance < 0)) {
+                        objects[y][x].distance = dist;
+                        binheap_decrease_key(&queue, bh_ptr[y][x]);
+                    }
+                }
+            }
+        }
+    }
+
+    // No need to add character: he starts in a room
+    for (int y = 0; y < current->rows; y++) {
+        for (int x = 0; x < current->cols; x++) {
+            if (current->rooms_layer[y][x] != ' ' || current->hallways_layer[y][x] != ' ') {
+                current->main_character.player_distances[y][x] = objects[y][x].distance;
+            }
+        }
+    }
 }
 
 void map_player_distances_unbounded(map* current)
 {
+    binheap_t queue;
+    binheap_init(&queue, distances_distance, NULL);
+
+    distances** objects = malloc(sizeof(distances) * current->rows * current->cols);
+    binheap_node_t*** bh_ptr = malloc(sizeof(binheap_node_t) * current->rows * current->cols);
+
+    // No need to add character: he starts in a room
+    for (int y = 0; y < current->rows; y++) {
+        objects[y] = malloc(sizeof(distances) * current->cols);
+        bh_ptr[y] = malloc(sizeof(binheap_node_t) * current->cols);
+        for (int x = 0; x < current->cols; x++) {
+            objects[y][x].x = x;
+            objects[y][x].y = y;
+            if (y != current->main_character.pos_y || x != current->main_character.pos_x) {
+                objects[y][x].distance = 255;
+            } else {
+                objects[y][x].distance = 0;
+            }
+            bh_ptr[y][x] = binheap_insert(&queue, &objects[y][x]);
+        }
+    }
+
+    distances* c;
+
+    printf("%i,%i", current->cols,current->rows);
+
+    printf("Hardness: 10,15: %i\n", (int) (1 + ((double) 254/63.9)));
+
+    while ((c = (distances*) binheap_remove_min(&queue))) {
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                int x = c->x + dx;
+                int y = c->y + dy;
+
+                if ((dx != dy) && x > 0 && y > 0 && x < current->cols && y < current->rows) {
+                    int dist = (1 + (double) current->rock_hardness[y][x] / 63.9) + objects[c->y][c->x].distance;
+                    if (current->rock_hardness[y][x] != 255 && (dist < objects[y][x].distance || objects[y][x].distance < 0)) {
+                        objects[y][x].distance = dist;
+                        binheap_decrease_key(&queue, bh_ptr[y][x]);
+                    }
+                }
+            }
+        }
+    }
+
+    // No need to add character: he starts in a room
+    for (int y = 0; y < current->rows; y++) {
+        for (int x = 0; x < current->cols; x++) {
+            current->main_character.all_distances[y][x] = objects[y][x].distance;
+        }
+    }
 }
 
 void map_player_deinit(map* current)

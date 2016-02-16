@@ -45,6 +45,6 @@ void map_player_distances_bounded(map* current);
 void map_player_distances_unbounded(map* current);
 void map_player_deinit(map* current);
 
-void map_rooms_contains_point(map* current, int x, int y);
+bool map_rooms_contains_point(map* current, int x, int y);
 
 #endif

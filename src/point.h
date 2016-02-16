@@ -5,10 +5,11 @@
 #include <stdint.h>
 
 typedef struct {
-    int x;
-    int y;
-} point;
+    int32_t x;
+    int32_t y;
+    int32_t distance;
+} distances;
 
-int32_t point_distance(const void *key, const void *with);
+int32_t distances_distance(const void *key, const void *with);
 
 #endif

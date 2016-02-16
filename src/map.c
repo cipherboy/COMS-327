@@ -157,7 +157,7 @@ void map_fill(map* current)
 {
     for (int y = 1; y < current->rows-1; y++) {
         for (int x = 1; x < current->cols-1; x++) {
-            current->rock_hardness[y][x] = 1 + (rand() % 255);
+            current->rock_hardness[y][x] = 1 + (rand() % 254);
         }
     }
 
@@ -338,8 +338,49 @@ void map_print(map* current)
                 printf("%c", current->characters_layer[y][x]);
             } else if (current->rooms_layer[y][x] != ' ') {
                 printf("%c", current->rooms_layer[y][x]);
-            } else {
+            } else if (current->hallways_layer[y][x] != ' ') {
                 printf("%c", current->hallways_layer[y][x]);
+            } else {
+                printf("%c", ' ');
+            }
+        }
+        printf("|\n");
+    }
+    printf("*--------------------------------------------------------------------------------*\n");
+    printf("\n\n\n");
+    char distanceCharacter[62] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+    printf("*--------------------------------------------------------------------------------*\n");
+    for (int y = 0; y < current->rows; y++) {
+        printf("|");
+        for (int x = 0; x < current->cols; x++) {
+            if (current->main_character.player_distances[y][x] < 62 && current->main_character.player_distances[y][x] >= 0) {
+                printf("%c", distanceCharacter[(int) current->main_character.player_distances[y][x]]);
+            } else if (current->rooms_layer[y][x] != ' ') {
+                printf("%c", current->rooms_layer[y][x]);
+            } else if (current->hallways_layer[y][x] != ' ') {
+                printf("%c", current->hallways_layer[y][x]);
+            } else {
+                printf("%c", ' ');
+            }
+        }
+        printf("|\n");
+    }
+    printf("*--------------------------------------------------------------------------------*\n");
+    printf("\n\n\n");
+
+    printf("*--------------------------------------------------------------------------------*\n");
+    for (int y = 0; y < current->rows; y++) {
+        printf("|");
+        for (int x = 0; x < current->cols; x++) {
+            if (current->main_character.all_distances[y][x] < 62 && current->main_character.all_distances[y][x] >= 0) {
+                printf("%c", distanceCharacter[(int) current->main_character.all_distances[y][x]]);
+            } else if (current->rooms_layer[y][x] != ' ') {
+                printf("%c", current->rooms_layer[y][x]);
+            } else if (current->hallways_layer[y][x] != ' ') {
+                printf("%c", current->hallways_layer[y][x]);
+            } else {
+                printf("%c", ' ');
             }
         }
         printf("|\n");

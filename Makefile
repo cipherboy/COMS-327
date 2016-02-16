@@ -49,4 +49,4 @@ main: $(OBJECTS)
 
 
 execute:
-	./bin/mapgen || true
+	./bin/$(NAME) || true
