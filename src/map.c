@@ -471,12 +471,14 @@ void map_deinit(map* current)
     for (int y = 0; y < current->rows; y++) {
         free(current->rock_hardness[y]);
         free(current->rooms_layer[y]);
+        free(current->characters_layer[y]);
         free(current->hallways_layer[y]);
     }
 
     free(current->rock_hardness);
     free(current->rooms_layer);
     free(current->hallways_layer);
+    free(current->characters_layer);
     free(current->rooms);
 
     map_player_deinit(current);

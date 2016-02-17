@@ -93,6 +93,14 @@ void map_player_distances_bounded(map* current)
             }
         }
     }
+
+    for (int y = 0; y < current->rows; y++) {
+        free(objects[y]);
+        free(bh_ptr[y]);
+    }
+    free(objects);
+    free(bh_ptr);
+    binheap_delete(&queue);
 }
 
 void map_player_distances_unbounded(map* current)
@@ -148,6 +156,14 @@ void map_player_distances_unbounded(map* current)
             current->main_character.all_distances[y][x] = objects[y][x].distance;
         }
     }
+
+    for (int y = 0; y < current->rows; y++) {
+        free(objects[y]);
+        free(bh_ptr[y]);
+    }
+    free(objects);
+    free(bh_ptr);
+    binheap_delete(&queue);
 }
 
 void map_player_deinit(map* current)
