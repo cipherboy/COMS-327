@@ -7,21 +7,19 @@
 # changelog: 	updates changelog
 # run:			makes all, executes code
 # execute:		runs current executable
-# test: 		runs unit test samples
 
 NAME = rlg327
 CC ?= gcc
-CFLAGS = -O0 -march=native -Wall -std=gnu99 -ggdb -lm
+CFLAGS = -O0 -march=native -Wall -std=gnu99 -ggdb
+LFLAGS = -lm
 
 SOURCES = $(wildcard src/*.c)
 OBJECTS = $(SOURCES:.c=.o)
 
-
-
 # Default target
 run: all execute
 
-all: format changelog build test
+all: format changelog build
 
 clean:
 	rm -rf ./src/*.o ./bin/mapgen.dSYM ./autom4te.cache ./configure
@@ -31,18 +29,15 @@ format:
 	astyle --style=linux ./src/*.h || true
 	rm -f ./src/*.orig
 
-changelog:
+changelog: .git
 	git log --source --log-size --all --cherry --decorate=full --full-history \
 		--date-order --show-notes --relative-date  --abbrev-commit --children \
 		--stat --no-color > CHANGELOG
 
-test:
-	true
-
 build: main
 
 main: $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) -o bin/$(NAME)
+	$(CC) $(LFLAGS) $(OBJECTS) -o bin/$(NAME)
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
