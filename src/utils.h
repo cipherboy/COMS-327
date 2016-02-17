@@ -1,5 +1,7 @@
 /**
  * Copyright 2016 Alexander Scheel
+ *
+ * Utils header file
 **/
 
 #pragma once

@@ -1,5 +1,10 @@
+/**
+ * Copyright 2016 Alexander Scheel
+ *
+ * Point implementation file
+**/
+
 #include <stdint.h>
-#include <stdio.h>
 
 #include "point.h"
 

@@ -1,3 +1,9 @@
+/**
+ * Copyright 2016 Alexander Scheel
+ *
+ * Map player implementation file
+**/
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>

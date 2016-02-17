@@ -1,3 +1,9 @@
+/**
+ * Copyright 2016 Alexander Scheel
+ *
+ * Point header file
+**/
+
 #pragma once
 #ifndef POINT_H
 #define POINT_H

@@ -1,7 +1,7 @@
 /**
  * Copyright 2016 Alexander Scheel
  *
- * Main room structure header file
+ * Main map header file
 **/
 
 #pragma once
@@ -27,24 +27,18 @@ typedef struct {
     char** hallways_layer;
 } map;
 
+// Method declarations
+#include "map_layers.h"
+#include "map_rooms.h"
+#include "map_player.h"
+
 void map_init(map* current);
 bool map_read(map* current, char* path);
 void map_blank(map* current);
 void map_fill(map* current);
-void map_layers(map* current);
-void map_layers_rooms(map* current);
-void map_layers_hallways(map* current);
 void map_print(map* current);
 void map_write(map* current, char* path);
 void map_deinit(map* current);
 
-void map_player_init(map* current);
-void map_player_distances(map* current);
-void map_player_distances_blank(map* current);
-void map_player_distances_bounded(map* current);
-void map_player_distances_unbounded(map* current);
-void map_player_deinit(map* current);
-
-bool map_rooms_contains_point(map* current, int x, int y);
 
 #endif

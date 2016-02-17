@@ -1,3 +1,5 @@
+// Source: https://gist.github.com/yinyin/2027912
+
 #ifndef __FINK_ENDIANDEV_PKG_ENDIAN_H__
 #define __FINK_ENDIANDEV_PKG_ENDIAN_H__ 1
 

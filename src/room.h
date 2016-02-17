@@ -1,5 +1,7 @@
 /**
  * Copyright 2016 Alexander Scheel
+ *
+ * Room header file
 **/
 
 #pragma once

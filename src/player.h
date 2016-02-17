@@ -1,7 +1,7 @@
 /**
  * Copyright 2016 Alexander Scheel
  *
- * Main room structure header file
+ * Player header file
 **/
 
 #pragma once

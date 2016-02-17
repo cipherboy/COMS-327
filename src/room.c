@@ -1,5 +1,7 @@
 /**
  * Copyright 2016 Alexander Scheel
+ *
+ * Room implementation file
 **/
 
 #include <stdlib.h>

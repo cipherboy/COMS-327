@@ -1,3 +1,9 @@
+/**
+ * Copyright 2016 Alexander Scheel
+ *
+ * main method
+**/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
