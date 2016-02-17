@@ -29,7 +29,7 @@ void map_init(map* current)
     map_layers(current);
 }
 
-void map_read(map* current, char* path)
+bool map_read(map* current, char* path)
 {
     char magic[7];
     magic[6] = '\0';
@@ -39,13 +39,13 @@ void map_read(map* current, char* path)
     f_ptr = fopen(path, "r");
     if (f_ptr == NULL) {
         printf("Opening file for writing failed with code %d, %s\n", errno, strerror(errno));
-        return;
+        return false;
     }
 
     fread_size = fread(&magic, sizeof(char), 6, f_ptr);
     if (fread_size != 6 || strcmp(magic, "RLG327") != 0) {
         printf("Invalid magic bytes: %s\n", magic);
-        return;
+        return false;
     }
 
     uint32_t version;
@@ -53,7 +53,7 @@ void map_read(map* current, char* path)
     version = be32toh(version);
     if (fread_size != 1 || version != 0) {
         printf("Invalid version number: %u\n", version);
-        return;
+        return false;
     }
 
     uint32_t file_size;
@@ -61,7 +61,7 @@ void map_read(map* current, char* path)
     file_size = be32toh(file_size);
     if (fread_size != 1) {
         printf("Unable to read file size: %u\n", file_size);
-        return;
+        return false;
     }
 
     map_blank(current);
@@ -126,6 +126,7 @@ void map_read(map* current, char* path)
     fclose(f_ptr);
 
     map_layers_rooms(current);
+    return true;
 }
 
 void map_blank(map* current)

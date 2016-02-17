@@ -28,7 +28,7 @@ typedef struct {
 } map;
 
 void map_init(map* current);
-void map_read(map* current, char* path);
+bool map_read(map* current, char* path);
 void map_blank(map* current);
 void map_fill(map* current);
 void map_layers(map* current);
