@@ -42,6 +42,8 @@ int main(int argc, char* argv[])
 
     if (!init) {
         printf("Usage: %s [--save] [--load]\n\t--save\t- create a new world and save state\n\t--load\t-load an existing world\n", argv[0]);
+	map_deinit(&r);
+	free(path);
         return 1;
     }
 

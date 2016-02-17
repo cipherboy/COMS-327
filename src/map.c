@@ -38,7 +38,7 @@ void map_read(map* current, char* path)
 
     f_ptr = fopen(path, "r");
     if (f_ptr == NULL) {
-        printf("Unable to read file!\n");
+        printf("Opening file for writing failed with code %d, %s\n", errno, strerror(errno));
         return;
     }
 

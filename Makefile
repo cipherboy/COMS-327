@@ -11,7 +11,7 @@
 
 NAME = rlg327
 CC ?= gcc
-CFLAGS = -O0 -march=native -Wall -std=gnu99 -ggdb
+CFLAGS = -O0 -march=native -Wall -std=gnu99 -ggdb -lm
 
 SOURCES = $(wildcard src/*.c)
 OBJECTS = $(SOURCES:.c=.o)
@@ -42,7 +42,7 @@ test:
 build: main
 
 main: $(OBJECTS)
-	$(CC) $(OBJECTS) -o bin/$(NAME)
+	$(CC) $(CFLAGS) $(OBJECTS) -o bin/$(NAME)
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
