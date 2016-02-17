@@ -21,12 +21,13 @@ int main(int argc, char* argv[])
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--load") == 0) {
             printf("Loading...\n");
-            if (map_read(&r, path)) {
-                map_player_init(&r);
-                map_player_distances(&r);
-                map_print(&r);
-                init = true;
+            if (!map_read(&r, path)) {
+                map_init(&r);
             }
+            map_player_init(&r);
+            map_player_distances(&r);
+            map_print(&r);
+            init = true;
         }
         if (strcmp(argv[i], "--save") == 0) {
             printf("Saving...\n");
@@ -43,8 +44,8 @@ int main(int argc, char* argv[])
 
     if (!init) {
         printf("Usage: %s [--save] [--load]\n\t--save\t- create a new world and save state\n\t--load\t-load an existing world\n", argv[0]);
-	map_deinit(&r);
-	free(path);
+        map_deinit(&r);
+        free(path);
         return 1;
     }
 
