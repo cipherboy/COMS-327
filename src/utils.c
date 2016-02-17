@@ -1,5 +1,7 @@
 /**
  * Copyright 2016 Alexander Scheel
+ *
+ * Utils implementation file
 **/
 
 #include <time.h>
