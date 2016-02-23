@@ -17,6 +17,7 @@
 void map_player_init(map* current)
 {
     int room = rand() % current->room_count;
+    current->main_character.speed = 10;
 
     int pos_x = current->rooms[room].pos_x + 1 + rand() % (current->rooms[room].width-2);
     int pos_y = current->rooms[room].pos_y + 1 + rand() % (current->rooms[room].height-2);
@@ -134,10 +135,6 @@ void map_player_distances_unbounded(map* current)
     }
 
     distances* c;
-
-    printf("%i,%i", current->cols,current->rows);
-
-    printf("Hardness: 10,15: %i\n", (int) (1 + ((double) 254/63.9)));
 
     while ((c = (distances*) binheap_remove_min(&queue))) {
         for (int dy = -1; dy <= 1; dy++) {

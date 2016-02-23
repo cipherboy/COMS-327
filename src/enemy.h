@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Alexander Scheel
  *
- * Player header file
+ * Enemy header file
 **/
 
 #pragma once
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef ENEMY_H
+#define ENEMY_H
 
 #include <stdint.h>
 
@@ -15,9 +15,6 @@ typedef struct {
     int pos_y;
 
     int speed;
-
-    char** player_distances;
-    char** all_distances;
-} player;
+} enemy;
 
 #endif

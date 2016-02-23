@@ -138,6 +138,8 @@ void map_blank(map* current)
 
     srand(utils_genseed());
 
+    current->enemy_count = rand() % 101;
+
     current->rock_hardness = malloc(sizeof(uint8_t) * current->rows * current->cols);
     current->characters_layer = malloc(sizeof(char) * current->rows * current->cols);
     current->rooms_layer = malloc(sizeof(char) * current->rows * current->cols);

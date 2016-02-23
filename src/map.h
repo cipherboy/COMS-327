@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include "player.h"
+#include "enemy.h"
 #include "room.h"
 
 typedef struct {
@@ -22,6 +23,11 @@ typedef struct {
 
     int room_count;
     room* rooms;
+
+    int enemy_count;
+    enemy* enemies;
+
+
     char** characters_layer;
     char** rooms_layer;
     char** hallways_layer;
@@ -31,6 +37,7 @@ typedef struct {
 #include "map_layers.h"
 #include "map_rooms.h"
 #include "map_player.h"
+#include "map_enemy.h"
 
 void map_init(map* current);
 bool map_read(map* current, char* path);

@@ -13,15 +13,13 @@
 
 int main(int argc, char* argv[])
 {
-    if (argc < 2 || argc > 3) {
-        printf("Usage: %s [--save] [--load]\n\t--save\t- create a new world and save state\n\t--load\t-load an existing world\n", argv[0]);
-        return 1;
-    }
-
     map r;
+
     bool load = false;
     bool save = false;
     bool other = false;
+    int nummon = -1;
+
     char* path;
     path = malloc(sizeof(char) * 1024);
     snprintf(path, 1024, "%s/.rlg327/dungeon", getenv("HOME"));
@@ -31,14 +29,19 @@ int main(int argc, char* argv[])
             load = true;
         } else if (strcmp(argv[i], "--save") == 0) {
             save = true;
+        } else if (strcmp(argv[i], "--nummon") == 0) {
+            nummon = atoi(argv[++i]);
+            if (nummon < 0 || nummon > 100) {
+                printf("Invalid number of monsters: %i ; 0 <= nummon <= 100\n", nummon);
+                return 1;
+            }
         } else {
             other = true;
         }
     }
 
     if ((!load && !save) || other) {
-        printf("Usage: %s [--save] [--load]\n\t--save\t- create a new world and save state\n\t--load\t-load an existing world\n", argv[0]);
-        map_deinit(&r);
+        printf("Usage: %s [--save] [--load] [--nummon int]\n\t--save\t\tcreate a new world and save state\n\t--load\t\tload an existing world\n\t--nummon\tspecify number of monsters\n", argv[0]);
         free(path);
         return 1;
     }
@@ -55,10 +58,17 @@ int main(int argc, char* argv[])
     map_player_distances(&r);
     map_print(&r);
 
+    if (nummon != -1) {
+        printf("Loading %i monsters...\n", nummon);
+    }
+    r.enemy_count = nummon;
+    map_enemy_init(&r);
+
     if (save) {
         map_write(&r, path);
     }
 
+    //map_main(&r);
 
     map_deinit(&r);
     free(path);
