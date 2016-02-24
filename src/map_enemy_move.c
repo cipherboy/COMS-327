@@ -135,7 +135,9 @@ void map_enemy_move_intelligent(map* current, int enemy_loc)
                     if (current->main_character.all_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] < min_distance && current->rock_hardness[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] != 255) {
                         pos_x = current->enemies[enemy_loc].pos_x + dx;
                         pos_y = current->enemies[enemy_loc].pos_y + dy;
-                    }
+
+                        min_distance = current->main_character.all_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx];                    
+}
                 }
             }
 
@@ -189,6 +191,8 @@ void map_enemy_move_intelligent(map* current, int enemy_loc)
                     if (current->main_character.player_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] < min_distance && current->rock_hardness[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] == 0) {
                         pos_x = current->enemies[enemy_loc].pos_x + dx;
                         pos_y = current->enemies[enemy_loc].pos_y + dy;
+
+                        min_distance = current->main_character.player_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx];
                     }
                 }
             }

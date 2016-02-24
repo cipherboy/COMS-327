@@ -33,6 +33,7 @@ int main(int argc, char* argv[])
             nummon = atoi(argv[++i]);
             if (nummon < 0 || nummon > 100) {
                 printf("Invalid number of monsters: %i ; 0 <= nummon <= 100\n", nummon);
+                free(path);
                 return 1;
             }
         } else {
