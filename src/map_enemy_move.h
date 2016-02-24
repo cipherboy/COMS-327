@@ -13,6 +13,6 @@
 
 void map_enemy_move_erratic(map* current, int enemy_loc);
 void map_enemy_move_random(map* current, int enemy_loc);
-void map_enemy_move_intelligent(map* current, int enemy_loc);
+void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc);
 
 #endif

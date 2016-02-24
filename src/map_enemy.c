@@ -99,11 +99,11 @@ void map_enemy_move(map* current, int enemy_loc)
         map_enemy_move_random,
         map_enemy_move_random,
         map_enemy_move_random,
-        map_enemy_move_intelligent,
+        map_enemy_move_intelligent_telepathic,
         map_enemy_move_random,
         map_enemy_move_random,
         map_enemy_move_random,
-        map_enemy_move_intelligent,
+        map_enemy_move_intelligent_telepathic,
     };
 
     if (!current->enemies[enemy_loc].is_alive) {

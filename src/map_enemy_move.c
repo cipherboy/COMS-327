@@ -88,7 +88,6 @@ void map_enemy_move_random(map* current, int enemy_loc)
         }
 
         if (tries >= 100) {
-            printf("move_random: Unable to find suitable path!\n");
             return;
         }
 
@@ -116,11 +115,10 @@ void map_enemy_move_erratic(map* current, int enemy_loc)
     }
 }
 
-void map_enemy_move_intelligent(map* current, int enemy_loc)
+void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc)
 {
     int telepathic = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_TELEPATHY;
     int tunneling = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_TUNNELING;
-    printf("move_intelligent: %i, %i, %i\n", telepathic, tunneling, current->enemies[enemy_loc].attributes);
     if (telepathic) {
         if (tunneling) {
             int pos_x = current->enemies[enemy_loc].pos_x;
@@ -136,8 +134,8 @@ void map_enemy_move_intelligent(map* current, int enemy_loc)
                         pos_x = current->enemies[enemy_loc].pos_x + dx;
                         pos_y = current->enemies[enemy_loc].pos_y + dy;
 
-                        min_distance = current->main_character.all_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx];                    
-}
+                        min_distance = current->main_character.all_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx];
+                    }
                 }
             }
 
@@ -162,7 +160,6 @@ void map_enemy_move_intelligent(map* current, int enemy_loc)
                 map_player_deinit(current);
                 map_player_distances(current);
             } else if (current->rock_hardness[pos_y][pos_x] == 255) {
-                printf("Random move!!!!\n");
                 map_enemy_move_random(current, enemy_loc);
             } else if (current->rock_hardness[pos_y][pos_x] == 0) {
                 current->hallways_layer[pos_y][pos_x] = '#';
@@ -198,10 +195,8 @@ void map_enemy_move_intelligent(map* current, int enemy_loc)
             }
 
             if (current->rock_hardness[pos_y][pos_x] > 0 && current->rock_hardness[pos_y][pos_x] != 255) {
-                printf("Cannot move...");
                 map_enemy_move_random(current, enemy_loc);
             } else if (current->rock_hardness[pos_y][pos_x] == 255) {
-                printf("Random move!!!!\n");
                 map_enemy_move_random(current, enemy_loc);
             } else if (current->rock_hardness[pos_y][pos_x] == 0) {
                 current->hallways_layer[pos_y][pos_x] = '#';

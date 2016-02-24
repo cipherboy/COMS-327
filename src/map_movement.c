@@ -54,7 +54,6 @@ void map_main(map* current)
         }
 
         printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        printf("Object: %i\n", c->order);
 
         for (int y = 0; y < current->rows; y++) {
             for (int x = 0; x < current->cols; x++) {
