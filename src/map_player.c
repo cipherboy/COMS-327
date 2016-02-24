@@ -25,6 +25,8 @@ void map_player_init(map* current)
     current->main_character.pos_x = pos_x;
     current->main_character.pos_y = pos_y;
 
+    current->main_character.is_alive = true;
+
     current->characters_layer[pos_y][pos_x] = '@';
 }
 
@@ -167,6 +169,51 @@ void map_player_distances_unbounded(map* current)
     free(objects);
     free(bh_ptr);
     binheap_delete(&queue);
+}
+
+void map_player_move(map* current)
+{
+    int dx = rand() % 3 - 1;
+    int dy = rand() % 3 - 1;
+
+    while (dy == 0 && dx == 0) {
+        dx = rand() % 3 - 1;
+        dy = rand() % 3 - 1;
+    }
+
+    int pos_x = current->main_character.pos_x + dx;
+    int pos_y = current->main_character.pos_y + dy;
+
+    while (pos_x < 0 || pos_x >= current->cols || pos_y < 0 || pos_y >= current->rows) {
+        while (dy == 0 && dx == 0) {
+            dx = rand() % 3 - 1;
+            dy = rand() % 3 - 1;
+        }
+
+        pos_x = current->main_character.pos_x + dx;
+        pos_y = current->main_character.pos_y + dy;
+    }
+
+    if (current->rock_hardness[pos_y][pos_x] > 0 && current->rock_hardness[pos_y][pos_x] != 255) {
+        if (current->rock_hardness[pos_y][pos_x] > 85) {
+            current->rock_hardness[pos_y][pos_x] -= 85;
+        } else {
+            current->rock_hardness[pos_y][pos_x] = 0;
+            current->hallways_layer[pos_y][pos_x] = '#';
+            current->main_character.pos_x = pos_x;
+            current->main_character.pos_y = pos_y;
+        }
+
+        map_player_distances(current);
+    } else if (current->rock_hardness[pos_y][pos_x] == 0) {
+        current->hallways_layer[pos_y][pos_x] = '#';
+        current->main_character.pos_x = pos_x;
+        current->main_character.pos_y = pos_y;
+    }
+
+    if (current->characters_location[pos_y][pos_x] != NULL) {
+        current->characters_location[pos_y][pos_x].is_alive = false;
+    }
 }
 
 void map_player_deinit(map* current)

@@ -14,6 +14,7 @@ void map_player_distances(map* current);
 void map_player_distances_blank(map* current);
 void map_player_distances_bounded(map* current);
 void map_player_distances_unbounded(map* current);
+void map_player_move(map* current);
 void map_player_deinit(map* current);
 
 #endif

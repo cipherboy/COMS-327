@@ -12,9 +12,9 @@ int32_t moveables_moveable(const void *key, const void *with)
 {
     moveable* a = (moveable *) key;
     moveable* b = (moveable *) with;
-    
-    if (a->speed != b->speed) {
-        return a->speed - b->speed;
+
+    if (a->next_turn != b->next_turn) {
+        return a->next_turn - b->next_turn;
     }
 
     return a->order - b->order;
