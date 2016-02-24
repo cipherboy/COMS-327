@@ -27,7 +27,6 @@ typedef struct {
     int enemy_count;
     enemy* enemies;
 
-
     char** characters_layer;
     char** rooms_layer;
     char** hallways_layer;
@@ -38,6 +37,7 @@ typedef struct {
 #include "map_rooms.h"
 #include "map_player.h"
 #include "map_enemy.h"
+#include "map_movement.h"
 
 void map_init(map* current);
 bool map_read(map* current, char* path);

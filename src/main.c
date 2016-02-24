@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 
     if (load) {
         if (!map_read(&r, path)) {
-            printf("Error reading path: %s. Are you sure it exists and is readable?", path);
+            printf("Error reading path: %s. Are you sure it exists and is readable?\n", path);
             return 0;
         }
     } else {
@@ -60,17 +60,22 @@ int main(int argc, char* argv[])
 
     if (nummon != -1) {
         printf("Loading %i monsters...\n", nummon);
+        r.enemy_count = nummon;
     }
-    r.enemy_count = nummon;
     map_enemy_init(&r);
+    map_enemy_render(&r);
+
+    map_print(&r);
 
     if (save) {
         map_write(&r, path);
     }
 
-    //map_main(&r);
+    map_main(&r);
 
+    map_enemy_deinit(&r);
     map_deinit(&r);
     free(path);
+    printf("\n\n");
     return 0;
 }

@@ -1,12 +1,12 @@
 /**
  * Copyright 2016 Alexander Scheel
  *
- * Point implementation file
+ * Node Distances implementation file
 **/
 
 #include <stdint.h>
 
-#include "point.h"
+#include "node_distances.h"
 
 int32_t distances_distance(const void *key, const void *with)
 {

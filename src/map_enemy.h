@@ -12,6 +12,7 @@
 #include "map.h"
 
 void map_enemy_init(map* current);
+void map_enemy_render(map* current);
 void map_enemy_deinit(map* current);
 
 #endif

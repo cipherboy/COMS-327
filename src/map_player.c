@@ -11,7 +11,7 @@
 #include "player.h"
 #include "map.h"
 #include "utils.h"
-#include "point.h"
+#include "node_distances.h"
 #include "binheap.h"
 
 void map_player_init(map* current)

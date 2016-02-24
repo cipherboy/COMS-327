@@ -5,8 +5,8 @@
 **/
 
 #pragma once
-#ifndef POINT_H
-#define POINT_H
+#ifndef NODE_DISTANCES_H
+#define NODE_DISTANCES_H
 
 #include <stdint.h>
 
