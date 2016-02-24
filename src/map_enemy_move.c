@@ -9,6 +9,7 @@
 
 #include "enemy.h"
 #include "map.h"
+#include "utils.h"
 #include "player.h"
 #include "map_enemy.h"
 
@@ -117,51 +118,32 @@ void map_enemy_move_erratic(map* current, int enemy_loc)
 
 void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc)
 {
-    int telepathic = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_TELEPATHY;
     int tunneling = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_TUNNELING;
-    if (telepathic) {
-        if (tunneling) {
-            int pos_x = current->enemies[enemy_loc].pos_x;
-            int pos_y = current->enemies[enemy_loc].pos_y;
-            int min_distance = current->cols * current->rows;
-            for (int dy = -1; dy <= 1; dy++) {
-                for (int dx = -1; dx <= 1; dx++) {
-                    if (dx == dy && dx == 0) {
-                        continue;
-                    }
 
-                    if (current->main_character.all_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] < min_distance && current->rock_hardness[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] != 255) {
-                        pos_x = current->enemies[enemy_loc].pos_x + dx;
-                        pos_y = current->enemies[enemy_loc].pos_y + dy;
+    if (tunneling) {
+        int pos_x = current->enemies[enemy_loc].pos_x;
+        int pos_y = current->enemies[enemy_loc].pos_y;
+        int min_distance = current->cols * current->rows;
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                if (dx == dy && dx == 0) {
+                    continue;
+                }
 
-                        min_distance = current->main_character.all_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx];
-                    }
+                if (current->main_character.all_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] < min_distance && current->rock_hardness[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] != 255) {
+                    pos_x = current->enemies[enemy_loc].pos_x + dx;
+                    pos_y = current->enemies[enemy_loc].pos_y + dy;
+
+                    min_distance = current->main_character.all_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx];
                 }
             }
+        }
 
-            if (current->rock_hardness[pos_y][pos_x] > 0 && current->rock_hardness[pos_y][pos_x] != 255) {
-                if (current->rock_hardness[pos_y][pos_x] > 85) {
-                    current->rock_hardness[pos_y][pos_x] -= 85;
-                } else {
-                    current->rock_hardness[pos_y][pos_x] = 0;
-                    current->hallways_layer[pos_y][pos_x] = '#';
-
-                    if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                        if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
-                            current->main_character.is_alive = false;
-                        }
-
-                        ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
-                    }
-                    current->enemies[enemy_loc].pos_x = pos_x;
-                    current->enemies[enemy_loc].pos_y = pos_y;
-                }
-
-                map_player_deinit(current);
-                map_player_distances(current);
-            } else if (current->rock_hardness[pos_y][pos_x] == 255) {
-                map_enemy_move_random(current, enemy_loc);
-            } else if (current->rock_hardness[pos_y][pos_x] == 0) {
+        if (current->rock_hardness[pos_y][pos_x] > 0 && current->rock_hardness[pos_y][pos_x] != 255) {
+            if (current->rock_hardness[pos_y][pos_x] > 85) {
+                current->rock_hardness[pos_y][pos_x] -= 85;
+            } else {
+                current->rock_hardness[pos_y][pos_x] = 0;
                 current->hallways_layer[pos_y][pos_x] = '#';
 
                 if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
@@ -171,34 +153,116 @@ void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc)
 
                     ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
                 }
-
                 current->enemies[enemy_loc].pos_x = pos_x;
                 current->enemies[enemy_loc].pos_y = pos_y;
             }
-        } else {
-            int pos_x = current->enemies[enemy_loc].pos_x;
-            int pos_y = current->enemies[enemy_loc].pos_y;
-            int min_distance = current->cols * current->rows;
-            for (int dy = -1; dy <= 1; dy++) {
-                for (int dx = -1; dx <= 1; dx++) {
-                    if (dx == dy && dx == 0) {
-                        continue;
-                    }
 
-                    if (current->main_character.player_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] < min_distance && current->rock_hardness[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] == 0) {
-                        pos_x = current->enemies[enemy_loc].pos_x + dx;
-                        pos_y = current->enemies[enemy_loc].pos_y + dy;
+            map_player_deinit(current);
+            map_player_distances(current);
+        } else if (current->rock_hardness[pos_y][pos_x] == 255) {
+            map_enemy_move_random(current, enemy_loc);
+        } else if (current->rock_hardness[pos_y][pos_x] == 0) {
+            current->hallways_layer[pos_y][pos_x] = '#';
 
-                        min_distance = current->main_character.player_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx];
-                    }
+            if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
+                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                    current->main_character.is_alive = false;
                 }
+
+                ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
             }
 
-            if (current->rock_hardness[pos_y][pos_x] > 0 && current->rock_hardness[pos_y][pos_x] != 255) {
-                map_enemy_move_random(current, enemy_loc);
-            } else if (current->rock_hardness[pos_y][pos_x] == 255) {
-                map_enemy_move_random(current, enemy_loc);
-            } else if (current->rock_hardness[pos_y][pos_x] == 0) {
+            current->enemies[enemy_loc].pos_x = pos_x;
+            current->enemies[enemy_loc].pos_y = pos_y;
+        }
+    } else {
+        int pos_x = current->enemies[enemy_loc].pos_x;
+        int pos_y = current->enemies[enemy_loc].pos_y;
+        int min_distance = current->cols * current->rows;
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                if (dx == dy && dx == 0) {
+                    continue;
+                }
+
+                if (current->main_character.player_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] < min_distance && current->rock_hardness[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] == 0) {
+                    pos_x = current->enemies[enemy_loc].pos_x + dx;
+                    pos_y = current->enemies[enemy_loc].pos_y + dy;
+
+                    min_distance = current->main_character.player_distances[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx];
+                }
+            }
+        }
+
+        if (current->rock_hardness[pos_y][pos_x] > 0 && current->rock_hardness[pos_y][pos_x] != 255) {
+            map_enemy_move_random(current, enemy_loc);
+        } else if (current->rock_hardness[pos_y][pos_x] == 255) {
+            map_enemy_move_random(current, enemy_loc);
+        } else if (current->rock_hardness[pos_y][pos_x] == 0) {
+            current->hallways_layer[pos_y][pos_x] = '#';
+
+            if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
+                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                    current->main_character.is_alive = false;
+                }
+
+                ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
+            }
+
+            current->enemies[enemy_loc].pos_x = pos_x;
+            current->enemies[enemy_loc].pos_y = pos_y;
+        }
+    }
+}
+
+void map_enemy_move_intelligent_not_telepathic(map* current, int enemy_loc)
+{
+    int main_character_room_number = map_rooms_find_contains_point(current, current->main_character.pos_x, current->main_character.pos_y);
+    int enemy_room_number = map_rooms_find_contains_point(current, current->enemies[enemy_loc].pos_x, current->enemies[enemy_loc].pos_y);
+
+    if (main_character_room_number == enemy_room_number && enemy_room_number != -1) {
+        current->enemies[enemy_loc].has_seen_main_character = true;
+    }
+
+    if (current->enemies[enemy_loc].has_seen_main_character) {
+        map_enemy_move_intelligent_telepathic(current, enemy_loc);
+    } else {
+        // Make no move; the praying mantis strikes again.
+    }
+}
+
+void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
+{
+    int tunneling = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_TUNNELING;
+
+    printf("map_enemy_move_not_intelligent_telepathic");
+
+    if (tunneling) {
+        int pos_x = current->enemies[enemy_loc].pos_x;
+        int pos_y = current->enemies[enemy_loc].pos_y;
+        int min_distance = current->cols * current->rows;
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                if (dx == dy && dx == 0) {
+                    continue;
+                }
+
+                int new_distance = raw_distances(current->enemies[enemy_loc].pos_x + dx, current->enemies[enemy_loc].pos_y + dy, current->main_character.pos_x, current->main_character.pos_y);
+
+                if (new_distance < min_distance && current->rock_hardness[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] != 255) {
+                    pos_x = current->enemies[enemy_loc].pos_x + dx;
+                    pos_y = current->enemies[enemy_loc].pos_y + dy;
+
+                    min_distance = new_distance;
+                }
+            }
+        }
+
+        if (current->rock_hardness[pos_y][pos_x] > 0 && current->rock_hardness[pos_y][pos_x] != 255) {
+            if (current->rock_hardness[pos_y][pos_x] > 85) {
+                current->rock_hardness[pos_y][pos_x] -= 85;
+            } else {
+                current->rock_hardness[pos_y][pos_x] = 0;
                 current->hallways_layer[pos_y][pos_x] = '#';
 
                 if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
@@ -208,10 +272,67 @@ void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc)
 
                     ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
                 }
-
                 current->enemies[enemy_loc].pos_x = pos_x;
                 current->enemies[enemy_loc].pos_y = pos_y;
             }
+
+            map_player_deinit(current);
+            map_player_distances(current);
+        } else if (current->rock_hardness[pos_y][pos_x] == 255) {
+            map_enemy_move_random(current, enemy_loc);
+        } else if (current->rock_hardness[pos_y][pos_x] == 0) {
+            current->hallways_layer[pos_y][pos_x] = '#';
+
+            if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
+                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                    current->main_character.is_alive = false;
+                }
+
+                ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
+            }
+
+            current->enemies[enemy_loc].pos_x = pos_x;
+            current->enemies[enemy_loc].pos_y = pos_y;
+        }
+    } else {
+        int pos_x = current->enemies[enemy_loc].pos_x;
+        int pos_y = current->enemies[enemy_loc].pos_y;
+        int min_distance = current->cols * current->rows;
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                if (dx == dy && dx == 0) {
+                    continue;
+                }
+
+                int new_distance = raw_distances(current->enemies[enemy_loc].pos_x + dx, current->enemies[enemy_loc].pos_y + dy, current->main_character.pos_x, current->main_character.pos_y);
+
+
+                if (new_distance < min_distance && current->rock_hardness[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] == 0) {
+                    pos_x = current->enemies[enemy_loc].pos_x + dx;
+                    pos_y = current->enemies[enemy_loc].pos_y + dy;
+
+                    min_distance = new_distance;
+                }
+            }
+        }
+
+        if (current->rock_hardness[pos_y][pos_x] > 0 && current->rock_hardness[pos_y][pos_x] != 255) {
+            map_enemy_move_random(current, enemy_loc);
+        } else if (current->rock_hardness[pos_y][pos_x] == 255) {
+            map_enemy_move_random(current, enemy_loc);
+        } else if (current->rock_hardness[pos_y][pos_x] == 0) {
+            current->hallways_layer[pos_y][pos_x] = '#';
+
+            if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
+                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                    current->main_character.is_alive = false;
+                }
+
+                ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
+            }
+
+            current->enemies[enemy_loc].pos_x = pos_x;
+            current->enemies[enemy_loc].pos_y = pos_y;
         }
     }
 }

@@ -51,6 +51,7 @@ void map_enemy_init(map* current)
         }
 
         int attributes = rand() % ENEMY_ATTRIBUTE_MAX;
+        attributes = 2;
         int speed = rand() % 15 + 5;
         char representation = '?';
 
@@ -97,12 +98,12 @@ void map_enemy_move(map* current, int enemy_loc)
 {
     func_table_element func_table[] = {
         map_enemy_move_random,
-        map_enemy_move_random,
-        map_enemy_move_random,
+        map_enemy_move_intelligent_not_telepathic,
+        map_enemy_move_not_intelligent_telepathic,
         map_enemy_move_intelligent_telepathic,
         map_enemy_move_random,
-        map_enemy_move_random,
-        map_enemy_move_random,
+        map_enemy_move_intelligent_not_telepathic,
+        map_enemy_move_not_intelligent_telepathic,
         map_enemy_move_intelligent_telepathic,
     };
 

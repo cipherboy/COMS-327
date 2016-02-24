@@ -31,3 +31,21 @@ unsigned int utils_genseed()
 
     return data;
 }
+
+int ipow(int base, int exp)
+{
+    int result = 1;
+    while (exp) {
+        if (exp & 1)
+            result *= base;
+        exp >>= 1;
+        base *= base;
+    }
+
+    return result;
+}
+
+int raw_distances(int x1, int y1, int x2, int y2)
+{
+    return ipow(x1 - x2, 2) + ipow(y1 - y2, 2);
+}

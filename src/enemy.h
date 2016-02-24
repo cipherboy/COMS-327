@@ -31,6 +31,8 @@ typedef struct {
     char representation;
 
     int speed;
+
+    bool has_seen_main_character;
 } enemy;
 
 #endif
