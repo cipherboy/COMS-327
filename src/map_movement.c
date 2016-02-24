@@ -79,7 +79,7 @@ void map_main(map* current)
 
         map_enemy_render(current);
         map_print(current);
-        usleep(10000);
+        usleep(100000);
     }
 
 
