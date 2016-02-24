@@ -228,6 +228,8 @@ void map_enemy_move_intelligent_not_telepathic(map* current, int enemy_loc)
 
 void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
 {
+    map_enemy_update_last_seen(current, enemy_loc);
+    
     int tunneling = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_TUNNELING;
 
     if (tunneling) {
