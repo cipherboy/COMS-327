@@ -200,6 +200,11 @@ void map_player_move(map* current)
         } else {
             current->rock_hardness[pos_y][pos_x] = 0;
             current->hallways_layer[pos_y][pos_x] = '#';
+
+            if ((current->main_character.pos_x != pos_x || current->main_character.pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
+                ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
+            }
+
             current->main_character.pos_x = pos_x;
             current->main_character.pos_y = pos_y;
         }
@@ -207,12 +212,13 @@ void map_player_move(map* current)
         map_player_distances(current);
     } else if (current->rock_hardness[pos_y][pos_x] == 0) {
         current->hallways_layer[pos_y][pos_x] = '#';
+
+        if ((current->main_character.pos_x != pos_x || current->main_character.pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
+            ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
+        }
+
         current->main_character.pos_x = pos_x;
         current->main_character.pos_y = pos_y;
-    }
-
-    if (current->characters_location[pos_y][pos_x] != NULL) {
-        current->characters_location[pos_y][pos_x].is_alive = false;
     }
 }
 

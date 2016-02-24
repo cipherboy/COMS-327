@@ -93,14 +93,18 @@ void map_enemy_render(map* current)
 }
 
 
-void map_enemy_move(map* current, int enemy)
+void map_enemy_move(map* current, int enemy_loc)
 {
-    int random = current->enemies[enemy].attributes & ENEMY_ATTRIBUTE_ERRATIC;
-    if (random) {
-        map_enemy_move_random(current, enemy);
+    if (!current->enemies[enemy_loc].is_alive) {
+        return;
     }
 
-    int intelligent = current->enemies[enemy].attributes & ENEMY_ATTRIBUTE_INTELLIGENCE;
+    int random = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_ERRATIC;
+    if (random) {
+        map_enemy_move_random(current, enemy_loc);
+    }
+
+    int intelligent = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_INTELLIGENCE;
     if (intelligent) {
         printf("intelligent monster!\n");
     }

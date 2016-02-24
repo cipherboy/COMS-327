@@ -7,9 +7,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "enemy.h"
 #include "map.h"
+#include "player.h"
+#include "map_enemy.h"
 
-void map_enemy_move_random(map* current, int enemy)
+void map_enemy_move_random(map* current, int enemy_loc)
 {
     if (rand() % 2 == 0) {
 
@@ -21,8 +24,8 @@ void map_enemy_move_random(map* current, int enemy)
             dy = rand() % 3 - 1;
         }
 
-        int pos_x = current->enemies[enemy].pos_x + dx;
-        int pos_y = current->enemies[enemy].pos_y + dy;
+        int pos_x = current->enemies[enemy_loc].pos_x + dx;
+        int pos_y = current->enemies[enemy_loc].pos_y + dy;
 
         while (pos_x < 0 || pos_x >= current->cols || pos_y < 0 || pos_y >= current->rows) {
             while (dy == 0 && dx == 0) {
@@ -30,11 +33,11 @@ void map_enemy_move_random(map* current, int enemy)
                 dy = rand() % 3 - 1;
             }
 
-            pos_x = current->enemies[enemy].pos_x + dx;
-            pos_y = current->enemies[enemy].pos_y + dy;
+            pos_x = current->enemies[enemy_loc].pos_x + dx;
+            pos_y = current->enemies[enemy_loc].pos_y + dy;
         }
 
-        int tunneling = current->enemies[enemy].attributes & ENEMY_ATTRIBUTE_TUNNELING;
+        int tunneling = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_TUNNELING;
         if (tunneling) {
             if (current->rock_hardness[pos_y][pos_x] > 0 && current->rock_hardness[pos_y][pos_x] != 255) {
                 if (current->rock_hardness[pos_y][pos_x] > 85) {
@@ -42,15 +45,31 @@ void map_enemy_move_random(map* current, int enemy)
                 } else {
                     current->rock_hardness[pos_y][pos_x] = 0;
                     current->hallways_layer[pos_y][pos_x] = '#';
-                    current->enemies[enemy].pos_x = pos_x;
-                    current->enemies[enemy].pos_y = pos_y;
+
+                    if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
+                        if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                            current->main_character.is_alive = false;
+                        }
+
+                        ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
+                    }
+                    current->enemies[enemy_loc].pos_x = pos_x;
+                    current->enemies[enemy_loc].pos_y = pos_y;
                 }
 
                 map_player_distances(current);
             } else if (current->rock_hardness[pos_y][pos_x] == 0) {
                 current->hallways_layer[pos_y][pos_x] = '#';
-                current->enemies[enemy].pos_x = pos_x;
-                current->enemies[enemy].pos_y = pos_y;
+
+                if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
+                    if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                        current->main_character.is_alive = false;
+                    }
+
+                    ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
+                }
+                current->enemies[enemy_loc].pos_x = pos_x;
+                current->enemies[enemy_loc].pos_y = pos_y;
             }
         } else {
             int tries = 0;
@@ -61,8 +80,15 @@ void map_enemy_move_random(map* current, int enemy)
                     tries += 1;
                 }
 
-                pos_x = current->enemies[enemy].pos_x + dx;
-                pos_y = current->enemies[enemy].pos_y + dy;
+                if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
+                    if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                        current->main_character.is_alive = false;
+                    }
+
+                    ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
+                }
+                pos_x = current->enemies[enemy_loc].pos_x + dx;
+                pos_y = current->enemies[enemy_loc].pos_y + dy;
 
                 tries += 1;
             }
@@ -72,12 +98,12 @@ void map_enemy_move_random(map* current, int enemy)
                 return;
             }
 
-            current->enemies[enemy].pos_x = pos_x;
-            current->enemies[enemy].pos_y = pos_y;
+            current->enemies[enemy_loc].pos_x = pos_x;
+            current->enemies[enemy_loc].pos_y = pos_y;
         }
     } else {
-        current->enemies[enemy].attributes -= ENEMY_ATTRIBUTE_ERRATIC;
-        map_enemy_move(current, enemy);
-        current->enemies[enemy].attributes += ENEMY_ATTRIBUTE_ERRATIC;
+        current->enemies[enemy_loc].attributes -= ENEMY_ATTRIBUTE_ERRATIC;
+        map_enemy_move(current, enemy_loc);
+        current->enemies[enemy_loc].attributes += ENEMY_ATTRIBUTE_ERRATIC;
     }
 }

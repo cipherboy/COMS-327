@@ -51,7 +51,11 @@ void map_main(map* current)
             map_enemy_move(current, c->order-1);
         }
 
-        bh_ptr[c->order] = binheap_insert(&queue, &objects[c->order]);
+        if (c->order != 0 && current->enemies[c->order-1].is_alive) {
+            bh_ptr[c->order] = binheap_insert(&queue, &objects[c->order]);
+        } else if (c->order == 0) {
+            bh_ptr[c->order] = binheap_insert(&queue, &objects[c->order]);
+        }
 
         printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         printf("Object: %i\n", c->order);
@@ -62,9 +66,25 @@ void map_main(map* current)
             }
         }
 
+        if (!current->main_character.is_alive) {
+            printf("Main character died! :(\n");
+            break;
+        } else {
+            bool has_enemies = false;;
+            for (int i = 0; i < current->enemy_count; i++) {
+                if (current->enemies[i].is_alive) {
+                    has_enemies = true;
+                }
+            }
+            if (!has_enemies) {
+                printf("Main character won!\n");
+                break;
+            }
+        }
+
         map_enemy_render(current);
         map_print(current);
-        usleep(10000);
+        usleep(100);
     }
 
 
