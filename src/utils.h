@@ -10,4 +10,6 @@
 
 unsigned int utils_genseed();
 
+typedef void (*func_table_element)(map *, int);
+
 #endif

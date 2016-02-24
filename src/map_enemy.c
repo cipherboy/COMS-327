@@ -10,6 +10,7 @@
 
 #include "map.h"
 #include "map_enemy.h"
+#include "utils.h"
 
 void map_enemy_init(map* current)
 {
@@ -92,22 +93,30 @@ void map_enemy_render(map* current)
     }
 }
 
-
 void map_enemy_move(map* current, int enemy_loc)
 {
+    func_table_element func_table[] = {
+        map_enemy_move_random,
+        map_enemy_move_random,
+        map_enemy_move_random,
+        map_enemy_move_intelligent,
+        map_enemy_move_random,
+        map_enemy_move_random,
+        map_enemy_move_random,
+        map_enemy_move_intelligent,
+    };
+
     if (!current->enemies[enemy_loc].is_alive) {
         return;
     }
 
     int random = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_ERRATIC;
     if (random) {
-        map_enemy_move_random(current, enemy_loc);
+        map_enemy_move_erratic(current, enemy_loc);
+    } else {
+        (* func_table[current->enemies[enemy_loc].attributes]) (current, enemy_loc);
     }
 
-    int intelligent = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_INTELLIGENCE;
-    if (intelligent) {
-        printf("intelligent monster!\n");
-    }
 }
 
 void map_enemy_deinit(map* current)

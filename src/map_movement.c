@@ -45,15 +45,11 @@ void map_main(map* current)
 
         objects[c->order].next_turn += 100/c->speed;
 
-        if (c->is_player) {
-            map_player_move(current);
-        } else {
+        if (!c->is_player && current->enemies[c->order-1].is_alive) {
             map_enemy_move(current, c->order-1);
-        }
-
-        if (c->order != 0 && current->enemies[c->order-1].is_alive) {
             bh_ptr[c->order] = binheap_insert(&queue, &objects[c->order]);
-        } else if (c->order == 0) {
+        } else if (c->is_player) {
+            map_player_move(current);
             bh_ptr[c->order] = binheap_insert(&queue, &objects[c->order]);
         }
 
@@ -84,7 +80,7 @@ void map_main(map* current)
 
         map_enemy_render(current);
         map_print(current);
-        usleep(100);
+        usleep(10000);
     }
 
 
