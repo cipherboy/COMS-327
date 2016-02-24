@@ -397,6 +397,7 @@ void map_deinit(map* current)
         free(current->rock_hardness[y]);
         free(current->rooms_layer[y]);
         free(current->characters_layer[y]);
+        free(current->characters_location[y]);
         free(current->hallways_layer[y]);
     }
 
@@ -404,6 +405,7 @@ void map_deinit(map* current)
     free(current->rooms_layer);
     free(current->hallways_layer);
     free(current->characters_layer);
+    free(current->characters_location);
     free(current->rooms);
 
     map_player_deinit(current);
