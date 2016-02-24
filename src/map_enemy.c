@@ -160,11 +160,11 @@ void map_enemy_update_last_seen(map* current, int enemy_loc)
 void map_enemy_move(map* current, int enemy_loc)
 {
     func_table_element func_table[] = {
-        map_enemy_move_random,  // Not much better to do, except if it has line of sight...
+        map_enemy_move_not_intelligent_not_telepathic,
         map_enemy_move_intelligent_not_telepathic,
         map_enemy_move_not_intelligent_telepathic,
         map_enemy_move_intelligent_telepathic,
-        map_enemy_move_random,
+        map_enemy_move_not_intelligent_not_telepathic,
         map_enemy_move_intelligent_not_telepathic,
         map_enemy_move_not_intelligent_telepathic,
         map_enemy_move_intelligent_telepathic,

@@ -229,7 +229,7 @@ void map_enemy_move_intelligent_not_telepathic(map* current, int enemy_loc)
 void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
 {
     map_enemy_update_last_seen(current, enemy_loc);
-    
+
     int tunneling = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_TUNNELING;
 
     if (tunneling) {
@@ -329,5 +329,18 @@ void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
             current->enemies[enemy_loc].pos_x = pos_x;
             current->enemies[enemy_loc].pos_y = pos_y;
         }
+    }
+}
+
+
+void map_enemy_move_not_intelligent_not_telepathic(map* current, int enemy_loc)
+{
+    current->enemies[enemy_loc].has_seen_main_character = false;
+    map_enemy_update_last_seen(current, enemy_loc);
+
+    if (current->enemies[enemy_loc].has_seen_main_character) {
+        map_enemy_move_not_intelligent_telepathic(current, enemy_loc);
+    } else {
+        map_enemy_move_random(current, enemy_loc);
     }
 }
