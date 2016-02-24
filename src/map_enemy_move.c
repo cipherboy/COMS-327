@@ -8,10 +8,10 @@
 #include <stdio.h>
 
 #include "enemy.h"
+#include "map_enemy.h"
 #include "map.h"
 #include "utils.h"
 #include "player.h"
-#include "map_enemy.h"
 
 void map_enemy_move_random(map* current, int enemy_loc)
 {
@@ -47,7 +47,7 @@ void map_enemy_move_random(map* current, int enemy_loc)
                 current->hallways_layer[pos_y][pos_x] = '#';
 
                 if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                    if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                    if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
                         current->main_character.is_alive = false;
                     }
 
@@ -63,7 +63,7 @@ void map_enemy_move_random(map* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
                     current->main_character.is_alive = false;
                 }
 
@@ -93,7 +93,7 @@ void map_enemy_move_random(map* current, int enemy_loc)
         }
 
         if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-            if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+            if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
                 current->main_character.is_alive = false;
             }
 
@@ -147,7 +147,7 @@ void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc)
                 current->hallways_layer[pos_y][pos_x] = '#';
 
                 if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                    if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                    if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
                         current->main_character.is_alive = false;
                     }
 
@@ -165,7 +165,7 @@ void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
                     current->main_character.is_alive = false;
                 }
 
@@ -202,7 +202,7 @@ void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
                     current->main_character.is_alive = false;
                 }
 
@@ -217,12 +217,7 @@ void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc)
 
 void map_enemy_move_intelligent_not_telepathic(map* current, int enemy_loc)
 {
-    int main_character_room_number = map_rooms_find_contains_point(current, current->main_character.pos_x, current->main_character.pos_y);
-    int enemy_room_number = map_rooms_find_contains_point(current, current->enemies[enemy_loc].pos_x, current->enemies[enemy_loc].pos_y);
-
-    if (main_character_room_number == enemy_room_number && enemy_room_number != -1) {
-        current->enemies[enemy_loc].has_seen_main_character = true;
-    }
+    map_enemy_update_last_seen(current, enemy_loc);
 
     if (current->enemies[enemy_loc].has_seen_main_character) {
         map_enemy_move_intelligent_telepathic(current, enemy_loc);
@@ -235,8 +230,6 @@ void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
 {
     int tunneling = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_TUNNELING;
 
-    printf("map_enemy_move_not_intelligent_telepathic");
-
     if (tunneling) {
         int pos_x = current->enemies[enemy_loc].pos_x;
         int pos_y = current->enemies[enemy_loc].pos_y;
@@ -247,7 +240,7 @@ void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
                     continue;
                 }
 
-                int new_distance = raw_distances(current->enemies[enemy_loc].pos_x + dx, current->enemies[enemy_loc].pos_y + dy, current->main_character.pos_x, current->main_character.pos_y);
+                int new_distance = raw_distances(current->enemies[enemy_loc].pos_x + dx, current->enemies[enemy_loc].pos_y + dy, current->enemies[enemy_loc].main_character_last_x, current->enemies[enemy_loc].main_character_last_y);
 
                 if (new_distance < min_distance && current->rock_hardness[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] != 255) {
                     pos_x = current->enemies[enemy_loc].pos_x + dx;
@@ -266,7 +259,7 @@ void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
                 current->hallways_layer[pos_y][pos_x] = '#';
 
                 if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                    if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                    if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
                         current->main_character.is_alive = false;
                     }
 
@@ -284,7 +277,7 @@ void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
                     current->main_character.is_alive = false;
                 }
 
@@ -304,7 +297,7 @@ void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
                     continue;
                 }
 
-                int new_distance = raw_distances(current->enemies[enemy_loc].pos_x + dx, current->enemies[enemy_loc].pos_y + dy, current->main_character.pos_x, current->main_character.pos_y);
+                int new_distance = raw_distances(current->enemies[enemy_loc].pos_x + dx, current->enemies[enemy_loc].pos_y + dy, current->enemies[enemy_loc].main_character_last_x, current->enemies[enemy_loc].main_character_last_y);
 
 
                 if (new_distance < min_distance && current->rock_hardness[current->enemies[enemy_loc].pos_y + dy][current->enemies[enemy_loc].pos_x + dx] == 0) {
@@ -324,7 +317,7 @@ void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
+                if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
                     current->main_character.is_alive = false;
                 }
 

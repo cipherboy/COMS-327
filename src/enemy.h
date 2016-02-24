@@ -33,6 +33,8 @@ typedef struct {
     int speed;
 
     bool has_seen_main_character;
+    int main_character_last_x;
+    int main_character_last_y;
 } enemy;
 
 #endif

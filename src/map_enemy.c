@@ -51,6 +51,7 @@ void map_enemy_init(map* current)
         }
 
         int attributes = rand() % ENEMY_ATTRIBUTE_MAX;
+        attributes = 1;
         int speed = rand() % 15 + 5;
         char representation = '?';
 
@@ -93,10 +94,74 @@ void map_enemy_render(map* current)
     }
 }
 
+void map_enemy_update_last_seen(map* current, int enemy_loc)
+{
+    int telepathic = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_TELEPATHY;
+    if (telepathic) {
+        current->enemies[enemy_loc].has_seen_main_character = true;
+        current->enemies[enemy_loc].main_character_last_x = current->main_character.pos_x;
+        current->enemies[enemy_loc].main_character_last_y = current->main_character.pos_y;
+    } else {
+        int main_character_room_number = map_rooms_find_contains_point(current, current->main_character.pos_x, current->main_character.pos_y);
+        int enemy_room_number = map_rooms_find_contains_point(current, current->enemies[enemy_loc].pos_x, current->enemies[enemy_loc].pos_y);
+
+        if (main_character_room_number == enemy_room_number && enemy_room_number != -1) {
+            current->enemies[enemy_loc].has_seen_main_character = true;
+            current->enemies[enemy_loc].main_character_last_x = current->main_character.pos_x;
+            current->enemies[enemy_loc].main_character_last_y = current->main_character.pos_y;
+        } else {
+            // Not in the same room, now the fun begins.
+            bool all_zeroes = true;
+
+            int left_x;
+            int left_y;
+            int right_x;
+            int right_y;
+
+            if (current->main_character.pos_x < current->enemies[enemy_loc].pos_x) {
+                left_x = current->main_character.pos_x;
+                left_y = current->main_character.pos_y;
+
+                right_x = current->enemies[enemy_loc].pos_x;
+                right_y = current->enemies[enemy_loc].pos_y;
+            } else {
+                left_x = current->enemies[enemy_loc].pos_x;
+                left_y = current->enemies[enemy_loc].pos_y;
+
+                right_x = current->main_character.pos_x;
+                right_y = current->main_character.pos_y;
+            }
+
+            double slope = ((double) (left_y - right_y)) / ((double) (left_x - right_x));
+
+            for (int dx = 0; left_x + dx <= right_x; dx += 1) {
+                int new_pos_x = left_x + dx;
+                int new_pos_y = slope*new_pos_x;
+
+                if (new_pos_x > 0 && new_pos_x < current->cols && new_pos_y > 0 && new_pos_y < current->rows) {
+                    if (current->rock_hardness[new_pos_y][new_pos_x] != 0) {
+                        all_zeroes = false;
+                        break;
+                    }
+                } else if (!(new_pos_x > 0 && new_pos_x < current->cols && new_pos_y > 0 && new_pos_y < current->rows)) {
+                    all_zeroes = false;
+                    break;
+                }
+            }
+
+            if (all_zeroes) {
+                current->enemies[enemy_loc].has_seen_main_character = true;
+                current->enemies[enemy_loc].main_character_last_x = current->main_character.pos_x;
+                current->enemies[enemy_loc].main_character_last_y = current->main_character.pos_y;
+            }
+        }
+    }
+}
+
 void map_enemy_move(map* current, int enemy_loc)
 {
     func_table_element func_table[] = {
-        map_enemy_move_random,
+        map_enemy_move_random,  // Not much better to do, except if it has line of sight...
         map_enemy_move_intelligent_not_telepathic,
         map_enemy_move_not_intelligent_telepathic,
         map_enemy_move_intelligent_telepathic,
