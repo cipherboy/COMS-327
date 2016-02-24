@@ -209,7 +209,7 @@ void map_player_move(map* current)
             current->main_character.pos_y = pos_y;
         }
 
-        map_player_deinit();
+        map_player_deinit(current);
         map_player_distances(current);
     } else if (current->rock_hardness[pos_y][pos_x] == 0) {
         current->hallways_layer[pos_y][pos_x] = '#';

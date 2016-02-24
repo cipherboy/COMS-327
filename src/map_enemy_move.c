@@ -56,7 +56,7 @@ void map_enemy_move_random(map* current, int enemy_loc)
                 current->enemies[enemy_loc].pos_y = pos_y;
             }
 
-            map_player_deinit();
+            map_player_deinit(current);
             map_player_distances(current);
         } else if (current->rock_hardness[pos_y][pos_x] == 0) {
             current->hallways_layer[pos_y][pos_x] = '#';
@@ -157,7 +157,7 @@ void map_enemy_move_intelligent(map* current, int enemy_loc)
                     current->enemies[enemy_loc].pos_y = pos_y;
                 }
 
-                map_player_deinit();
+                map_player_deinit(current);
                 map_player_distances(current);
             } else if (current->rock_hardness[pos_y][pos_x] == 255) {
                 printf("Random move!!!!\n");
