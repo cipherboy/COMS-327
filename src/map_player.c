@@ -176,6 +176,8 @@ void map_player_move(map* current)
     int pos_x = current->main_character.pos_x;
     int pos_y = current->main_character.pos_y;
 
+    map_enemy_render(current);
+
     for (int ly = -1; ly <= 1; ly++) {
         for (int lx = -1; lx <= 1; lx++) {
             if (lx == ly && lx == 0) {
@@ -183,18 +185,17 @@ void map_player_move(map* current)
             }
 
             if (current->characters_location[pos_y+lx][pos_x+ly] != NULL) {
-                pos_x += lx;
-                pos_y += ly;
+                pos_x = current->main_character.pos_x + lx;
+                pos_y = current->main_character.pos_y + ly;
                 lx = 10000;
                 ly = 10000;
-                continue;
+                break;
             }
         }
     }
 
     if (pos_x != current->main_character.pos_x && pos_y != current->main_character.pos_y) {
         // New location!
-
         current->hallways_layer[pos_y][pos_x] = '#';
 
         if (current->characters_location[pos_y][pos_x] != NULL) {
@@ -203,7 +204,11 @@ void map_player_move(map* current)
 
         current->main_character.pos_x = pos_x;
         current->main_character.pos_y = pos_y;
+        return;
     }
+
+    pos_x = current->main_character.pos_x;
+    pos_y = current->main_character.pos_y;
 
     int dx = rand() % 3 - 1;
     int dy = rand() % 3 - 1;

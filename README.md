@@ -64,10 +64,6 @@ To date, longest running game:
     ==23408==   total heap usage: 5,199,261 allocs, 5,199,261 frees, 462,508,146 bytes allocated
     ==23408==
     ==23408== All heap blocks were freed -- no leaks are possible
-    ==23408==
-    ==23408== For counts of detected and suppressed errors, rerun with: -v
-    ==23408== Use --track-origins=yes to see where uninitialised values come from
-    ==23408== ERROR SUMMARY: 3936 errors from 1 contexts (suppressed: 0 from 0)
 
 However, the program never exceeds 8K of memory useage! (realloc may or
 may not be abused).

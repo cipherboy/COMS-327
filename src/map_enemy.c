@@ -67,6 +67,10 @@ void map_enemy_init(map* current)
         current->enemies[i].speed = speed;
         current->enemies[i].representation = representation;
         current->enemies[i].is_alive = true;
+        current->enemies[i].has_seen_main_character = false;
+        current->enemies[i].main_character_last_x = 2;
+        current->enemies[i].main_character_last_y = 2;
+        map_enemy_update_last_seen(current, i);
     }
 }
 
@@ -78,8 +82,11 @@ void map_enemy_render(map* current)
             current->characters_layer[y][x] = ' ';
         }
     }
-    current->characters_location[current->main_character.pos_y][current->main_character.pos_x] = (void *) &current->main_character;
-    current->characters_layer[current->main_character.pos_y][current->main_character.pos_x] = '@';
+    
+    if (current->main_character.is_alive) {
+        current->characters_location[current->main_character.pos_y][current->main_character.pos_x] = (void *) &current->main_character;
+        current->characters_layer[current->main_character.pos_y][current->main_character.pos_x] = '@';
+    }
 
     for (int i = 0; i < current->enemy_count; i++) {
         if (current->enemies[i].is_alive) {
@@ -100,65 +107,97 @@ void map_enemy_update_last_seen(map* current, int enemy_loc)
         current->enemies[enemy_loc].has_seen_main_character = true;
         current->enemies[enemy_loc].main_character_last_x = current->main_character.pos_x;
         current->enemies[enemy_loc].main_character_last_y = current->main_character.pos_y;
+        return;
+    }
+    int main_character_room_number = map_rooms_find_contains_point(current, current->main_character.pos_x, current->main_character.pos_y);
+    int enemy_room_number = map_rooms_find_contains_point(current, current->enemies[enemy_loc].pos_x, current->enemies[enemy_loc].pos_y);
+
+    if (main_character_room_number == enemy_room_number && enemy_room_number != -1) {
+        current->enemies[enemy_loc].has_seen_main_character = true;
+        current->enemies[enemy_loc].main_character_last_x = current->main_character.pos_x;
+        current->enemies[enemy_loc].main_character_last_y = current->main_character.pos_y;
+        return;
+    }
+
+    // Not in the same room, now the fun begins.
+    bool all_zeroes = true;
+
+    int left_x;
+    int left_y;
+    int right_x;
+    int right_y;
+
+    if (current->main_character.pos_x < current->enemies[enemy_loc].pos_x) {
+        left_x = current->main_character.pos_x;
+        left_y = current->main_character.pos_y;
+
+        right_x = current->enemies[enemy_loc].pos_x;
+        right_y = current->enemies[enemy_loc].pos_y;
     } else {
-        int main_character_room_number = map_rooms_find_contains_point(current, current->main_character.pos_x, current->main_character.pos_y);
-        int enemy_room_number = map_rooms_find_contains_point(current, current->enemies[enemy_loc].pos_x, current->enemies[enemy_loc].pos_y);
+        left_x = current->enemies[enemy_loc].pos_x;
+        left_y = current->enemies[enemy_loc].pos_y;
 
-        if (main_character_room_number == enemy_room_number && enemy_room_number != -1) {
-            current->enemies[enemy_loc].has_seen_main_character = true;
-            current->enemies[enemy_loc].main_character_last_x = current->main_character.pos_x;
-            current->enemies[enemy_loc].main_character_last_y = current->main_character.pos_y;
-        } else {
-            // Not in the same room, now the fun begins.
-            bool all_zeroes = true;
+        right_x = current->main_character.pos_x;
+        right_y = current->main_character.pos_y;
+    }
 
-            int left_x;
-            int left_y;
-            int right_x;
-            int right_y;
+    if (left_x - right_x != 0) {
+        double slope = ((double) (left_y - right_y)) / ((double) (left_x - right_x));
 
-            if (current->main_character.pos_x < current->enemies[enemy_loc].pos_x) {
-                left_x = current->main_character.pos_x;
-                left_y = current->main_character.pos_y;
+        for (int dx = 0; left_x + dx <= right_x; dx += 1) {
+            int new_pos_x = left_x + dx;
+            int new_pos_y = slope*new_pos_x;
 
-                right_x = current->enemies[enemy_loc].pos_x;
-                right_y = current->enemies[enemy_loc].pos_y;
-            } else {
-                left_x = current->enemies[enemy_loc].pos_x;
-                left_y = current->enemies[enemy_loc].pos_y;
-
-                right_x = current->main_character.pos_x;
-                right_y = current->main_character.pos_y;
-            }
-
-            double slope = ((double) (left_y - right_y)) / ((double) (left_x - right_x));
-
-            for (int dx = 0; left_x + dx <= right_x; dx += 1) {
-                int new_pos_x = left_x + dx;
-                int new_pos_y = slope*new_pos_x;
-
-                if (new_pos_x > 0 && new_pos_x < current->cols && new_pos_y > 0 && new_pos_y < current->rows) {
-                    if (current->rock_hardness[new_pos_y][new_pos_x] != 0) {
-                        all_zeroes = false;
-                        break;
-                    }
-                } else if (!(new_pos_x > 0 && new_pos_x < current->cols && new_pos_y > 0 && new_pos_y < current->rows)) {
+            if (new_pos_x > 0 && new_pos_x < current->cols && new_pos_y > 0 && new_pos_y < current->rows) {
+                if (current->rock_hardness[new_pos_y][new_pos_x] != 0) {
                     all_zeroes = false;
                     break;
                 }
-            }
-
-            if (all_zeroes) {
-                current->enemies[enemy_loc].has_seen_main_character = true;
-                current->enemies[enemy_loc].main_character_last_x = current->main_character.pos_x;
-                current->enemies[enemy_loc].main_character_last_y = current->main_character.pos_y;
+            } else if (!(new_pos_x > 0 && new_pos_x < current->cols && new_pos_y > 0 && new_pos_y < current->rows)) {
+                all_zeroes = false;
+                break;
             }
         }
+    } else {
+        int top_y = 0;
+        int bottom_y = 0;
+
+        if (left_y < right_y) {
+            bottom_y = left_y;
+            top_y = right_y;
+        } else {
+            bottom_y = right_y;
+            top_y = left_y;
+        }
+
+        for (int dy = 0; bottom_y + dy <= top_y; dy++) {
+            int new_pos_y = bottom_y + dy;
+
+            if (new_pos_y > 0 && new_pos_y < current->rows) {
+                if (current->rock_hardness[new_pos_y][left_x] != 0) {
+                    all_zeroes = false;
+                    break;
+                }
+            } else if (!(new_pos_y > 0 && new_pos_y < current->rows)) {
+                all_zeroes = false;
+                break;
+            }
+        }
+    }
+
+    if (all_zeroes) {
+        current->enemies[enemy_loc].has_seen_main_character = true;
+        current->enemies[enemy_loc].main_character_last_x = current->main_character.pos_x;
+        current->enemies[enemy_loc].main_character_last_y = current->main_character.pos_y;
     }
 }
 
 void map_enemy_move(map* current, int enemy_loc)
 {
+    if (!current->enemies[enemy_loc].is_alive) {
+        return;
+    }
+
     func_table_element func_table[] = {
         map_enemy_move_not_intelligent_not_telepathic,
         map_enemy_move_intelligent_not_telepathic,
@@ -169,10 +208,6 @@ void map_enemy_move(map* current, int enemy_loc)
         map_enemy_move_not_intelligent_telepathic,
         map_enemy_move_intelligent_telepathic,
     };
-
-    if (!current->enemies[enemy_loc].is_alive) {
-        return;
-    }
 
     int random = current->enemies[enemy_loc].attributes & ENEMY_ATTRIBUTE_ERRATIC;
     if (random) {
@@ -185,6 +220,5 @@ void map_enemy_move(map* current, int enemy_loc)
 
 void map_enemy_deinit(map* current)
 {
-    printf("Enemies freed~");
     free(current->enemies);
 }
