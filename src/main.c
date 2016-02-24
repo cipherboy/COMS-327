@@ -55,6 +55,7 @@ int main(int argc, char* argv[])
     } else {
         map_init(&r);
     }
+    
     map_player_init(&r);
     map_player_distances(&r);
 

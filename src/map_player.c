@@ -194,8 +194,9 @@ void map_player_move(map* current)
         }
     }
 
-    if (pos_x != current->main_character.pos_x && pos_y != current->main_character.pos_y) {
+    if (pos_x != current->main_character.pos_x && pos_y != current->main_character.pos_y && current->rock_hardness[pos_y][pos_x] <= 85) {
         // New location!
+        current->rock_hardness[pos_y][pos_x] = 0;
         current->hallways_layer[pos_y][pos_x] = '#';
 
         if (current->characters_location[pos_y][pos_x] != NULL) {

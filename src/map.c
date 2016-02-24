@@ -185,17 +185,16 @@ void map_fill(map* current)
         uint8_t r_width = 5;
         uint8_t r_height = 4;
 
-        r_pos_x += rand() % 68;
-        r_pos_y += rand() % 14;
-        r_width += rand() % 12;
-        r_height += rand() % 3;
+        r_pos_x = 3 + (rand() % 65);
+        r_pos_y = 1 + (rand() % 13);
+        r_width = 5 + (rand() % 12);
+        r_height = 4 + (rand() % 3);
 
-        if (r_width + r_pos_x >= current->cols) {
-            r_width = 3;
-        }
-
-        if (r_height + r_pos_y >= current->rows) {
-            r_height = 2;
+        while (r_width + r_pos_x >= (current->cols-1) || r_height + r_pos_y >= (current->rows-1)) {
+            r_pos_x = 3 + (rand() % 65);
+            r_pos_y = 1 + (rand() % 13);
+            r_width = 5 + (rand() % 12);
+            r_height = 4 + (rand() % 3);
         }
 
         candidates[i].pos_x = r_pos_x;
@@ -273,45 +272,6 @@ void map_print(map* current)
     }
     printf("*--------------------------------------------------------------------------------*\n");
     printf("\n\n\n");
-    /*char distanceCharacter[62] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-
-    printf("*--------------------------------------------------------------------------------*\n");
-    for (int y = 0; y < current->rows; y++) {
-        printf("|");
-        for (int x = 0; x < current->cols; x++) {
-            if (current->main_character.player_distances[y][x] < 62 && current->main_character.player_distances[y][x] >= 0) {
-                printf("%c", distanceCharacter[(int) current->main_character.player_distances[y][x]]);
-            } else if (current->rooms_layer[y][x] != ' ') {
-                printf("%c", current->rooms_layer[y][x]);
-            } else if (current->hallways_layer[y][x] != ' ') {
-                printf("%c", current->hallways_layer[y][x]);
-            } else {
-                printf("%c", ' ');
-            }
-        }
-        printf("|\n");
-    }
-    printf("*--------------------------------------------------------------------------------*\n");
-    printf("\n\n\n");
-
-    printf("*--------------------------------------------------------------------------------*\n");
-    for (int y = 0; y < current->rows; y++) {
-        printf("|");
-        for (int x = 0; x < current->cols; x++) {
-            if (current->main_character.all_distances[y][x] < 62 && current->main_character.all_distances[y][x] >= 0) {
-                printf("%c", distanceCharacter[(int) current->main_character.all_distances[y][x]]);
-            } else if (current->rooms_layer[y][x] != ' ') {
-                printf("%c", current->rooms_layer[y][x]);
-            } else if (current->hallways_layer[y][x] != ' ') {
-                printf("%c", current->hallways_layer[y][x]);
-            } else {
-                printf("%c", ' ');
-            }
-        }
-        printf("|\n");
-    }
-    printf("*--------------------------------------------------------------------------------*\n");
-    printf("\n\n\n");*/
 }
 
 void map_write(map* current, char* path)
