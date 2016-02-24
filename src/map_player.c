@@ -173,6 +173,38 @@ void map_player_distances_unbounded(map* current)
 
 void map_player_move(map* current)
 {
+    int pos_x = current->main_character.pos_x;
+    int pos_y = current->main_character.pos_y;
+
+    for (int ly = -1; ly <= 1; ly++) {
+        for (int lx = -1; lx <= 1; lx++) {
+            if (lx == ly && lx == 0) {
+                continue;
+            }
+
+            if (current->characters_location[pos_y+lx][pos_x+ly] != NULL) {
+                pos_x += lx;
+                pos_y += ly;
+                lx = 10000;
+                ly = 10000;
+                continue;
+            }
+        }
+    }
+
+    if (pos_x != current->main_character.pos_x && pos_y != current->main_character.pos_y) {
+        // New location!
+
+        current->hallways_layer[pos_y][pos_x] = '#';
+
+        if (current->characters_location[pos_y][pos_x] != NULL) {
+            ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
+        }
+
+        current->main_character.pos_x = pos_x;
+        current->main_character.pos_y = pos_y;
+    }
+
     int dx = rand() % 3 - 1;
     int dy = rand() % 3 - 1;
 
@@ -181,8 +213,8 @@ void map_player_move(map* current)
         dy = rand() % 3 - 1;
     }
 
-    int pos_x = current->main_character.pos_x + dx;
-    int pos_y = current->main_character.pos_y + dy;
+    pos_x = current->main_character.pos_x + dx;
+    pos_y = current->main_character.pos_y + dy;
 
     while (pos_x < 0 || pos_x >= current->cols || pos_y < 0 || pos_y >= current->rows) {
         while (dy == 0 && dx == 0) {

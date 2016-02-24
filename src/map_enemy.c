@@ -51,7 +51,6 @@ void map_enemy_init(map* current)
         }
 
         int attributes = rand() % ENEMY_ATTRIBUTE_MAX;
-        attributes = 1;
         int speed = rand() % 15 + 5;
         char representation = '?';
 

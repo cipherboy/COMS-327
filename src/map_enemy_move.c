@@ -47,7 +47,7 @@ void map_enemy_move_random(map* current, int enemy_loc)
                 current->hallways_layer[pos_y][pos_x] = '#';
 
                 if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                    if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
+                    if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
                         current->main_character.is_alive = false;
                     }
 
@@ -63,7 +63,7 @@ void map_enemy_move_random(map* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
+                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
                     current->main_character.is_alive = false;
                 }
 
@@ -93,7 +93,7 @@ void map_enemy_move_random(map* current, int enemy_loc)
         }
 
         if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-            if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
+            if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
                 current->main_character.is_alive = false;
             }
 
@@ -147,7 +147,7 @@ void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc)
                 current->hallways_layer[pos_y][pos_x] = '#';
 
                 if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                    if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
+                    if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
                         current->main_character.is_alive = false;
                     }
 
@@ -165,7 +165,7 @@ void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
+                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
                     current->main_character.is_alive = false;
                 }
 
@@ -202,7 +202,7 @@ void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
+                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
                     current->main_character.is_alive = false;
                 }
 
@@ -219,7 +219,7 @@ void map_enemy_move_intelligent_not_telepathic(map* current, int enemy_loc)
 {
     map_enemy_update_last_seen(current, enemy_loc);
 
-    if (current->enemies[enemy_loc].has_seen_main_character) {
+    if (current->enemies[enemy_loc].has_seen_main_character && current->enemies[enemy_loc].main_character_last_x != current->enemies[enemy_loc].pos_x && current->enemies[enemy_loc].main_character_last_y != current->enemies[enemy_loc].pos_y) {
         map_enemy_move_intelligent_telepathic(current, enemy_loc);
     } else {
         // Make no move; the praying mantis strikes again.
@@ -259,7 +259,7 @@ void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
                 current->hallways_layer[pos_y][pos_x] = '#';
 
                 if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                    if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
+                    if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
                         current->main_character.is_alive = false;
                     }
 
@@ -277,7 +277,7 @@ void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
+                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
                     current->main_character.is_alive = false;
                 }
 
@@ -317,7 +317,7 @@ void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc].pos_x != pos_x || current->enemies[enemy_loc].pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->enemies[enemy_loc].main_character_last_x == pos_x && current->enemies[enemy_loc].main_character_last_y == pos_y) {
+                if (current->main_character.pos_x == pos_x && current->main_character.pos_y == pos_y) {
                     current->main_character.is_alive = false;
                 }
 
