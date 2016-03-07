@@ -16,6 +16,24 @@
 
 void map_main(map* current)
 {
+
+    map_render_splash();
+
+    initscr();
+    clear();
+    raw();
+    keypad(stdscr, TRUE);
+    noecho();
+
+    int row, col;
+    getmaxyx(stdscr,row,col);
+    if (col < 79 || row < 23) {
+        printw("\nPlease make your console at least 80x24: %i,%i.\n", row, col);
+        getch();
+        endwin();
+        return;
+    }
+
     binheap_t queue;
     binheap_init(&queue, moveables_moveable, NULL);
 
@@ -37,13 +55,6 @@ void map_main(map* current)
     }
 
     map_enemy_render(current);
-
-    map_render_splash();
-
-    initscr();
-    raw();
-    keypad(stdscr, TRUE);
-    noecho();
 
     map_print(current);
     for (int y = 0; y < current->rows; y++) {
@@ -124,6 +135,8 @@ void map_main(map* current)
                     // ~~~~~~~~~~~~~~~~~~
                     // "just quit the game"
 
+                    printw("\nGame quit.\n");
+                    getch();
                     endwin();
 
                     binheap_delete(&queue);
@@ -195,102 +208,33 @@ void map_render_splash()
     initscr();
     int row, col;
     getmaxyx(stdscr,row,col);
-    printw("*------------------------------------------------------------------------------*");
-    if (col > 80) {
-        printw("\n");
+    if (col < 79 || row < 23) {
+        return;
     }
-    printw("|                                                                              |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                                                              |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                                                              |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                            |_|_|_  |_|_|_  |_                                |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                            |_      |_      |_                                |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                            |_      |_|_    |_                                |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                            |_      |_      |_                                |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                            |_|_|_  |_|_|_  |_|_|_                            |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                                                              |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                            cipherboy~                                        |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                 entertainment                                |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                           limited                            |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                                                              |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                            v1.0%i ~ \"LoP\"                                     |", 5);
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                                                              |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                          Optimized for POWER7+/POWER 8                       |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                                                              |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                                                              |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                                                              |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                                      COPYRIGHT (C) 2016      |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                                      ALL RIGHTS RESERVED     |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("|                                                      (see LICENSE for terms) |");
-    if (col > 80) {
-        printw("\n");
-    }
-    printw("*------------------------------------------------------------------------------*");
-    if (col > 80) {
-        printw("\n");
-    }
+    printw("*-----------------------------------------------------------------------------*\n");
+    printw("|                                                                             |\n");
+    printw("|                                                                             |\n");
+    printw("|                                                                             |\n");
+    printw("|                           |_|_|_  |_|_|_  |_                                |\n");
+    printw("|                           |_      |_      |_                                |\n");
+    printw("|                           |_      |_|_    |_                                |\n");
+    printw("|                           |_      |_      |_                                |\n");
+    printw("|                           |_|_|_  |_|_|_  |_|_|_                            |\n");
+    printw("|                                                                             |\n");
+    printw("|                           cipherboy~                                        |\n");
+    printw("|                                entertainment                                |\n");
+    printw("|                                          limited                            |\n");
+    printw("|                                                                             |\n");
+    printw("|                           v1.0%i ~ \"LoP\"                                     |\n", 5);
+    printw("|                                                                             |\n");
+    printw("|                         Optimized for POWER7+/POWER 8                       |\n");
+    printw("|                                                                             |\n");
+    printw("|                                                                             |\n");
+    printw("|                                                                             |\n");
+    printw("|                                                     COPYRIGHT (C) 2016      |\n");
+    printw("|                                                     ALL RIGHTS RESERVED     |\n");
+    printw("|                                                     (see LICENSE for terms) |\n");
+    printw("*-----------------------------------------------------------------------------*\n");
     refresh();
     sleep(3);
     endwin();
