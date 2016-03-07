@@ -38,6 +38,8 @@ void map_main(map* current)
 
     map_enemy_render(current);
 
+    map_render_splash();
+
     initscr();
     raw();
     keypad(stdscr, TRUE);
@@ -64,7 +66,6 @@ void map_main(map* current)
         } else if (c->is_player) {
             bool valid_key = false;
             int ch = 0;
-
             while (!valid_key) {
                 ch = getch();
                 valid_key = true;
@@ -123,7 +124,6 @@ void map_main(map* current)
                     // ~~~~~~~~~~~~~~~~~~
                     // "just quit the game"
 
-                    getch();
                     endwin();
 
                     binheap_delete(&queue);
@@ -183,10 +183,115 @@ void map_main(map* current)
 
     free(objects);
     free(bh_ptr);
-
 }
 
 void map_display_enemies(map* current)
 {
     // pass
+}
+
+void map_render_splash()
+{
+    initscr();
+    int row, col;
+    getmaxyx(stdscr,row,col);
+    printw("*------------------------------------------------------------------------------*");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                                              |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                                              |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                                              |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                            |_|_|_  |_|_|_  |_                                |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                            |_      |_      |_                                |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                            |_      |_|_    |_                                |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                            |_      |_      |_                                |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                            |_|_|_  |_|_|_  |_|_|_                            |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                                              |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                            cipherboy~                                        |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                 entertainment                                |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                           limited                            |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                                              |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                            v1.0%i ~ \"LoP\"                                     |", 5);
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                                              |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                          Optimized for POWER7+/POWER 8                       |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                                              |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                                              |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                                              |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                      COPYRIGHT (C) 2016      |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                      ALL RIGHTS RESERVED     |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("|                                                      (see LICENSE for terms) |");
+    if (col > 80) {
+        printw("\n");
+    }
+    printw("*------------------------------------------------------------------------------*");
+    if (col > 80) {
+        printw("\n");
+    }
+    refresh();
+    sleep(3);
+    endwin();
 }
