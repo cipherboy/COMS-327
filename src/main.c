@@ -24,6 +24,7 @@ int main(int argc, char* argv[])
     path = malloc(sizeof(char) * 1024);
     snprintf(path, 1024, "%s/.rlg327/dungeon", getenv("HOME"));
 
+    // Argument parsing
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--load") == 0) {
             load = true;
@@ -41,7 +42,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    if ((!load && !save) || other) {
+    if (other) {
         printf("Usage: %s [--save] [--load] [--nummon int]\n\t--save\t\tcreate a new world and save state\n\t--load\t\tload an existing world\n\t--nummon\tspecify number of monsters\n", argv[0]);
         free(path);
         return 1;
@@ -55,15 +56,16 @@ int main(int argc, char* argv[])
     } else {
         map_init(&r);
     }
-    
-    map_player_init(&r);
-    map_player_distances(&r);
 
     if (nummon != -1) {
         printf("Loading %i monsters...\n", nummon);
         r.enemy_count = nummon;
     }
     map_enemy_init(&r);
+
+    map_player_init(&r);
+    map_player_distances(&r);
+    map_stairs(&r);
 
     map_main(&r);
 
@@ -74,6 +76,6 @@ int main(int argc, char* argv[])
     map_enemy_deinit(&r);
     map_deinit(&r);
     free(path);
-    printf("\n\n");
+
     return 0;
 }

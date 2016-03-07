@@ -32,6 +32,7 @@ typedef struct {
     char** characters_layer;
     char** rooms_layer;
     char** hallways_layer;
+    char** char_buffer;
 } map;
 
 // Method declarations
@@ -46,6 +47,7 @@ void map_init(map* current);
 bool map_read(map* current, char* path);
 void map_blank(map* current);
 void map_fill(map* current);
+void map_stairs(map* current);
 void map_print(map* current);
 void map_write(map* current, char* path);
 void map_deinit(map* current);

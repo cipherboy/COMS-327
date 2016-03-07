@@ -171,53 +171,12 @@ void map_player_distances_unbounded(map* current)
     binheap_delete(&queue);
 }
 
-void map_player_move(map* current)
+void map_player_move(map* current, int dx, int dy)
 {
     int pos_x = current->main_character.pos_x;
     int pos_y = current->main_character.pos_y;
 
     map_enemy_render(current);
-
-    for (int ly = -1; ly <= 1; ly++) {
-        for (int lx = -1; lx <= 1; lx++) {
-            if (lx == ly && lx == 0) {
-                continue;
-            }
-
-            if (current->characters_location[pos_y+lx][pos_x+ly] != NULL) {
-                pos_x = current->main_character.pos_x + lx;
-                pos_y = current->main_character.pos_y + ly;
-                lx = 10000;
-                ly = 10000;
-                break;
-            }
-        }
-    }
-
-    if (pos_x != current->main_character.pos_x && pos_y != current->main_character.pos_y && current->rock_hardness[pos_y][pos_x] <= 85) {
-        // New location!
-        current->rock_hardness[pos_y][pos_x] = 0;
-        current->hallways_layer[pos_y][pos_x] = '#';
-
-        if (current->characters_location[pos_y][pos_x] != NULL) {
-            ((enemy *) current->characters_location[pos_y][pos_x])->is_alive = false;
-        }
-
-        current->main_character.pos_x = pos_x;
-        current->main_character.pos_y = pos_y;
-        return;
-    }
-
-    pos_x = current->main_character.pos_x;
-    pos_y = current->main_character.pos_y;
-
-    int dx = rand() % 3 - 1;
-    int dy = rand() % 3 - 1;
-
-    while (dy == 0 && dx == 0) {
-        dx = rand() % 3 - 1;
-        dy = rand() % 3 - 1;
-    }
 
     pos_x = current->main_character.pos_x + dx;
     pos_y = current->main_character.pos_y + dy;

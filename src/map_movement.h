@@ -11,5 +11,6 @@
 #define MAP_MOVEMENT_H
 
 void map_main(map* current);
+void map_display_enemies(map* current);
 
 #endif

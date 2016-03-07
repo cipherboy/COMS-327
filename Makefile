@@ -12,7 +12,7 @@ VERSION = Scheel_Alexander.assignment-1.04
 NAME = rlg327
 CC ?= gcc
 CFLAGS = -O0 -march=native -Wall -std=gnu99 -ggdb
-LFLAGS = -lm
+LFLAGS = -lm -lncurses
 
 SOURCES = $(wildcard src/*.c)
 OBJECTS = $(SOURCES:.c=.o)
@@ -48,4 +48,4 @@ gzip:
 	gzip ../$(VERSION).tar
 
 execute:
-	./bin/$(NAME) || true
+	./bin/$(NAME) --error || true

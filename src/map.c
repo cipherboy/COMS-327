@@ -145,15 +145,18 @@ void map_blank(map* current)
     current->characters_location = malloc(sizeof(void*) * current->rows * current->cols);
     current->rooms_layer = malloc(sizeof(char) * current->rows * current->cols);
     current->hallways_layer = malloc(sizeof(char) * current->rows * current->cols);
+    current->char_buffer = malloc(sizeof(char) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
         current->rock_hardness[y] = malloc(sizeof(uint8_t) * current->cols);
         current->characters_layer[y] = malloc(sizeof(char) * current->cols);
         current->characters_location[y] = malloc(sizeof(void *) * current->cols);
         current->rooms_layer[y] = malloc(sizeof(char) * current->cols);
         current->hallways_layer[y] = malloc(sizeof(char) * current->cols);
+        current->char_buffer[y] = malloc(sizeof(char) * current->cols);
         for (int x = 0; x < current->cols; x++) {
             current->rock_hardness[y][x] = 255;
             current->characters_layer[y][x] = ' ';
+            current->char_buffer[y][x] = ' ';
             current->characters_location[y][x] = NULL;
             current->rooms_layer[y][x] = ' ';
             current->hallways_layer[y][x] = ' ';
@@ -252,26 +255,26 @@ void map_fill(map* current)
     }
 }
 
+void map_stairs(map* current)
+{
+
+}
+
 void map_print(map* current)
 {
-    printf("*--------------------------------------------------------------------------------*\n");
     for (int y = 0; y < current->rows; y++) {
-        printf("|");
         for (int x = 0; x < current->cols; x++) {
             if (current->characters_layer[y][x] != ' ') {
-                printf("%c", current->characters_layer[y][x]);
+                current->char_buffer[y][x] = current->characters_layer[y][x];
             } else if (current->rooms_layer[y][x] != ' ') {
-                printf("%c", current->rooms_layer[y][x]);
+                current->char_buffer[y][x] = current->rooms_layer[y][x];
             } else if (current->hallways_layer[y][x] != ' ') {
-                printf("%c", current->hallways_layer[y][x]);
+                current->char_buffer[y][x] = current->hallways_layer[y][x];
             } else {
-                printf("%c", ' ');
+                current->char_buffer[y][x] = ' ';
             }
         }
-        printf("|\n");
     }
-    printf("*--------------------------------------------------------------------------------*\n");
-    printf("\n\n\n");
 }
 
 void map_write(map* current, char* path)
@@ -359,6 +362,7 @@ void map_deinit(map* current)
         free(current->characters_layer[y]);
         free(current->characters_location[y]);
         free(current->hallways_layer[y]);
+        free(current->char_buffer[y]);
     }
 
     free(current->rock_hardness);
@@ -366,6 +370,7 @@ void map_deinit(map* current)
     free(current->hallways_layer);
     free(current->characters_layer);
     free(current->characters_location);
+    free(current->char_buffer);
     free(current->rooms);
 
     map_player_deinit(current);

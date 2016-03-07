@@ -82,7 +82,7 @@ void map_enemy_render(map* current)
             current->characters_layer[y][x] = ' ';
         }
     }
-    
+
     if (current->main_character.is_alive) {
         current->characters_location[current->main_character.pos_y][current->main_character.pos_x] = (void *) &current->main_character;
         current->characters_layer[current->main_character.pos_y][current->main_character.pos_x] = '@';
