@@ -283,11 +283,9 @@ void map_display_enemies(map* current)
     pnoutrefresh(subwin, offset, 0, (LINES-15)/2, (COLS-50)/2, (LINES+15)/2, (COLS+50)/2);
     doupdate();
 
-    bool valid_key = false;
     int ch = 0;
     while (true) {
         ch = getch();
-        valid_key = true;
         switch (ch) {
         case KEY_UP:
             offset -= 1;
@@ -319,8 +317,6 @@ void map_display_enemies(map* current)
             refresh();
             clear();
             return;
-        default:
-            valid_key = false;
         }
     }
 
