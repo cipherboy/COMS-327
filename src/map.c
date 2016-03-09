@@ -257,7 +257,23 @@ void map_fill(map* current)
 
 void map_stairs(map* current)
 {
+    int uproom = map_rooms_find_contains_point(current, current->main_character.pos_x, current->main_character.pos_y);
+    if (uproom == -1) {
+        uproom = rand() % current->room_count;
+    }
 
+    int downroom = uproom;
+    while (downroom == uproom) {
+        downroom = rand() % current->room_count;
+    }
+
+    int dx = rand() % current->rooms[uproom].width;
+    int dy = rand() % current->rooms[uproom].height;
+    current->rooms_layer[current->rooms[uproom].pos_y + dy][current->rooms[uproom].pos_x + dx] = '<';
+
+    dx = rand() % current->rooms[downroom].width;
+    dy = rand() % current->rooms[downroom].height;
+    current->rooms_layer[current->rooms[downroom].pos_y + dy][current->rooms[downroom].pos_x + dx] = '>';
 }
 
 void map_print(map* current)

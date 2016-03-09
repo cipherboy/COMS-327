@@ -14,10 +14,11 @@
 #include "binheap.h"
 #include "node_moveable.h"
 
-void map_main(map* current)
+int map_main(map* current, bool splash)
 {
-
-    map_render_splash();
+    if (splash) {
+        map_render_splash();
+    }
 
     initscr();
     clear();
@@ -31,14 +32,14 @@ void map_main(map* current)
         printw("\nPlease make your console at least 80x24: %i,%i.\n", row, col);
         getch();
         endwin();
-        return;
+        return -1;
     }
 
     binheap_t queue;
     binheap_init(&queue, moveables_moveable, NULL);
 
     moveable* objects = malloc(sizeof(moveable) * (current->enemy_count+1));
-    binheap_node_t** bh_ptr = malloc(sizeof(binheap_node_t) * (current->enemy_count+1));
+    binheap_node_t** bh_ptr = malloc(sizeof(binheap_node_t*) * (current->enemy_count+1));
 
     objects[0].order = 0;
     objects[0].is_player = true;
@@ -139,6 +140,27 @@ void map_main(map* current)
                 case KEY_NPAGE:
                     map_player_move(current, 1, 1);
                     break;
+                case '>':
+                    printw("Going down...\n");
+                    endwin();
+
+                    binheap_delete(&queue);
+
+                    free(objects);
+                    free(bh_ptr);
+                    return 1;
+                    break;
+                case '<':
+                    printw("Going up...\n");
+                    getch();
+                    endwin();
+
+                    binheap_delete(&queue);
+
+                    free(objects);
+                    free(bh_ptr);
+                    return 2;
+                    break;
                 case 'S':
                 case 's':
                     // Save to disk and exit game. Saving and restoring will be revisited later. For now, this will
@@ -155,7 +177,7 @@ void map_main(map* current)
                     free(objects);
                     free(bh_ptr);
 
-                    return;
+                    return -1;
                     break;
                 default:
                     valid_key = false;
@@ -227,6 +249,7 @@ void map_main(map* current)
 
     free(objects);
     free(bh_ptr);
+    return 0;
 }
 
 void map_display_enemies(map* current)

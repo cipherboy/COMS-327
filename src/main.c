@@ -58,7 +58,6 @@ int main(int argc, char* argv[])
     }
 
     if (nummon != -1) {
-        //printf("Loading %i monsters...\n", nummon);
         r.enemy_count = nummon;
     }
 
@@ -68,7 +67,26 @@ int main(int argc, char* argv[])
 
     map_enemy_init(&r);
 
-    map_main(&r);
+    int rval = map_main(&r, true);
+
+    while (rval != 0 && rval != -1) {
+        map_enemy_deinit(&r);
+        map_deinit(&r);
+
+        map_init(&r);
+
+        if (nummon != -1) {
+            r.enemy_count = nummon;
+        }
+
+        map_player_init(&r);
+        map_player_distances(&r);
+        map_stairs(&r);
+
+        map_enemy_init(&r);
+
+        rval = map_main(&r, false);
+    }
 
     if (save) {
         map_write(&r, path);
