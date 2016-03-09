@@ -81,8 +81,19 @@ void map_main(map* current)
                 ch = getch();
                 valid_key = true;
                 switch (ch) {
-                case 109: // m -- monsters list
+                case 'm': // m -- monsters list
                     map_display_enemies(current);
+
+                    map_enemy_render(current);
+
+                    map_print(current);
+                    for (int y = 0; y < current->rows; y++) {
+                        for (int x = 0; x < current->cols; x++) {
+                            mvaddch(y, x, current->char_buffer[y][x]);
+                        }
+                    }
+                    refresh();
+                    valid_key = false;
                     break;
                 case '7':
                 case 'y':
@@ -149,7 +160,27 @@ void map_main(map* current)
                 default:
                     valid_key = false;
                 }
+
+                map_enemy_render(current);
+
+                map_print(current);
+                for (int y = 0; y < current->rows; y++) {
+                    for (int x = 0; x < current->cols; x++) {
+                        mvaddch(y, x, current->char_buffer[y][x]);
+                    }
+                }
+                refresh();
             }
+
+            map_enemy_render(current);
+
+            map_print(current);
+            for (int y = 0; y < current->rows; y++) {
+                for (int x = 0; x < current->cols; x++) {
+                    mvaddch(y, x, current->char_buffer[y][x]);
+                }
+            }
+            refresh();
 
             bh_ptr[c->order] = binheap_insert(&queue, &objects[c->order]);
         }
@@ -200,7 +231,77 @@ void map_main(map* current)
 
 void map_display_enemies(map* current)
 {
-    // pass
+    WINDOW *subwin;
+    int offset = 0;
+    subwin = newpad(current->enemy_count, 50);
+    for (int i = 0; i < current->enemy_count; i++) {
+        int dx = current->enemies[i].pos_x - current->main_character.pos_x;
+        char* upordown = "left";
+        if (dx < 0) {
+            upordown = "right";
+            dx *= -1;
+        }
+
+        int dy = current->enemies[i].pos_y - current->main_character.pos_y;
+        char* leftorright = "down";
+        if (dy < 0) {
+            leftorright = "up";
+            dy *= -1;
+        }
+        char* aliveordead = "dead";
+
+        if (current->enemies[i].is_alive) {
+            aliveordead = "alive";
+        }
+
+        wprintw(subwin, "%c [%s] - pos: %i %s, %i %s: speed: %i\n", current->enemies[i].representation, aliveordead, dx, upordown, dy, leftorright, current->enemies[i].speed);
+    }
+    wnoutrefresh(stdscr);
+    pnoutrefresh(subwin, offset, 0, (LINES-15)/2, (COLS-50)/2, (LINES+15)/2, (COLS+50)/2);
+    doupdate();
+
+    bool valid_key = false;
+    int ch = 0;
+    while (true) {
+        ch = getch();
+        valid_key = true;
+        switch (ch) {
+        case KEY_UP:
+            offset -= 1;
+            if (offset >= current->enemy_count - 15) {
+                offset = current->enemy_count - 15;
+            }
+            if (offset < 0) {
+                offset = 0;
+            }
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, offset, 0, (LINES-15)/2, (COLS-50)/2, (LINES+15)/2, (COLS+50)/2);
+            doupdate();
+            break;
+        case KEY_DOWN:
+            offset += 1;
+            if (offset >= current->enemy_count - 15) {
+                offset = current->enemy_count - 15;
+            }
+            if (offset < 0) {
+                offset = 0;
+            }
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, offset, 0, (LINES-15)/2, (COLS-50)/2, (LINES+15)/2, (COLS+50)/2);
+            doupdate();
+            break;
+        case 27:
+            delwin(subwin);
+            doupdate();
+            refresh();
+            clear();
+            return;
+        default:
+            valid_key = false;
+        }
+    }
+
+    delwin(subwin);
 }
 
 void map_render_splash()
