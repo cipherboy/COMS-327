@@ -8,7 +8,7 @@
 # run:			makes all, executes code
 # execute:		runs current executable
 
-VERSION = Scheel_Alexander.assignment-1.04
+VERSION = Scheel_Alexander.assignment-1.05
 NAME = rlg327
 CC ?= gcc
 CFLAGS = -O0 -march=native -Wall -std=gnu99 -ggdb
