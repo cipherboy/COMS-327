@@ -82,7 +82,8 @@ int map_main(map* current, bool splash)
                 ch = getch();
                 valid_key = true;
                 switch (ch) {
-                case 'm': // m -- monsters list
+                case 'm':
+                case 'M':
                     map_display_enemies(current);
 
                     map_enemy_render(current);
@@ -98,21 +99,25 @@ int map_main(map* current, bool splash)
                     break;
                 case '7':
                 case 'y':
+                case 'Y':
                 case KEY_HOME:
                     map_player_move(current, -1, -1);
                     break;
                 case '8':
                 case 'k':
+                case 'K':
                 case KEY_UP:
                     map_player_move(current, 0, -1);
                     break;
                 case '9':
                 case 'u':
+                case 'U':
                 case KEY_PPAGE:
                     map_player_move(current, 1, -1);
                     break;
                 case '4':
                 case 'h':
+                case 'H':
                 case KEY_LEFT:
                     map_player_move(current, -1, 0);
                     break;
@@ -122,21 +127,25 @@ int map_main(map* current, bool splash)
                     break;
                 case '6':
                 case 'l':
+                case 'L':
                 case KEY_RIGHT:
                     map_player_move(current, 1, 0);
                     break;
                 case '1':
                 case 'b':
+                case 'B':
                 case KEY_END:
                     map_player_move(current, -1, 1);
                     break;
                 case '2':
                 case 'j':
+                case 'J':
                 case KEY_DOWN:
                     map_player_move(current, 0, 1);
                     break;
                 case '3':
                 case 'n':
+                case 'N':
                 case KEY_NPAGE:
                     map_player_move(current, 1, 1);
                     break;
