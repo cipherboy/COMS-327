@@ -43,6 +43,10 @@ typedef struct {
 #include "map_enemy_move.h"
 #include "map_movement.h"
 
+# ifdef __cplusplus
+extern "C" {
+# endif
+
 void map_init(map* current);
 bool map_read(map* current, char* path);
 void map_blank(map* current);
@@ -51,6 +55,10 @@ void map_stairs(map* current);
 void map_print(map* current);
 void map_write(map* current, char* path);
 void map_deinit(map* current);
+
+# ifdef __cplusplus
+}
+# endif
 
 
 #endif

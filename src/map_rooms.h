@@ -10,7 +10,15 @@
 #ifndef MAP_ROOMS_H
 #define MAP_ROOMS_H
 
+# ifdef __cplusplus
+extern "C" {
+# endif
+
 bool map_rooms_contains_point(map* current, int x, int y);
 int map_rooms_find_contains_point(map* current, int x, int y);
+
+# ifdef __cplusplus
+}
+# endif
 
 #endif

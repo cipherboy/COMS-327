@@ -11,11 +11,15 @@
 VERSION = Scheel_Alexander.assignment-1.05
 NAME = rlg327
 CC ?= gcc
+CXX ?= g++
 CFLAGS = -O0 -march=native -Wall -std=gnu99 -ggdb
+CXXFLAGS = -O0 -march=native -Wall -std=gnu++98 -ggdb
 LFLAGS = -lm -lncurses
 
-SOURCES = $(wildcard src/*.c)
-OBJECTS = $(SOURCES:.c=.o)
+CSOURCES = $(wildcard src/*.c)
+CXXSOURCES = $(wildcard src/*.cc)
+COBJECTS = $(CSOURCES:.c=.o)
+CXXOBJECTS = $(CXXSOURCES:.cc=.o)
 
 # Default target
 run: all execute
@@ -23,7 +27,7 @@ run: all execute
 all: format changelog build
 
 clean:
-	rm -rf ./src/*.o ./bin/mapgen.dSYM ./autom4te.cache ./configure
+	rm -rf ./src/*.o ./bin/mapgen.dSYM ./autom4te.cache ./configure ./bin/$(NAME)
 
 format:
 	astyle --style=linux ./src/*.c || true
@@ -37,11 +41,14 @@ changelog: .git
 
 build: main
 
-main: $(OBJECTS)
-	$(CC) $(LFLAGS) $(OBJECTS) -o bin/$(NAME)
+main: $(COBJECTS) $(CXXOBJECTS)
+	$(CXX) $(LFLAGS) $(COBJECTS) $(CXXOBJECTS) -o bin/$(NAME)
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
+
+%.o: %.cc
+	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 gzip:
 	tar -cf ../$(VERSION).tar ../$(VERSION)

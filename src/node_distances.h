@@ -16,6 +16,14 @@ typedef struct {
     int32_t distance;
 } distances;
 
+# ifdef __cplusplus
+extern "C" {
+# endif
+
 int32_t distances_distance(const void *key, const void *with);
+
+# ifdef __cplusplus
+}
+# endif
 
 #endif
