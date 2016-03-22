@@ -16,6 +16,8 @@
 
 void map_player_init(map* current)
 {
+    current->main_character = player_new();
+
     int room = rand() % current->room_count;
     *character_speed(current->main_character) = 10;
 
