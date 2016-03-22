@@ -17,7 +17,7 @@ typedef struct {
     int rows; // max_x
     int cols; // max_y
 
-    player main_character;
+    player* main_character;
 
     uint8_t** rock_hardness;
 
@@ -25,7 +25,7 @@ typedef struct {
     room* rooms;
 
     int enemy_count;
-    enemy* enemies;
+    enemy** enemies;
 
     void*** characters_location;
 

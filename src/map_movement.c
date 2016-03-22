@@ -43,14 +43,14 @@ int map_main(map* current, bool splash)
 
     objects[0].order = 0;
     objects[0].is_player = true;
-    objects[0].speed = current->main_character.speed;
+    objects[0].speed = *character_speed(current->main_character);
     objects[0].next_turn = 0;
     bh_ptr[0] = binheap_insert(&queue, &objects[0]);
 
     for (int i = 0; i < current->enemy_count; i++) {
         objects[i+1].order = i+1;
         objects[i+1].is_player = false;
-        objects[i+1].speed = current->enemies[i].speed;
+        objects[i+1].speed = *character_speed(current->enemies[i]);
         objects[i+1].next_turn = 0;
         bh_ptr[i+1] = binheap_insert(&queue, &objects[i+1]);
     }
@@ -72,7 +72,7 @@ int map_main(map* current, bool splash)
 
         objects[c->order].next_turn += 100/c->speed;
 
-        if (!c->is_player && current->enemies[c->order-1].is_alive) {
+        if (!c->is_player && *character_is_alive(current->enemies[c->order-1])) {
             map_enemy_move(current, c->order-1);
             bh_ptr[c->order] = binheap_insert(&queue, &objects[c->order]);
         } else if (c->is_player) {
@@ -222,13 +222,13 @@ int map_main(map* current, bool splash)
             }
         }
 
-        if (!current->main_character.is_alive) {
+        if (!*character_is_alive(current->main_character)) {
             printw("\nMain character died! :(\n");
             break;
         } else {
             bool has_enemies = false;;
             for (int i = 0; i < current->enemy_count; i++) {
-                if (current->enemies[i].is_alive) {
+                if (*character_is_alive(current->enemies[i])) {
                     has_enemies = true;
                 }
             }
@@ -267,14 +267,14 @@ void map_display_enemies(map* current)
     int offset = 0;
     subwin = newpad(current->enemy_count, 50);
     for (int i = 0; i < current->enemy_count; i++) {
-        int dx = current->enemies[i].pos_x - current->main_character.pos_x;
+        int dx = *character_pos_x(current->enemies[i]) - *character_pos_x(current->main_character);
         char* upordown = "left";
         if (dx < 0) {
             upordown = "right";
             dx *= -1;
         }
 
-        int dy = current->enemies[i].pos_y - current->main_character.pos_y;
+        int dy = *character_pos_y(current->enemies[i]) - *character_pos_y(current->main_character);
         char* leftorright = "down";
         if (dy < 0) {
             leftorright = "up";
@@ -282,11 +282,11 @@ void map_display_enemies(map* current)
         }
         char* aliveordead = "dead";
 
-        if (current->enemies[i].is_alive) {
+        if (*character_is_alive(current->enemies[i])) {
             aliveordead = "alive";
         }
 
-        wprintw(subwin, "%c [%s] - pos: %i %s, %i %s: speed: %i\n", current->enemies[i].representation, aliveordead, dx, upordown, dy, leftorright, current->enemies[i].speed);
+        wprintw(subwin, "%c [%s] - pos: %i %s, %i %s: speed: %i\n", *character_representation(current->enemies[i]), aliveordead, dx, upordown, dy, leftorright, *character_speed(current->enemies[i]));
     }
     wnoutrefresh(stdscr);
     pnoutrefresh(subwin, offset, 0, (LINES-15)/2, (COLS-50)/2, (LINES+15)/2, (COLS+50)/2);

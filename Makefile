@@ -31,6 +31,7 @@ clean:
 
 format:
 	astyle --style=linux ./src/*.c || true
+	astyle --style=linux ./src/*.cc || true
 	astyle --style=linux ./src/*.h || true
 	rm -f ./src/*.orig
 

@@ -89,7 +89,7 @@ bool map_read(map* current, char* path)
     }
 
     current->room_count = (file_size-1495)/4;
-    current->rooms = malloc(sizeof(room) * current->room_count);
+    current->rooms = malloc(sizeof(room*) * current->room_count);
 
     for (int i = 0; i < current->room_count; i++) {
         room current_room;
@@ -140,16 +140,16 @@ void map_blank(map* current)
 
     current->enemy_count = rand() % 15;
 
-    current->rock_hardness = malloc(sizeof(uint8_t) * current->rows * current->cols);
-    current->characters_layer = malloc(sizeof(char) * current->rows * current->cols);
-    current->characters_location = malloc(sizeof(void*) * current->rows * current->cols);
-    current->rooms_layer = malloc(sizeof(char) * current->rows * current->cols);
-    current->hallways_layer = malloc(sizeof(char) * current->rows * current->cols);
-    current->char_buffer = malloc(sizeof(char) * current->rows * current->cols);
+    current->rock_hardness = malloc(sizeof(uint8_t*) * current->rows * current->cols);
+    current->characters_layer = malloc(sizeof(char*) * current->rows * current->cols);
+    current->characters_location = malloc(sizeof(void**) * current->rows * current->cols);
+    current->rooms_layer = malloc(sizeof(char*) * current->rows * current->cols);
+    current->hallways_layer = malloc(sizeof(char*) * current->rows * current->cols);
+    current->char_buffer = malloc(sizeof(char*) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
         current->rock_hardness[y] = malloc(sizeof(uint8_t) * current->cols);
         current->characters_layer[y] = malloc(sizeof(char) * current->cols);
-        current->characters_location[y] = malloc(sizeof(void *) * current->cols);
+        current->characters_location[y] = malloc(sizeof(void*) * current->cols);
         current->rooms_layer[y] = malloc(sizeof(char) * current->cols);
         current->hallways_layer[y] = malloc(sizeof(char) * current->cols);
         current->char_buffer[y] = malloc(sizeof(char) * current->cols);
@@ -243,7 +243,7 @@ void map_fill(map* current)
     }
 
     current->room_count = r_num_rooms;
-    current->rooms = malloc(sizeof(room) * r_num_rooms);
+    current->rooms = malloc(sizeof(room*) * r_num_rooms);
 
     for (int i = 0; i < r_num_rooms; i++) {
         current->rooms[i] = candidates[choices[i]];
@@ -257,7 +257,7 @@ void map_fill(map* current)
 
 void map_stairs(map* current)
 {
-    int uproom = map_rooms_find_contains_point(current, current->main_character.pos_x, current->main_character.pos_y);
+    int uproom = map_rooms_find_contains_point(current, *character_pos_x(current->main_character), *character_pos_y(current->main_character));
     if (uproom == -1) {
         uproom = rand() % current->room_count;
     }
