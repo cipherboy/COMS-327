@@ -348,7 +348,7 @@ void map_render_splash()
     printw("|                                entertainment                                |\n");
     printw("|                                          limited                            |\n");
     printw("|                                                                             |\n");
-    printw("|                           v1.0%i ~ \"LoP\"                                     |\n", 5);
+    printw("|                           v1.0%i ~ \"LoP\"                                     |\n", 6);
     printw("|                                                                             |\n");
     printw("|                         Optimized for POWER7+/POWER 8                       |\n");
     printw("|                                                                             |\n");

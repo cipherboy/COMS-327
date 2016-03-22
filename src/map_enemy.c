@@ -14,15 +14,8 @@
 
 void map_enemy_init(map* current)
 {
-    FILE* fp = fopen("/tmp/test.txt", "a");
-    fputs("enemy init\n", fp);
-    fclose(fp);
-
     current->enemies = malloc(sizeof(enemy*) * current->enemy_count);
     for (int i = 0; i < current->enemy_count; i++) {
-        FILE* fp = fopen("/tmp/test.txt", "a");
-        fprintf(fp, "enemy init - monster: %i\n", i);
-        fclose(fp);
         current->enemies[i] = enemy_new();
     }
 
@@ -74,10 +67,6 @@ void map_enemy_init(map* current)
 
         (*character_pos_x(current->enemies[i])) = pos_x;
         (*character_pos_y(current->enemies[i])) = pos_y;
-
-        FILE* fp = fopen("/tmp/test.txt", "a");
-        fprintf(fp, "enemy create - monster x, y: %i, %i, %i, %i\n", pos_x, pos_y, (*character_pos_x(current->enemies[i])), (*character_pos_y(current->enemies[i])));
-        fclose(fp);
 
         (*enemy_attributes(current->enemies[i])) = attributes;
         (*character_speed(current->enemies[i])) = speed;
@@ -236,15 +225,8 @@ void map_enemy_move(map* current, int enemy_loc)
 
 void map_enemy_deinit(map* current)
 {
-    FILE* fp = fopen("/tmp/test.txt", "a");
-    fputs("enemy deinit\n", fp);
-    fclose(fp);
-
     for (int i = 0; i < current->enemy_count; i++) {
         if (current->enemies[i] != NULL) {
-            FILE* fp = fopen("/tmp/test.txt", "a");
-            fprintf(fp, "enemy deinit - monster: %i\n", i);
-            fclose(fp);
             enemy_delete(current->enemies[i]);
         }
     }

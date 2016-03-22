@@ -27,7 +27,7 @@ run: all execute
 all: format changelog build
 
 clean:
-	rm -rf ./src/*.o ./bin/mapgen.dSYM ./autom4te.cache ./configure ./bin/$(NAME)
+	rm -rf ./src/*.o ./bin/*.dSYM ./autom4te.cache ./configure ./bin/$(NAME)
 
 format:
 	astyle --style=linux ./src/*.c || true

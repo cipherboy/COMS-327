@@ -14,7 +14,7 @@
 extern "C" {
 # endif
 
-typedef struct {} character; // for increased accuracy
+typedef double character; // for increased accuracy
 
 character* character_new();
 int* character_pos_x(character* c);
