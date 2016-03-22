@@ -217,7 +217,31 @@ int map_main(map* current, bool splash)
         }
 
         if (!(*character_is_alive(current->main_character)) ) {
-            printw("\nMain character died! :(\n");
+            clear();
+            printw("*-----------------------------------------------------------------------------*\n");
+            printw("|                                                                             |\n");
+            printw("|                          _______________________                            |\n");
+            printw("|                         /                   \\###\\                           |\n");
+            printw("|                        |=====================|###|                          |\n");
+            printw("|                        |                     |###|                          |\n");
+            printw("|                        | Requiescat in pace  |###|                          |\n");
+            printw("|                        |                     |###|                          |\n");
+            printw("|                        | Main '@' Character  |###|                          |\n");
+            printw("|                        | 'Die doing what you |###|                          |\n");
+            printw("|                        |   love' ~ unknown   |###|                          |\n");
+            printw("|                        |                     |###|                          |\n");
+            printw("|         \\|/            |  Succeeded by:      |###|           \\|/            |\n");
+            printw("|        --O--           |   npc1  npc3  npc5  |###|          --O--           |\n");
+            printw("|         /|\\            |   npc2  npc4  npc6  |###|           /|\\            |\n");
+            printw("|          |             |                     |###|            |             |\n");
+            printw("|        |\\|             |  And a hoard of     |###|          |\\|             |\n");
+            printw("|         \\|/|           |  little monsters :O |###|           \\|/|           |\n");
+            printw("|          |/            |_____________________|###|            |/            |\n");
+            printw("|wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww|\n");
+            printw("|wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww|\n");
+            printw("|wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww|\n");
+            printw("|wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww|\n");
+            printw("*-----------------------------------------------------------------------------*\n");
             break;
         } else {
             bool has_enemies = false;;
@@ -228,7 +252,31 @@ int map_main(map* current, bool splash)
             }
 
             if (!has_enemies) {
-                printw("\nMain character won!\n");
+                clear();
+                printw("*-----------------------------------------------------------------------------*\n");
+                printw("|                                                                             |\n");
+                printw("|                                                                             |\n");
+                printw("|                                       *                                     |\n");
+                printw("|                      *               ***               *                    |\n");
+                printw("|                     ***             *****             ***                   |\n");
+                printw("|               *    *****     *     *******     *     *****    *             |\n");
+                printw("|               *   *******   ***   *********   ***   *******   *             |\n");
+                printw("|               *************************************************             |\n");
+                printw("|               *************************************************             |\n");
+                printw("|               =================================================             |\n");
+                printw("|                    |_      |_    |_|_    |_|_|_  |_     |_                  |\n");
+                printw("|                    |_|_  |_|_  |_    |_    |_    |_|_   |_                  |\n");
+                printw("|                    |_  |_  |_  |_|_|_|_    |_    |_ |_  |_                  |\n");
+                printw("|                    |_      |_  |_    |_    |_    |_   |_|_                  |\n");
+                printw("|                    |_      |_  |_    |_  |_|_|_  |_     |_                  |\n");
+                printw("|                                                                             |\n");
+                printw("|                                                                             |\n");
+                printw("|                The dungeons have been conquered, Oh Mighty King!            |\n");
+                printw("|                                                                             |\n");
+                printw("|                     All Hail King Main! All Hail King Main!                 |\n");
+                printw("|                                                                             |\n");
+                printw("|                                                                             |\n");
+                printw("*-----------------------------------------------------------------------------*\n");
                 break;
             }
         }
@@ -247,7 +295,6 @@ int map_main(map* current, bool splash)
     getch();
     endwin();
 
-
     binheap_delete(&queue);
 
     free(objects);
@@ -262,9 +309,9 @@ void map_display_enemies(map* current)
     subwin = newpad(current->enemy_count, 50);
     for (int i = 0; i < current->enemy_count; i++) {
         int dx = (*character_pos_x(current->enemies[i])) - (*character_pos_x(current->main_character));
-        char* upordown = "left";
+        char* upordown = "right";
         if (dx < 0) {
-            upordown = "right";
+            upordown = "left";
             dx *= -1;
         }
 
