@@ -61,8 +61,6 @@ int main(int argc, char* argv[])
         r.enemy_count = nummon;
     }
 
-    r.main_character = player_new();
-
     map_player_init(&r);
     map_player_distances(&r);
     map_stairs(&r);
@@ -74,6 +72,7 @@ int main(int argc, char* argv[])
     while (rval != 0 && rval != -1) {
         map_enemy_deinit(&r);
         map_deinit(&r);
+        map_player_deinit(&r);
 
         map_init(&r);
 
@@ -95,6 +94,7 @@ int main(int argc, char* argv[])
     }
 
     map_enemy_deinit(&r);
+    map_player_deinit(&r);
     map_deinit(&r);
     free(path);
 

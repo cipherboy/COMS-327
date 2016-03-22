@@ -19,17 +19,23 @@ void map_player_init(map* current)
     current->main_character = player_new();
 
     int room = rand() % current->room_count;
-    *character_speed(current->main_character) = 10;
+    (*character_speed(current->main_character)) = 10;
 
     int pos_x = current->rooms[room].pos_x + 1 + rand() % (current->rooms[room].width-2);
     int pos_y = current->rooms[room].pos_y + 1 + rand() % (current->rooms[room].height-2);
 
-    *character_pos_x(current->main_character) = pos_x;
-    *character_pos_y(current->main_character) = pos_y;
+    (*character_pos_x(current->main_character)) = pos_x;
+    (*character_pos_y(current->main_character)) = pos_y;
 
-    *character_is_alive(current->main_character) = true;
+    (*character_is_alive(current->main_character)) = true;
+    (*character_representation(current->main_character)) = '@';
 
-    current->characters_layer[pos_y][pos_x] = '@';
+    (*player_player_distances(current->main_character)) = malloc(sizeof(char*) * current->rows * current->cols);
+    (*player_all_distances(current->main_character)) = malloc(sizeof(char*) * current->rows * current->cols);
+    for (int y = 0; y < current->rows; y++) {
+        ((*player_player_distances(current->main_character))[y]) = malloc(sizeof(char) * current->cols);
+        ((*player_all_distances(current->main_character))[y]) = malloc(sizeof(char) * current->cols);
+    }
 }
 
 void map_player_distances(map* current)
@@ -41,14 +47,10 @@ void map_player_distances(map* current)
 
 void map_player_distances_blank(map* current)
 {
-    *player_player_distances(current->main_character) = malloc(sizeof(char*) * current->rows * current->cols);
-    *player_all_distances(current->main_character) = malloc(sizeof(char*) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
-        (*player_player_distances(current->main_character))[y] = malloc(sizeof(char) * current->cols);
-        (*player_all_distances(current->main_character))[y] = malloc(sizeof(char) * current->cols);
         for (int x = 0; x < current->cols; x++) {
-            (*player_player_distances(current->main_character))[y][x] = 255;
-            (*player_all_distances(current->main_character))[y][x] = 255;
+            ((*player_player_distances(current->main_character))[y][x]) = 255;
+            ((*player_all_distances(current->main_character))[y][x]) = 255;
         }
     }
 }
@@ -68,7 +70,7 @@ void map_player_distances_bounded(map* current)
         for (int x = 0; x < current->cols; x++) {
             objects[y][x].x = x;
             objects[y][x].y = y;
-            if (y != *character_pos_y(current->main_character) || x != *character_pos_x(current->main_character)) {
+            if (y != (*character_pos_y(current->main_character) )|| x != (*character_pos_x(current->main_character)) ) {
                 objects[y][x].distance = 255;
             } else {
                 objects[y][x].distance = 0;
@@ -100,7 +102,7 @@ void map_player_distances_bounded(map* current)
     for (int y = 0; y < current->rows; y++) {
         for (int x = 0; x < current->cols; x++) {
             if (current->rooms_layer[y][x] != ' ' || current->hallways_layer[y][x] != ' ') {
-                (*player_player_distances(current->main_character))[y][x] = objects[y][x].distance;
+                ((*player_player_distances(current->main_character))[y][x]) = objects[y][x].distance;
             }
         }
     }
@@ -129,7 +131,7 @@ void map_player_distances_unbounded(map* current)
         for (int x = 0; x < current->cols; x++) {
             objects[y][x].x = x;
             objects[y][x].y = y;
-            if (y != *character_pos_y(current->main_character) || x != *character_pos_x(current->main_character)) {
+            if (y != (*character_pos_y(current->main_character) )|| x != (*character_pos_x(current->main_character)) ) {
                 objects[y][x].distance = 255;
             } else {
                 objects[y][x].distance = 0;
@@ -160,7 +162,7 @@ void map_player_distances_unbounded(map* current)
     // No need to add character: he starts in a room
     for (int y = 0; y < current->rows; y++) {
         for (int x = 0; x < current->cols; x++) {
-            (*player_all_distances(current->main_character))[y][x] = objects[y][x].distance;
+            ((*player_all_distances(current->main_character))[y][x]) = objects[y][x].distance;
         }
     }
 
@@ -175,13 +177,13 @@ void map_player_distances_unbounded(map* current)
 
 void map_player_move(map* current, int dx, int dy)
 {
-    int pos_x = *character_pos_x(current->main_character);
-    int pos_y = *character_pos_y(current->main_character);
+    int pos_x = (*character_pos_x(current->main_character));
+    int pos_y = (*character_pos_y(current->main_character));
 
     map_enemy_render(current);
 
-    pos_x = *character_pos_x(current->main_character) + dx;
-    pos_y = *character_pos_y(current->main_character) + dy;
+    pos_x = (*character_pos_x(current->main_character)) + dx;
+    pos_y = (*character_pos_y(current->main_character)) + dy;
 
     while (pos_x < 0 || pos_x >= current->cols || pos_y < 0 || pos_y >= current->rows) {
         while (dy == 0 && dx == 0) {
@@ -189,8 +191,8 @@ void map_player_move(map* current, int dx, int dy)
             dy = rand() % 3 - 1;
         }
 
-        pos_x = *character_pos_x(current->main_character) + dx;
-        pos_y = *character_pos_y(current->main_character) + dy;
+        pos_x = (*character_pos_x(current->main_character)) + dx;
+        pos_y = (*character_pos_y(current->main_character)) + dy;
     }
 
     if (current->rock_hardness[pos_y][pos_x] > 0 && current->rock_hardness[pos_y][pos_x] != 255) {
@@ -200,35 +202,34 @@ void map_player_move(map* current, int dx, int dy)
             current->rock_hardness[pos_y][pos_x] = 0;
             current->hallways_layer[pos_y][pos_x] = '#';
 
-            if ((*character_pos_x(current->main_character) != pos_x || *character_pos_y(current->main_character) != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                *character_is_alive((enemy *) current->characters_location[pos_y][pos_x]) = false;
+            if (((*character_pos_x(current->main_character) )!= pos_x || (*character_pos_y(current->main_character) )!= pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
+                (*character_is_alive(*((enemy **) current->characters_location[pos_y][pos_x]))) = false;
             }
 
-            *character_pos_x(current->main_character) = pos_x;
-            *character_pos_y(current->main_character) = pos_y;
+            (*character_pos_x(current->main_character)) = pos_x;
+            (*character_pos_y(current->main_character)) = pos_y;
         }
 
-        map_player_deinit(current);
         map_player_distances(current);
     } else if (current->rock_hardness[pos_y][pos_x] == 0) {
         current->hallways_layer[pos_y][pos_x] = '#';
 
-        if ((*character_pos_x(current->main_character) != pos_x || *character_pos_y(current->main_character) != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-            *character_is_alive((enemy *) current->characters_location[pos_y][pos_x]) = false;
+        if (((*character_pos_x(current->main_character) )!= pos_x || (*character_pos_y(current->main_character) )!= pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
+            (*character_is_alive(*((enemy **) current->characters_location[pos_y][pos_x]))) = false;
         }
 
-        *character_pos_x(current->main_character) = pos_x;
-        *character_pos_y(current->main_character) = pos_y;
+        (*character_pos_x(current->main_character)) = pos_x;
+        (*character_pos_y(current->main_character)) = pos_y;
     }
 }
 
 void map_player_deinit(map* current)
 {
     for (int y = 0; y < current->rows; y++) {
-        free((*player_player_distances(current->main_character))[y]);
-        free((*player_all_distances(current->main_character))[y]);
+        free(((*player_player_distances(current->main_character))[y]));
+        free(((*player_all_distances(current->main_character))[y]));
     }
-    free(*player_player_distances(current->main_character));
-    free(*player_all_distances(current->main_character));
+    free((*player_player_distances(current->main_character)));
+    free((*player_all_distances(current->main_character)));
     player_delete(current->main_character);
 }

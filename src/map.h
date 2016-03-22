@@ -9,6 +9,7 @@
 #define MAP_H
 
 #include <stdint.h>
+#include "character.h"
 #include "player.h"
 #include "enemy.h"
 #include "room.h"
@@ -27,7 +28,7 @@ typedef struct {
     int enemy_count;
     enemy** enemies;
 
-    void*** characters_location;
+    character*** characters_location;
 
     char** characters_layer;
     char** rooms_layer;

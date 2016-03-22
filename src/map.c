@@ -142,14 +142,14 @@ void map_blank(map* current)
 
     current->rock_hardness = malloc(sizeof(uint8_t*) * current->rows * current->cols);
     current->characters_layer = malloc(sizeof(char*) * current->rows * current->cols);
-    current->characters_location = malloc(sizeof(void**) * current->rows * current->cols);
+    current->characters_location = malloc(sizeof(character**) * current->rows * current->cols);
     current->rooms_layer = malloc(sizeof(char*) * current->rows * current->cols);
     current->hallways_layer = malloc(sizeof(char*) * current->rows * current->cols);
     current->char_buffer = malloc(sizeof(char*) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
         current->rock_hardness[y] = malloc(sizeof(uint8_t) * current->cols);
         current->characters_layer[y] = malloc(sizeof(char) * current->cols);
-        current->characters_location[y] = malloc(sizeof(void*) * current->cols);
+        current->characters_location[y] = malloc(sizeof(character*) * current->cols);
         current->rooms_layer[y] = malloc(sizeof(char) * current->cols);
         current->hallways_layer[y] = malloc(sizeof(char) * current->cols);
         current->char_buffer[y] = malloc(sizeof(char) * current->cols);
@@ -257,7 +257,7 @@ void map_fill(map* current)
 
 void map_stairs(map* current)
 {
-    int uproom = map_rooms_find_contains_point(current, *character_pos_x(current->main_character), *character_pos_y(current->main_character));
+    int uproom = map_rooms_find_contains_point(current, (*character_pos_x(current->main_character)), (*character_pos_y(current->main_character)));
     if (uproom == -1) {
         uproom = rand() % current->room_count;
     }
@@ -388,6 +388,4 @@ void map_deinit(map* current)
     free(current->characters_location);
     free(current->char_buffer);
     free(current->rooms);
-
-    map_player_deinit(current);
 }
