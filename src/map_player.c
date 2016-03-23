@@ -32,9 +32,14 @@ void map_player_init(map* current)
 
     (*player_player_distances(current->main_character)) = malloc(sizeof(char*) * current->rows * current->cols);
     (*player_all_distances(current->main_character)) = malloc(sizeof(char*) * current->rows * current->cols);
+    (*player_seen_map(current->main_character)) = malloc(sizeof(char*) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
         ((*player_player_distances(current->main_character))[y]) = malloc(sizeof(char) * current->cols);
         ((*player_all_distances(current->main_character))[y]) = malloc(sizeof(char) * current->cols);
+        ((*player_seen_map(current->main_character))[y]) = malloc(sizeof(char) * current->cols);
+        for (int x = 0; x < current->cols; x++) {
+            ((*player_seen_map(current->main_character))[y][x]) = ' ';
+        }
     }
 }
 
@@ -228,8 +233,10 @@ void map_player_deinit(map* current)
     for (int y = 0; y < current->rows; y++) {
         free(((*player_player_distances(current->main_character))[y]));
         free(((*player_all_distances(current->main_character))[y]));
+        free(((*player_seen_map(current->main_character))[y]));
     }
     free((*player_player_distances(current->main_character)));
     free((*player_all_distances(current->main_character)));
+    free((*player_seen_map(current->main_character)));
     player_delete(current->main_character);
 }

@@ -22,6 +22,7 @@ int* character_pos_y(character* c);
 bool* character_is_alive(character* c);
 char* character_representation(character* c);
 int* character_speed(character* c);
+void character_delete(character* c);
 
 # ifdef __cplusplus
 }

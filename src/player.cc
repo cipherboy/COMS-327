@@ -24,6 +24,11 @@ char*** player_all_distances(player* p)
     return &((*(player_t *)p).all_distances);
 }
 
+char*** player_seen_map(player* p)
+{
+    return &((*(player_t *)p).seen_map);
+}
+
 void player_delete(player* p)
 {
     delete p;

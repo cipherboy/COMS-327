@@ -280,12 +280,16 @@ void map_print(map* current)
 {
     for (int y = 0; y < current->rows; y++) {
         for (int x = 0; x < current->cols; x++) {
-            if (current->characters_layer[y][x] != ' ') {
+            int dx = (*character_pos_y(current->main_character)) - y;
+            int dy = (*character_pos_x(current->main_character)) - x;
+
+            if (current->characters_layer[y][x] != ' ' && dx >= -3 && dx <= 3 && dy >= -3 && dy <= 3) {
                 current->char_buffer[y][x] = current->characters_layer[y][x];
-            } else if (current->rooms_layer[y][x] != ' ') {
-                current->char_buffer[y][x] = current->rooms_layer[y][x];
-            } else if (current->hallways_layer[y][x] != ' ') {
-                current->char_buffer[y][x] = current->hallways_layer[y][x];
+                FILE* fp = fopen("/tmp/test.txt", "a");
+                fprintf(fp, "dx: %i dy: %i :: %c\n", dx, dy, current->characters_layer[y][x]);
+                fclose(fp);
+            } else if (((*player_seen_map(current->main_character))[y][x]) != ' ') {
+                current->char_buffer[y][x] = ((*player_seen_map(current->main_character))[y][x]);
             } else {
                 current->char_buffer[y][x] = ' ';
             }

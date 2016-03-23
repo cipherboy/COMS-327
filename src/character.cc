@@ -10,7 +10,7 @@
 
 character* character_new()
 {
-    return (character *) malloc(sizeof(character_t));
+    return (character *) new character_t();
 }
 
 int* character_pos_x(character* c)
@@ -36,4 +36,9 @@ char* character_representation(character* c)
 int* character_speed(character* c)
 {
     return &((*(character_t *)c).speed);
+}
+
+void character_delete(character* c)
+{
+    delete c;
 }

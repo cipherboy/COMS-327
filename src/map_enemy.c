@@ -90,7 +90,19 @@ void map_enemy_render(map* current)
 
     if ((*character_is_alive(current->main_character)) ) {
         current->characters_location[(*character_pos_y(current->main_character))][(*character_pos_x(current->main_character))] = (void *) &current->main_character;
-        current->characters_layer[(*character_pos_y(current->main_character))][(*character_pos_x(current->main_character))] =  (*character_representation(current->main_character));
+        current->characters_layer[(*character_pos_y(current->main_character))][(*character_pos_x(current->main_character))] = (*character_representation(current->main_character));
+    }
+
+    for (int dy = -3; dy <= 3; dy++) {
+        for (int dx = -3; dx <= 3; dx++) {
+            int y = (*character_pos_y(current->main_character)) + dy;
+            int x = (*character_pos_x(current->main_character)) + dx;
+            if (current->rooms_layer[y][x] != ' ') {
+                ((*player_seen_map(current->main_character))[y][x]) = current->rooms_layer[y][x];
+            } else if (current->hallways_layer[y][x] != ' ') {
+                ((*player_seen_map(current->main_character))[y][x]) = current->hallways_layer[y][x];
+            }
+        }
     }
 
     for (int i = 0; i < current->enemy_count; i++) {
