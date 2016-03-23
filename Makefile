@@ -1,14 +1,14 @@
 #Possible targets:
 #
-# all:			recompiles code, runs tests
-# format: 		formats source files
-# build:		builds and compiles code
-# clean: 		removes old object files
-# changelog: 	updates changelog
-# run:			makes all, executes code
-# execute:		runs current executable
+# all:				recompiles code, runs tests
+# format: 			formats source files
+# build:			builds and compiles code
+# clean: 			removes old object files
+# changelog: 		updates changelog
+# run:				makes all, executes code
+# execute:			runs current executable
 
-VERSION = Scheel_Alexander.assignment-1.05
+VERSION = Scheel_Alexander.assignment-1.06
 NAME = rlg327
 CC ?= gcc
 CXX ?= g++
