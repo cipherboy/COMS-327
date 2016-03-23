@@ -339,8 +339,8 @@ void map_display_enemies(map* current)
         switch (ch) {
         case KEY_UP:
             offset -= 1;
-            if (offset >= current->enemy_count - 15) {
-                offset = current->enemy_count - 15;
+            if (offset >= current->enemy_count - 16) {
+                offset = current->enemy_count - 16;
             }
             if (offset < 0) {
                 offset = 0;
@@ -351,8 +351,8 @@ void map_display_enemies(map* current)
             break;
         case KEY_DOWN:
             offset += 1;
-            if (offset >= current->enemy_count - 15) {
-                offset = current->enemy_count - 15;
+            if (offset >= current->enemy_count - 16) {
+                offset = current->enemy_count - 16;
             }
             if (offset < 0) {
                 offset = 0;

@@ -12,8 +12,8 @@ VERSION = Scheel_Alexander.assignment-1.06
 NAME = rlg327
 CC ?= gcc
 CXX ?= g++
-CFLAGS = -O0 -march=native -Wall -std=gnu99 -ggdb -fdiagnostics-color=always
-CXXFLAGS = -O0 -march=native -Wall -std=gnu++98 -ggdb -fdiagnostics-color=always
+CFLAGS = -O0 -mtune=native -Wall -std=gnu99 -ggdb -fdiagnostics-color=always
+CXXFLAGS = -O0 -mtune=native -Wall -std=gnu++98 -ggdb -fdiagnostics-color=always
 LFLAGS = -lm -lncurses
 
 CSOURCES = $(wildcard src/*.c)
