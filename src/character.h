@@ -4,33 +4,31 @@
  * Character header file
 **/
 
+#include "map.h"
+
 #pragma once
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
 #include "stdbool.h"
 
-typedef double character; // for increased accuracy
-
-character* character_new();
-int* character_pos_x(character* c);
-int* character_pos_y(character* c);
-bool* character_is_alive(character* c);
-char* character_representation(character* c);
-int* character_speed(character* c);
-void character_delete(character* c);
-
 class character_t
 {
+protected:
+  map* current;
+
 public:
-    int pos_x;
-    int pos_y;
+  int pos_x;
+  int pos_y;
 
-    bool is_alive;
+  bool is_alive;
 
-    char representation;
+  char representation;
 
-    int speed;
+  int speed;
+
+  character_t(map* current);
+  ~character_t();
 };
 
 #endif

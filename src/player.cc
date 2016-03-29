@@ -5,31 +5,32 @@
 **/
 
 #include "stdlib.h"
-#include "stdbool.h"
 #include "player.h"
 #include "character.h"
 
-player* player_new()
+player_t::player_t(map* current) : character_t(current)
 {
-    return (player *) new player_t();
+    this->player_distances = (char **) malloc(sizeof(char*) * current->rows * current->cols);
+    this->all_distances = (char **) malloc(sizeof(char*) * current->rows * current->cols);
+    this->seen_map = (char **) malloc(sizeof(char*) * current->rows * current->cols);
+    for (int y = 0; y < this->current->rows; y++) {
+        this->player_distances[y] = (char *) malloc(sizeof(char) * current->cols);
+        this->all_distances[y] = (char *) malloc(sizeof(char) * current->cols);
+        this->seen_map[y] = (char *) malloc(sizeof(char) * current->cols);
+        for (int x = 0; x < this->current->cols; x++) {
+            this->seen_map[y][x] = ' ';
+        }
+    }
 }
 
-char*** player_player_distances(player* p)
+player_t::~player_t()
 {
-    return &((*(player_t *)p).player_distances);
-}
-
-char*** player_all_distances(player* p)
-{
-    return &((*(player_t *)p).all_distances);
-}
-
-char*** player_seen_map(player* p)
-{
-    return &((*(player_t *)p).seen_map);
-}
-
-void player_delete(player* p)
-{
-    delete p;
+    for (int y = 0; y < this->current->rows; y++) {
+        free(this->player_distances[y]);
+        free(this->all_distances[y]);
+        free(this->seen_map[y]);
+    }
+    free(this->player_distances);
+    free(this->all_distances);
+    free(this->seen_map);
 }

@@ -8,37 +8,21 @@
 #include "stdlib.h"
 #include "character.h"
 
-character* character_new()
+character_t::character_t(map* current)
 {
-    return (character *) new character_t();
+  this->current = current;
+
+  int room = rand() % current->room_count;
+  this->speed = 10;
+
+  int pos_x = current->rooms[room].pos_x + 1 + rand() % (current->rooms[room].width-2);
+  int pos_y = current->rooms[room].pos_y + 1 + rand() % (current->rooms[room].height-2);
+
+  this->pos_x = pos_x;
+  this->pos_y = pos_y;
+
+  this->is_alive = true;
+  this->representation = '@';
 }
 
-int* character_pos_x(character* c)
-{
-    return &((*(character_t *)c).pos_x);
-}
-
-int* character_pos_y(character* c)
-{
-    return &((*(character_t *)c).pos_y);
-}
-
-bool* character_is_alive(character* c)
-{
-    return &((*(character_t *)c).is_alive);
-}
-
-char* character_representation(character* c)
-{
-    return &((*(character_t *)c).representation);
-}
-
-int* character_speed(character* c)
-{
-    return &((*(character_t *)c).speed);
-}
-
-void character_delete(character* c)
-{
-    delete c;
-}
+character_t::~character_t(void) { }

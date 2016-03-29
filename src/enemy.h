@@ -4,12 +4,13 @@
  * Enemy header file
 **/
 
+#include "character.h"
+
 #pragma once
 #ifndef ENEMY_H
 #define ENEMY_H
 
 #include "stdbool.h"
-#include "character.h"
 
 #define ENEMY_ATTRIBUTE_INTELLIGENCE 0x00000001
 #define ENEMY_ATTRIBUTE_TELEPATHY 0x00000002
@@ -21,16 +22,6 @@
 #define ENEMY_ATTRIBUTE_8 0x00000080
 #define ENEMY_ATTRIBUTE_MAX 16
 
-typedef character enemy;
-
-enemy* enemy_new();
-int* enemy_attributes(enemy* e);
-bool* enemy_has_seen_main_character(enemy* e);
-int* enemy_main_character_last_x(enemy* e);
-int* enemy_main_character_last_y(enemy* e);
-void enemy_delete(enemy* e);
-
-
 class enemy_t: public character_t
 {
 public:
@@ -39,5 +30,7 @@ public:
     bool has_seen_main_character;
     int main_character_last_x;
     int main_character_last_y;
+
+    enemy_t(map* current);
 };
 #endif

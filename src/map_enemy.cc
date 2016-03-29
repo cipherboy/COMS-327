@@ -9,14 +9,17 @@
 #include <stdio.h>
 
 #include "map.h"
+#include "character.h"
+#include "player.h"
+#include "enemy.h"
 #include "map_enemy.h"
 #include "utils.h"
 
 void map_enemy_init(map* current)
 {
-    current->enemies = (enemy**) malloc(sizeof(enemy*) * current->enemy_count);
+    current->enemies = (enemy_t**) malloc(sizeof(enemy_t*) * current->enemy_count);
     for (int i = 0; i < current->enemy_count; i++) {
-        current->enemies[i] = enemy_new();
+        current->enemies[i] = new enemy_t(current);
     }
 
     for (int i = 0; i < current->enemy_count; i++) {
@@ -25,11 +28,11 @@ void map_enemy_init(map* current)
         int pos_y = current->rooms[room].pos_y + 1 + rand() % (current->rooms[room].height-2);
 
         bool has_conflict = false;
-        if (pos_x == (*character_pos_x(current->main_character) )&& pos_y == (*character_pos_y(current->main_character)) ) {
+        if (pos_x == current->main_character->pos_x&& pos_y == current->main_character->pos_y ) {
             has_conflict = true;
         } else {
             for (int j = 0; j < i; j++) {
-                if (pos_x == (*character_pos_x(current->enemies[j]) )&& pos_y == (*character_pos_y(current->enemies[j])) ) {
+                if (pos_x == current->enemies[j]->pos_x&& pos_y == current->enemies[j]->pos_y ) {
                     has_conflict = true;
                     break;
                 }
@@ -42,11 +45,11 @@ void map_enemy_init(map* current)
             pos_y = current->rooms[room].pos_y + rand() % (current->rooms[room].height);
 
             has_conflict = false;
-            if (pos_x == (*character_pos_x(current->main_character) )&& pos_y == (*character_pos_y(current->main_character)) ) {
+            if (pos_x == current->main_character->pos_x&& pos_y == current->main_character->pos_y ) {
                 has_conflict = true;
             } else {
                 for (int j = 0; j < i; j++) {
-                    if (pos_x == (*character_pos_x(current->enemies[j]) )&& pos_y == (*character_pos_y(current->enemies[j])) ) {
+                    if (pos_x == current->enemies[j]->pos_x&& pos_y == current->enemies[j]->pos_y ) {
                         has_conflict = true;
                         break;
                     }
@@ -65,16 +68,16 @@ void map_enemy_init(map* current)
             representation = 'a' + attributes-10;
         }
 
-        (*character_pos_x(current->enemies[i])) = pos_x;
-        (*character_pos_y(current->enemies[i])) = pos_y;
+        current->enemies[i]->pos_x = pos_x;
+        current->enemies[i]->pos_y = pos_y;
 
-        (*enemy_attributes(current->enemies[i])) = attributes;
-        (*character_speed(current->enemies[i])) = speed;
-        (*character_representation(current->enemies[i])) = representation;
-        (*character_is_alive(current->enemies[i])) = true;
-        (*enemy_has_seen_main_character(current->enemies[i])) = false;
-        (*enemy_main_character_last_x(current->enemies[i])) = 2;
-        (*enemy_main_character_last_y(current->enemies[i])) = 2;
+        current->enemies[i]->attributes = attributes;
+        current->enemies[i]->speed = speed;
+        current->enemies[i]->representation = representation;
+        current->enemies[i]->is_alive = true;
+        current->enemies[i]->has_seen_main_character = false;
+        current->enemies[i]->main_character_last_x = 2;
+        current->enemies[i]->main_character_last_y = 2;
         map_enemy_update_last_seen(current, i);
     }
 }
@@ -88,51 +91,51 @@ void map_enemy_render(map* current)
         }
     }
 
-    if ((*character_is_alive(current->main_character)) ) {
-        current->characters_location[(*character_pos_y(current->main_character))][(*character_pos_x(current->main_character))] = (character *) &current->main_character;
-        current->characters_layer[(*character_pos_y(current->main_character))][(*character_pos_x(current->main_character))] = (*character_representation(current->main_character));
+    if (current->main_character->is_alive ) {
+        current->characters_location[current->main_character->pos_y][current->main_character->pos_x] = current->main_character;
+        current->characters_layer[current->main_character->pos_y][current->main_character->pos_x] = current->main_character->representation;
     }
 
     for (int dy = -3; dy <= 3; dy++) {
         for (int dx = -3; dx <= 3; dx++) {
-            int y = (*character_pos_y(current->main_character)) + dy;
-            int x = (*character_pos_x(current->main_character)) + dx;
+            int y = current->main_character->pos_y + dy;
+            int x = current->main_character->pos_x + dx;
             if (current->rooms_layer[y][x] != ' ') {
-                ((*player_seen_map(current->main_character))[y][x]) = current->rooms_layer[y][x];
+                current->main_character->seen_map[y][x] = current->rooms_layer[y][x];
             } else if (current->hallways_layer[y][x] != ' ') {
-                ((*player_seen_map(current->main_character))[y][x]) = current->hallways_layer[y][x];
+                current->main_character->seen_map[y][x] = current->hallways_layer[y][x];
             }
         }
     }
 
     for (int i = 0; i < current->enemy_count; i++) {
-        if ((*character_is_alive(current->enemies[i])) ) {
+        if (current->enemies[i]->is_alive ) {
 
-            if (current->characters_location[(*character_pos_y(current->enemies[i]))][(*character_pos_x(current->enemies[i]))] != NULL) {
+            if (current->characters_location[current->enemies[i]->pos_y][current->enemies[i]->pos_x] != NULL) {
                 printf("Uncaught collision!");
             }
-            current->characters_location[(*character_pos_y(current->enemies[i]))][(*character_pos_x(current->enemies[i]))] = (character *) &current->enemies[i];
-            current->characters_layer[(*character_pos_y(current->enemies[i]))][(*character_pos_x(current->enemies[i]))] =  (*character_representation(current->enemies[i]));
+            current->characters_location[current->enemies[i]->pos_y][current->enemies[i]->pos_x] = current->enemies[i];
+            current->characters_layer[current->enemies[i]->pos_y][current->enemies[i]->pos_x] =  current->enemies[i]->representation;
         }
     }
 }
 
 void map_enemy_update_last_seen(map* current, int enemy_loc)
 {
-    int telepathic = (*enemy_attributes(current->enemies[enemy_loc]) )& ENEMY_ATTRIBUTE_TELEPATHY;
+    int telepathic = current->enemies[enemy_loc]->attributes & ENEMY_ATTRIBUTE_TELEPATHY;
     if (telepathic) {
-        (*enemy_has_seen_main_character(current->enemies[enemy_loc])) = true;
-        (*enemy_main_character_last_x(current->enemies[enemy_loc])) = (*character_pos_x(current->main_character));
-        (*enemy_main_character_last_y(current->enemies[enemy_loc])) = (*character_pos_y(current->main_character));
+        current->enemies[enemy_loc]->has_seen_main_character = true;
+        current->enemies[enemy_loc]->main_character_last_x = current->main_character->pos_x;
+        current->enemies[enemy_loc]->main_character_last_y = current->main_character->pos_y;
         return;
     }
-    int main_character_room_number = map_rooms_find_contains_point(current, (*character_pos_x(current->main_character)), (*character_pos_y(current->main_character)));
-    int enemy_room_number = map_rooms_find_contains_point(current, (*character_pos_x(current->enemies[enemy_loc])), (*character_pos_y(current->enemies[enemy_loc])));
+    int main_character_room_number = map_rooms_find_contains_point(current, current->main_character->pos_x, current->main_character->pos_y);
+    int enemy_room_number = map_rooms_find_contains_point(current, current->enemies[enemy_loc]->pos_x, current->enemies[enemy_loc]->pos_y);
 
     if (main_character_room_number == enemy_room_number && enemy_room_number != -1) {
-        (*enemy_has_seen_main_character(current->enemies[enemy_loc])) = true;
-        (*enemy_main_character_last_x(current->enemies[enemy_loc])) = (*character_pos_x(current->main_character));
-        (*enemy_main_character_last_y(current->enemies[enemy_loc])) = (*character_pos_y(current->main_character));
+        current->enemies[enemy_loc]->has_seen_main_character = true;
+        current->enemies[enemy_loc]->main_character_last_x = current->main_character->pos_x;
+        current->enemies[enemy_loc]->main_character_last_y = current->main_character->pos_y;
         return;
     }
 
@@ -144,18 +147,18 @@ void map_enemy_update_last_seen(map* current, int enemy_loc)
     int right_x;
     int right_y;
 
-    if ((*character_pos_x(current->main_character)) < (*character_pos_x(current->enemies[enemy_loc]))) {
-        left_x = (*character_pos_x(current->main_character));
-        left_y = (*character_pos_y(current->main_character));
+    if (current->main_character->pos_x < current->enemies[enemy_loc]->pos_x) {
+        left_x = current->main_character->pos_x;
+        left_y = current->main_character->pos_y;
 
-        right_x = (*character_pos_x(current->enemies[enemy_loc]));
-        right_y = (*character_pos_y(current->enemies[enemy_loc]));
+        right_x = current->enemies[enemy_loc]->pos_x;
+        right_y = current->enemies[enemy_loc]->pos_y;
     } else {
-        left_x = (*character_pos_x(current->enemies[enemy_loc]));
-        left_y = (*character_pos_y(current->enemies[enemy_loc]));
+        left_x = current->enemies[enemy_loc]->pos_x;
+        left_y = current->enemies[enemy_loc]->pos_y;
 
-        right_x = (*character_pos_x(current->main_character));
-        right_y = (*character_pos_y(current->main_character));
+        right_x = current->main_character->pos_x;
+        right_y = current->main_character->pos_y;
     }
 
     if (left_x - right_x != 0) {
@@ -203,15 +206,15 @@ void map_enemy_update_last_seen(map* current, int enemy_loc)
     }
 
     if (all_zeroes) {
-        (*enemy_has_seen_main_character(current->enemies[enemy_loc])) = true;
-        (*enemy_main_character_last_x(current->enemies[enemy_loc])) = (*character_pos_x(current->main_character));
-        (*enemy_main_character_last_y(current->enemies[enemy_loc])) = (*character_pos_y(current->main_character));
+        current->enemies[enemy_loc]->has_seen_main_character = true;
+        current->enemies[enemy_loc]->main_character_last_x = current->main_character->pos_x;
+        current->enemies[enemy_loc]->main_character_last_y = current->main_character->pos_y;
     }
 }
 
 void map_enemy_move(map* current, int enemy_loc)
 {
-    if (!(*character_is_alive(current->enemies[enemy_loc])) ) {
+    if (!current->enemies[enemy_loc]->is_alive ) {
         return;
     }
 
@@ -226,11 +229,11 @@ void map_enemy_move(map* current, int enemy_loc)
         map_enemy_move_intelligent_telepathic,
     };
 
-    int random = (*enemy_attributes(current->enemies[enemy_loc]) )& ENEMY_ATTRIBUTE_ERRATIC;
+    int random = current->enemies[enemy_loc]->attributes & ENEMY_ATTRIBUTE_ERRATIC;
     if (random) {
         map_enemy_move_erratic(current, enemy_loc);
     } else {
-        (* func_table[*enemy_attributes(current->enemies[enemy_loc])]) (current, enemy_loc);
+        (* func_table[current->enemies[enemy_loc]->attributes]) (current, enemy_loc);
     }
 
 }
@@ -239,7 +242,7 @@ void map_enemy_deinit(map* current)
 {
     for (int i = 0; i < current->enemy_count; i++) {
         if (current->enemies[i] != NULL) {
-            enemy_delete(current->enemies[i]);
+            delete current->enemies[i];
         }
     }
     free(current->enemies);

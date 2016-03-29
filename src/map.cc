@@ -142,14 +142,14 @@ void map_blank(map* current)
 
     current->rock_hardness = (uint8_t**) malloc(sizeof(uint8_t*) * current->rows * current->cols);
     current->characters_layer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
-    current->characters_location = (character***) malloc(sizeof(character**) * current->rows * current->cols);
+    current->characters_location = (character_t***) malloc(sizeof(character_t**) * current->rows * current->cols);
     current->rooms_layer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
     current->hallways_layer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
     current->char_buffer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
         current->rock_hardness[y] = (uint8_t*) malloc(sizeof(uint8_t) * current->cols);
         current->characters_layer[y] = (char*) malloc(sizeof(char) * current->cols);
-        current->characters_location[y] = (character**) malloc(sizeof(character*) * current->cols);
+        current->characters_location[y] = (character_t**) malloc(sizeof(character_t*) * current->cols);
         current->rooms_layer[y] = (char*) malloc(sizeof(char) * current->cols);
         current->hallways_layer[y] = (char*) malloc(sizeof(char) * current->cols);
         current->char_buffer[y] = (char*) malloc(sizeof(char) * current->cols);
@@ -257,7 +257,7 @@ void map_fill(map* current)
 
 void map_stairs(map* current)
 {
-    int uproom = map_rooms_find_contains_point(current, (*character_pos_x(current->main_character)), (*character_pos_y(current->main_character)));
+    int uproom = map_rooms_find_contains_point(current, current->main_character->pos_x, current->main_character->pos_y);
     if (uproom == -1) {
         uproom = rand() % current->room_count;
     }
@@ -280,16 +280,16 @@ void map_print(map* current)
 {
     for (int y = 0; y < current->rows; y++) {
         for (int x = 0; x < current->cols; x++) {
-            int dx = (*character_pos_y(current->main_character)) - y;
-            int dy = (*character_pos_x(current->main_character)) - x;
+            int dx = current->main_character->pos_y - y;
+            int dy = current->main_character->pos_x - x;
 
             if (current->characters_layer[y][x] != ' ' && dx >= -3 && dx <= 3 && dy >= -3 && dy <= 3) {
                 current->char_buffer[y][x] = current->characters_layer[y][x];
                 FILE* fp = fopen("/tmp/test.txt", "a");
                 fprintf(fp, "dx: %i dy: %i :: %c\n", dx, dy, current->characters_layer[y][x]);
                 fclose(fp);
-            } else if (((*player_seen_map(current->main_character))[y][x]) != ' ') {
-                current->char_buffer[y][x] = ((*player_seen_map(current->main_character))[y][x]);
+            } else if ((current->main_character->seen_map[y][x]) != ' ') {
+                current->char_buffer[y][x] = (current->main_character->seen_map[y][x]);
             } else {
                 current->char_buffer[y][x] = ' ';
             }
