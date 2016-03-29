@@ -5,8 +5,12 @@
     l: BSD: 2-clause
 
 ## Overview
-This part of the project finishes the conversion to C++. In order to make it
-more closely aligned with the C++. 
+This part of the project finishes the conversion to C++. Since this project has
+thus been fully converted, the few remaining structs have been converted to
+classes. Finally, the development of an editable EDL, or Entity Description
+Language for monsters and objects creates a modable interface to the game.
+
+
 
 
 ## Running
