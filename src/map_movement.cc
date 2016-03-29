@@ -38,8 +38,8 @@ int map_main(map* current, bool splash)
     binheap_t queue;
     binheap_init(&queue, moveables_moveable, NULL);
 
-    moveable* objects = malloc(sizeof(moveable) * (current->enemy_count+1));
-    binheap_node_t** bh_ptr = malloc(sizeof(binheap_node_t*) * (current->enemy_count+1));
+    moveable* objects = (moveable*) malloc(sizeof(moveable) * (current->enemy_count+1));
+    binheap_node_t** bh_ptr = (binheap_node_t**) malloc(sizeof(binheap_node_t*) * (current->enemy_count+1));
 
     objects[0].order = 0;
     objects[0].is_player = true;
@@ -309,22 +309,22 @@ void map_display_enemies(map* current)
     subwin = newpad(current->enemy_count, 50);
     for (int i = 0; i < current->enemy_count; i++) {
         int dx = (*character_pos_x(current->enemies[i])) - (*character_pos_x(current->main_character));
-        char* upordown = "right";
+        char* upordown = (char*) "right";
         if (dx < 0) {
-            upordown = "left";
+            upordown = (char*) "left";
             dx *= -1;
         }
 
         int dy = (*character_pos_y(current->enemies[i])) - (*character_pos_y(current->main_character));
-        char* leftorright = "down";
+        char* leftorright = (char*) "down";
         if (dy < 0) {
-            leftorright = "up";
+            leftorright = (char*) "up";
             dy *= -1;
         }
-        char* aliveordead = "dead";
+        char* aliveordead = (char*) "dead";
 
         if ((*character_is_alive(current->enemies[i])) ) {
-            aliveordead = "alive";
+            aliveordead = (char*) "alive";
         }
 
         wprintw(subwin, "%c [%s] - pos: %i %s, %i %s: speed: %i\n", (*character_representation(current->enemies[i])), aliveordead, dx, upordown, dy, leftorright, (*character_speed(current->enemies[i])));

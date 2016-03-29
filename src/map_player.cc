@@ -30,13 +30,13 @@ void map_player_init(map* current)
     (*character_is_alive(current->main_character)) = true;
     (*character_representation(current->main_character)) = '@';
 
-    (*player_player_distances(current->main_character)) = malloc(sizeof(char*) * current->rows * current->cols);
-    (*player_all_distances(current->main_character)) = malloc(sizeof(char*) * current->rows * current->cols);
-    (*player_seen_map(current->main_character)) = malloc(sizeof(char*) * current->rows * current->cols);
+    (*player_player_distances(current->main_character)) = (char **) malloc(sizeof(char*) * current->rows * current->cols);
+    (*player_all_distances(current->main_character)) = (char **) malloc(sizeof(char*) * current->rows * current->cols);
+    (*player_seen_map(current->main_character)) = (char **) malloc(sizeof(char*) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
-        ((*player_player_distances(current->main_character))[y]) = malloc(sizeof(char) * current->cols);
-        ((*player_all_distances(current->main_character))[y]) = malloc(sizeof(char) * current->cols);
-        ((*player_seen_map(current->main_character))[y]) = malloc(sizeof(char) * current->cols);
+        ((*player_player_distances(current->main_character))[y]) = (char *) malloc(sizeof(char) * current->cols);
+        ((*player_all_distances(current->main_character))[y]) = (char *) malloc(sizeof(char) * current->cols);
+        ((*player_seen_map(current->main_character))[y]) = (char *) malloc(sizeof(char) * current->cols);
         for (int x = 0; x < current->cols; x++) {
             ((*player_seen_map(current->main_character))[y][x]) = ' ';
         }
@@ -65,13 +65,13 @@ void map_player_distances_bounded(map* current)
     binheap_t queue;
     binheap_init(&queue, distances_distance, NULL);
 
-    distances** objects = malloc(sizeof(distances*) * current->rows * current->cols);
-    binheap_node_t*** bh_ptr = malloc(sizeof(binheap_node_t**) * current->rows * current->cols);
+    distances** objects = (distances **) malloc(sizeof(distances*) * current->rows * current->cols);
+    binheap_node_t*** bh_ptr = (binheap_node_t ***) malloc(sizeof(binheap_node_t**) * current->rows * current->cols);
 
     // No need to add character: he starts in a room
     for (int y = 0; y < current->rows; y++) {
-        objects[y] = malloc(sizeof(distances) * current->cols);
-        bh_ptr[y] = malloc(sizeof(binheap_node_t*) * current->cols);
+        objects[y] = (distances *) malloc(sizeof(distances) * current->cols);
+        bh_ptr[y] = (binheap_node_t **) malloc(sizeof(binheap_node_t*) * current->cols);
         for (int x = 0; x < current->cols; x++) {
             objects[y][x].x = x;
             objects[y][x].y = y;
@@ -126,13 +126,13 @@ void map_player_distances_unbounded(map* current)
     binheap_t queue;
     binheap_init(&queue, distances_distance, NULL);
 
-    distances** objects = malloc(sizeof(distances*) * current->rows * current->cols);
-    binheap_node_t*** bh_ptr = malloc(sizeof(binheap_node_t**) * current->rows * current->cols);
+    distances** objects = (distances **) malloc(sizeof(distances *) * current->rows * current->cols);
+    binheap_node_t*** bh_ptr = (binheap_node_t ***) malloc(sizeof(binheap_node_t**) * current->rows * current->cols);
 
     // No need to add character: he starts in a room
     for (int y = 0; y < current->rows; y++) {
-        objects[y] = malloc(sizeof(distances) * current->cols);
-        bh_ptr[y] = malloc(sizeof(binheap_node_t*) * current->cols);
+        objects[y] = (distances *) malloc(sizeof(distances) * current->cols);
+        bh_ptr[y] = (binheap_node_t **) malloc(sizeof(binheap_node_t*) * current->cols);
         for (int x = 0; x < current->cols; x++) {
             objects[y][x].x = x;
             objects[y][x].y = y;

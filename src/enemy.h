@@ -21,10 +21,6 @@
 #define ENEMY_ATTRIBUTE_8 0x00000080
 #define ENEMY_ATTRIBUTE_MAX 16
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef character enemy;
 
 enemy* enemy_new();
@@ -34,8 +30,6 @@ int* enemy_main_character_last_x(enemy* e);
 int* enemy_main_character_last_y(enemy* e);
 void enemy_delete(enemy* e);
 
-#ifdef __cplusplus
-}
 
 class enemy_t: public character_t
 {
@@ -46,5 +40,4 @@ public:
     int main_character_last_x;
     int main_character_last_y;
 };
-#endif
 #endif

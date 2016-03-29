@@ -9,9 +9,6 @@
 #define PLAYER_H
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 #include "character.h"
 
 typedef character player;
@@ -22,8 +19,6 @@ char*** player_all_distances(player* p);
 char*** player_seen_map(player* p);
 void player_delete(player* p);
 
-#ifdef __cplusplus
-}
 
 class player_t : public character_t
 {
@@ -33,5 +28,4 @@ public:
     char** seen_map;
 };
 
-#endif
 #endif

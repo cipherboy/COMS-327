@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     int nummon = -1;
 
     char* path;
-    path = malloc(sizeof(char) * 1024);
+    path = (char *) malloc(sizeof(char *) * 1024);
     snprintf(path, 1024, "%s/.rlg327/dungeon", getenv("HOME"));
 
     // Argument parsing

@@ -18,14 +18,6 @@ typedef struct {
     int32_t next_turn;
 } moveable;
 
-# ifdef __cplusplus
-extern "C" {
-# endif
-
 int32_t moveables_moveable(const void *key, const void *with);
-
-# ifdef __cplusplus
-}
-# endif
 
 #endif

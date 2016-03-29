@@ -14,7 +14,7 @@
 
 void map_enemy_init(map* current)
 {
-    current->enemies = malloc(sizeof(enemy*) * current->enemy_count);
+    current->enemies = (enemy**) malloc(sizeof(enemy*) * current->enemy_count);
     for (int i = 0; i < current->enemy_count; i++) {
         current->enemies[i] = enemy_new();
     }
@@ -89,7 +89,7 @@ void map_enemy_render(map* current)
     }
 
     if ((*character_is_alive(current->main_character)) ) {
-        current->characters_location[(*character_pos_y(current->main_character))][(*character_pos_x(current->main_character))] = (void *) &current->main_character;
+        current->characters_location[(*character_pos_y(current->main_character))][(*character_pos_x(current->main_character))] = (character *) &current->main_character;
         current->characters_layer[(*character_pos_y(current->main_character))][(*character_pos_x(current->main_character))] = (*character_representation(current->main_character));
     }
 
@@ -111,7 +111,7 @@ void map_enemy_render(map* current)
             if (current->characters_location[(*character_pos_y(current->enemies[i]))][(*character_pos_x(current->enemies[i]))] != NULL) {
                 printf("Uncaught collision!");
             }
-            current->characters_location[(*character_pos_y(current->enemies[i]))][(*character_pos_x(current->enemies[i]))] = (void *) &current->enemies[i];
+            current->characters_location[(*character_pos_y(current->enemies[i]))][(*character_pos_x(current->enemies[i]))] = (character *) &current->enemies[i];
             current->characters_layer[(*character_pos_y(current->enemies[i]))][(*character_pos_x(current->enemies[i]))] =  (*character_representation(current->enemies[i]));
         }
     }

@@ -89,7 +89,7 @@ bool map_read(map* current, char* path)
     }
 
     current->room_count = (file_size-1495)/4;
-    current->rooms = malloc(sizeof(room*) * current->room_count);
+    current->rooms = (room *) malloc(sizeof(room*) * current->room_count);
 
     for (int i = 0; i < current->room_count; i++) {
         room current_room;
@@ -140,19 +140,19 @@ void map_blank(map* current)
 
     current->enemy_count = rand() % 15;
 
-    current->rock_hardness = malloc(sizeof(uint8_t*) * current->rows * current->cols);
-    current->characters_layer = malloc(sizeof(char*) * current->rows * current->cols);
-    current->characters_location = malloc(sizeof(character**) * current->rows * current->cols);
-    current->rooms_layer = malloc(sizeof(char*) * current->rows * current->cols);
-    current->hallways_layer = malloc(sizeof(char*) * current->rows * current->cols);
-    current->char_buffer = malloc(sizeof(char*) * current->rows * current->cols);
+    current->rock_hardness = (uint8_t**) malloc(sizeof(uint8_t*) * current->rows * current->cols);
+    current->characters_layer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
+    current->characters_location = (character***) malloc(sizeof(character**) * current->rows * current->cols);
+    current->rooms_layer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
+    current->hallways_layer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
+    current->char_buffer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
-        current->rock_hardness[y] = malloc(sizeof(uint8_t) * current->cols);
-        current->characters_layer[y] = malloc(sizeof(char) * current->cols);
-        current->characters_location[y] = malloc(sizeof(character*) * current->cols);
-        current->rooms_layer[y] = malloc(sizeof(char) * current->cols);
-        current->hallways_layer[y] = malloc(sizeof(char) * current->cols);
-        current->char_buffer[y] = malloc(sizeof(char) * current->cols);
+        current->rock_hardness[y] = (uint8_t*) malloc(sizeof(uint8_t) * current->cols);
+        current->characters_layer[y] = (char*) malloc(sizeof(char) * current->cols);
+        current->characters_location[y] = (character**) malloc(sizeof(character*) * current->cols);
+        current->rooms_layer[y] = (char*) malloc(sizeof(char) * current->cols);
+        current->hallways_layer[y] = (char*) malloc(sizeof(char) * current->cols);
+        current->char_buffer[y] = (char*) malloc(sizeof(char) * current->cols);
         for (int x = 0; x < current->cols; x++) {
             current->rock_hardness[y][x] = 255;
             current->characters_layer[y][x] = ' ';
@@ -243,7 +243,7 @@ void map_fill(map* current)
     }
 
     current->room_count = r_num_rooms;
-    current->rooms = malloc(sizeof(room*) * r_num_rooms);
+    current->rooms = (room*) malloc(sizeof(room) * r_num_rooms);
 
     for (int i = 0; i < r_num_rooms; i++) {
         current->rooms[i] = candidates[choices[i]];

@@ -10,10 +10,6 @@
 
 #include "stdbool.h"
 
-# ifdef __cplusplus
-extern "C" {
-# endif
-
 typedef double character; // for increased accuracy
 
 character* character_new();
@@ -23,9 +19,6 @@ bool* character_is_alive(character* c);
 char* character_representation(character* c);
 int* character_speed(character* c);
 void character_delete(character* c);
-
-# ifdef __cplusplus
-}
 
 class character_t
 {
@@ -39,7 +32,5 @@ public:
 
     int speed;
 };
-
-# endif
 
 #endif
