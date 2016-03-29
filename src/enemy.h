@@ -4,13 +4,9 @@
  * Enemy header file
 **/
 
-#include "character.h"
-
 #pragma once
 #ifndef ENEMY_H
 #define ENEMY_H
-
-#include "stdbool.h"
 
 #define ENEMY_ATTRIBUTE_INTELLIGENCE 0x00000001
 #define ENEMY_ATTRIBUTE_TELEPATHY 0x00000002
@@ -22,6 +18,8 @@
 #define ENEMY_ATTRIBUTE_8 0x00000080
 #define ENEMY_ATTRIBUTE_MAX 16
 
+#include "character.h"
+
 class enemy_t: public character_t
 {
 public:
@@ -31,6 +29,6 @@ public:
     int main_character_last_x;
     int main_character_last_y;
 
-    enemy_t(map* current);
+    enemy_t(map_t* current);
 };
 #endif

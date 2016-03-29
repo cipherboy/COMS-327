@@ -7,6 +7,7 @@
 #pragma once
 #ifndef PLAYER_H
 #define PLAYER_H
+
 #include "character.h"
 
 class player_t : public character_t
@@ -16,7 +17,7 @@ public:
     char** all_distances;
     char** seen_map;
 
-    player_t(map* current);
+    player_t(map_t* current);
     ~player_t();
 };
 

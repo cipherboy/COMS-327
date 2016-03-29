@@ -4,18 +4,16 @@
  * Character header file
 **/
 
-#include "map.h"
-
 #pragma once
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
-#include "stdbool.h"
+#include "map.h"
 
 class character_t
 {
 protected:
-  map* current;
+  map_t* current;
 
 public:
   int pos_x;
@@ -27,7 +25,7 @@ public:
 
   int speed;
 
-  character_t(map* current);
+  character_t(map_t* current);
   ~character_t();
 };
 

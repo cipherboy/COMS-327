@@ -7,8 +7,9 @@
 
 #include "stdlib.h"
 #include "character.h"
+#include "map.h"
 
-character_t::character_t(map* current)
+character_t::character_t(map_t* current)
 {
   this->current = current;
 

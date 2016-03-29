@@ -14,19 +14,19 @@
 #include "node_distances.h"
 #include "binheap.h"
 
-void map_player_init(map* current)
+void map_player_init(map_t* current)
 {
     current->main_character = new player_t(current);
 }
 
-void map_player_distances(map* current)
+void map_player_distances(map_t* current)
 {
     map_player_distances_blank(current);
     map_player_distances_bounded(current);
     map_player_distances_unbounded(current);
 }
 
-void map_player_distances_blank(map* current)
+void map_player_distances_blank(map_t* current)
 {
     for (int y = 0; y < current->rows; y++) {
         for (int x = 0; x < current->cols; x++) {
@@ -36,7 +36,7 @@ void map_player_distances_blank(map* current)
     }
 }
 
-void map_player_distances_bounded(map* current)
+void map_player_distances_bounded(map_t* current)
 {
     binheap_t queue;
     binheap_init(&queue, distances_distance, NULL);
@@ -97,7 +97,7 @@ void map_player_distances_bounded(map* current)
     binheap_delete(&queue);
 }
 
-void map_player_distances_unbounded(map* current)
+void map_player_distances_unbounded(map_t* current)
 {
     binheap_t queue;
     binheap_init(&queue, distances_distance, NULL);
@@ -156,7 +156,7 @@ void map_player_distances_unbounded(map* current)
     binheap_delete(&queue);
 }
 
-void map_player_move(map* current, int dx, int dy)
+void map_player_move(map_t* current, int dx, int dy)
 {
     int pos_x = current->main_character->pos_x;
     int pos_y = current->main_character->pos_y;
@@ -204,7 +204,7 @@ void map_player_move(map* current, int dx, int dy)
     }
 }
 
-void map_player_deinit(map* current)
+void map_player_deinit(map_t* current)
 {
     delete current->main_character;
 }

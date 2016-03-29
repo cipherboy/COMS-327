@@ -11,11 +11,11 @@
 
 #include "map.h"
 
-void map_enemy_move_erratic(map* current, int enemy_loc);
-void map_enemy_move_random(map* current, int enemy_loc);
-void map_enemy_move_intelligent_not_telepathic(map* current, int enemy_loc);
-void map_enemy_move_not_intelligent_telepathic(map* current, int enemy_loc);
-void map_enemy_move_intelligent_telepathic(map* current, int enemy_loc);
-void map_enemy_move_not_intelligent_not_telepathic(map* current, int enemy_loc);
+void map_enemy_move_erratic(map_t* current, int enemy_loc);
+void map_enemy_move_random(map_t* current, int enemy_loc);
+void map_enemy_move_intelligent_not_telepathic(map_t* current, int enemy_loc);
+void map_enemy_move_not_intelligent_telepathic(map_t* current, int enemy_loc);
+void map_enemy_move_intelligent_telepathic(map_t* current, int enemy_loc);
+void map_enemy_move_not_intelligent_not_telepathic(map_t* current, int enemy_loc);
 
 #endif

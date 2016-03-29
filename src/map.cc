@@ -24,14 +24,14 @@
 #include "utils.h"
 #include "player.h"
 
-void map_init(map* current)
+void map_init(map_t* current)
 {
     map_blank(current);
     map_fill(current);
     map_layers(current);
 }
 
-bool map_read(map* current, char* path)
+bool map_read(map_t* current, char* path)
 {
     char magic[7];
     magic[6] = '\0';
@@ -131,7 +131,7 @@ bool map_read(map* current, char* path)
     return true;
 }
 
-void map_blank(map* current)
+void map_blank(map_t* current)
 {
     current->cols = 80;
     current->rows = 21;
@@ -164,7 +164,7 @@ void map_blank(map* current)
     }
 }
 
-void map_fill(map* current)
+void map_fill(map_t* current)
 {
     for (int y = 1; y < current->rows-1; y++) {
         for (int x = 1; x < current->cols-1; x++) {
@@ -255,7 +255,7 @@ void map_fill(map* current)
     }
 }
 
-void map_stairs(map* current)
+void map_stairs(map_t* current)
 {
     int uproom = map_rooms_find_contains_point(current, current->main_character->pos_x, current->main_character->pos_y);
     if (uproom == -1) {
@@ -276,7 +276,7 @@ void map_stairs(map* current)
     current->rooms_layer[current->rooms[downroom].pos_y + dy][current->rooms[downroom].pos_x + dx] = '>';
 }
 
-void map_print(map* current)
+void map_print(map_t* current)
 {
     for (int y = 0; y < current->rows; y++) {
         for (int x = 0; x < current->cols; x++) {
@@ -297,7 +297,7 @@ void map_print(map* current)
     }
 }
 
-void map_write(map* current, char* path)
+void map_write(map_t* current, char* path)
 {
     char magic[7] = "RLG327";
     uint32_t version = htobe32(0);
@@ -374,7 +374,7 @@ void map_write(map* current, char* path)
     fclose(f_ptr);
 }
 
-void map_deinit(map* current)
+void map_deinit(map_t* current)
 {
     for (int y = 0; y < current->rows; y++) {
         free(current->rock_hardness[y]);

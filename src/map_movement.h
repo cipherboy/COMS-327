@@ -10,8 +10,8 @@
 #ifndef MAP_MOVEMENT_H
 #define MAP_MOVEMENT_H
 
-int map_main(map* current, bool splash);
+int map_main(map_t* current, bool splash);
 void map_render_splash();
-void map_display_enemies(map* current);
+void map_display_enemies(map_t* current);
 
 #endif

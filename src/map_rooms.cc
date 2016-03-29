@@ -8,7 +8,7 @@
 #include "map.h"
 #include "room.h"
 
-bool map_rooms_contains_point(map* current, int x, int y)
+bool map_rooms_contains_point(map_t* current, int x, int y)
 {
     for (int i = 0; i < current->room_count; i++) {
         if (room_contains_point(x, y, &current->rooms[i])) {
@@ -18,7 +18,7 @@ bool map_rooms_contains_point(map* current, int x, int y)
     return false;
 }
 
-int map_rooms_find_contains_point(map* current, int x, int y)
+int map_rooms_find_contains_point(map_t* current, int x, int y)
 {
     for (int i = 0; i < current->room_count; i++) {
         if (room_contains_point(x, y, &current->rooms[i])) {

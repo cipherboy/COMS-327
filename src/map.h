@@ -18,7 +18,8 @@ class player_t;
 class enemy_t;
 class character_t;
 
-typedef struct {
+class map_t {
+public:
     int rows; // max_x
     int cols; // max_y
 
@@ -38,7 +39,7 @@ typedef struct {
     char** rooms_layer;
     char** hallways_layer;
     char** char_buffer;
-} map;
+};
 
 // Method declarations
 #include "map_layers.h"
@@ -48,13 +49,13 @@ typedef struct {
 #include "map_enemy_move.h"
 #include "map_movement.h"
 
-void map_init(map* current);
-bool map_read(map* current, char* path);
-void map_blank(map* current);
-void map_fill(map* current);
-void map_stairs(map* current);
-void map_print(map* current);
-void map_write(map* current, char* path);
-void map_deinit(map* current);
+void map_init(map_t* current);
+bool map_read(map_t* current, char* path);
+void map_blank(map_t* current);
+void map_fill(map_t* current);
+void map_stairs(map_t* current);
+void map_print(map_t* current);
+void map_write(map_t* current, char* path);
+void map_deinit(map_t* current);
 
 #endif

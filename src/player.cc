@@ -7,8 +7,9 @@
 #include "stdlib.h"
 #include "player.h"
 #include "character.h"
+#include "map.h"
 
-player_t::player_t(map* current) : character_t(current)
+player_t::player_t(map_t* current) : character_t(current)
 {
     this->player_distances = (char **) malloc(sizeof(char*) * current->rows * current->cols);
     this->all_distances = (char **) malloc(sizeof(char*) * current->rows * current->cols);

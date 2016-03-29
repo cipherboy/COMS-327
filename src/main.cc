@@ -13,7 +13,7 @@
 
 int main(int argc, char* argv[])
 {
-    map r;
+    map_t r;
 
     bool load = false;
     bool save = false;

@@ -15,7 +15,7 @@
 #include "map_enemy.h"
 #include "utils.h"
 
-void map_enemy_init(map* current)
+void map_enemy_init(map_t* current)
 {
     current->enemies = (enemy_t**) malloc(sizeof(enemy_t*) * current->enemy_count);
     for (int i = 0; i < current->enemy_count; i++) {
@@ -82,7 +82,7 @@ void map_enemy_init(map* current)
     }
 }
 
-void map_enemy_render(map* current)
+void map_enemy_render(map_t* current)
 {
     for (int y = 0; y < current->rows; y++) {
         for (int x = 0; x < current->cols; x++) {
@@ -120,7 +120,7 @@ void map_enemy_render(map* current)
     }
 }
 
-void map_enemy_update_last_seen(map* current, int enemy_loc)
+void map_enemy_update_last_seen(map_t* current, int enemy_loc)
 {
     int telepathic = current->enemies[enemy_loc]->attributes & ENEMY_ATTRIBUTE_TELEPATHY;
     if (telepathic) {
@@ -212,7 +212,7 @@ void map_enemy_update_last_seen(map* current, int enemy_loc)
     }
 }
 
-void map_enemy_move(map* current, int enemy_loc)
+void map_enemy_move(map_t* current, int enemy_loc)
 {
     if (!current->enemies[enemy_loc]->is_alive ) {
         return;
@@ -238,7 +238,7 @@ void map_enemy_move(map* current, int enemy_loc)
 
 }
 
-void map_enemy_deinit(map* current)
+void map_enemy_deinit(map_t* current)
 {
     for (int i = 0; i < current->enemy_count; i++) {
         if (current->enemies[i] != NULL) {

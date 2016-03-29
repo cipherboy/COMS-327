@@ -10,7 +10,7 @@
 #ifndef MAP_ROOMS_H
 #define MAP_ROOMS_H
 
-bool map_rooms_contains_point(map* current, int x, int y);
-int map_rooms_find_contains_point(map* current, int x, int y);
+bool map_rooms_contains_point(map_t* current, int x, int y);
+int map_rooms_find_contains_point(map_t* current, int x, int y);
 
 #endif

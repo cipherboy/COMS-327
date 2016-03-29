@@ -11,7 +11,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct {
+class room {
+public:
     uint8_t pos_x;
     uint8_t pos_y;
 
@@ -20,7 +21,7 @@ typedef struct {
 
     uint8_t max_x;
     uint8_t max_y;
-} room;
+};
 
 bool room_overlaps(room* first, room* second);
 bool room_contains_point(uint8_t x, uint8_t y, room* place);
