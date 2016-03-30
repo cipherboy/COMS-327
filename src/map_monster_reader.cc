@@ -9,6 +9,7 @@
 #include "player.h"
 #include "map.h"
 #include "utils.h"
+#include "dice.h"
 
 #include <cstddef>
 #include <cstdlib>
@@ -69,7 +70,6 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
         string line;
         line.assign(real_line);
         if (line == "BEGIN MONSTER" || line == "begin monster") {
-            cout << "Beginning monster" << endl;
             if (in_monster && !has_error) {
                 cout << "Not keeping old monster even though no error" << endl;
                 current_monster -= 1;
@@ -173,7 +173,8 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
                 has_error = true;
                 cout << "Error: missing SPEED value" << endl;
             } else {
-                results[current_monster]->speed = atoi(speed.c_str());
+                results[current_monster]->speed_dice = dice_t();
+                results[current_monster]->speed_dice.parse(strndup(speed.c_str(), speed.length()));
             }
         }
 
@@ -282,7 +283,7 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
         cout << m.name << endl;
         cout << m.description;
         cout << m.color << endl;
-        cout << m.speed << endl;
+        cout << m.speed_dice.print() << endl;
         cout << m.abilities << endl;
         cout << m.hp << endl;
         cout << m.attack_damage << endl << endl;

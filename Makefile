@@ -8,7 +8,7 @@
 # run:				makes all, executes code
 # execute:			runs current executable
 
-VERSION = Scheel_Alexander.assignment-1.06
+VERSION = Scheel_Alexander.assignment-1.07
 NAME = rlg327
 CC ?= gcc
 CXX ?= g++

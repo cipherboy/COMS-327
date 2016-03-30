@@ -17,28 +17,28 @@ using namespace std;
 class character_t
 {
 protected:
-  map_t* current;
-
+    map_t* current;
 public:
-  int pos_x;
-  int pos_y;
+    int pos_x;
+    int pos_y;
 
-  int hp;
-  int attack_damage;
+    int hp;
+    int attack_damage;
 
-  bool is_alive;
+    bool is_alive;
 
-  char representation;
+    char representation;
 
-  string name;
-  string description;
-  string color;
-  string abilities;
+    string name;
+    string description;
+    string color;
+    string abilities;
 
-  int speed;
+    int speed;
+    dice_t speed_dice;
 
-  character_t(map_t* current);
-  ~character_t();
+    character_t(map_t* current);
+    ~character_t();
 };
 
 #endif

@@ -11,7 +11,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-class room {
+class room
+{
 public:
     uint8_t pos_x;
     uint8_t pos_y;

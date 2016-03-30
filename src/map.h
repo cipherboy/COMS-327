@@ -18,7 +18,8 @@ class player_t;
 class enemy_t;
 class character_t;
 
-class map_t {
+class map_t
+{
 public:
     int rows; // max_x
     int cols; // max_y
