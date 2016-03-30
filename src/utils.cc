@@ -6,6 +6,9 @@
 
 #include <time.h>
 #include <stdio.h>
+#include <string>
+#include "map.h"
+#include "utils.h"
 
 unsigned int utils_genseed()
 {

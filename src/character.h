@@ -9,6 +9,10 @@
 #define CHARACTER_H
 
 #include "map.h"
+#include "dice.h"
+#include <string>
+
+using namespace std;
 
 class character_t
 {
@@ -19,9 +23,17 @@ public:
   int pos_x;
   int pos_y;
 
+  int hp;
+  int attack_damage;
+
   bool is_alive;
 
   char representation;
+
+  string name;
+  string description;
+  string color;
+  string abilities;
 
   int speed;
 

@@ -31,22 +31,28 @@ void map_init(map_t* current)
     map_layers(current);
 }
 
-bool map_read(map_t* current, char* path)
+bool map_read(map_t* current, char* basepath)
 {
     char magic[7];
     magic[6] = '\0';
     FILE* f_ptr;
     int fread_size = 0;
 
+    char* path = (char *) malloc(sizeof(char) * 1100);
+    strncat(path, basepath, 1024);
+    strcat(path, "/dungeon");
+
     f_ptr = fopen(path, "r");
     if (f_ptr == NULL) {
         printf("Opening file for writing failed with code %d, %s\n", errno, strerror(errno));
+        free(path);
         return false;
     }
 
     fread_size = fread(&magic, sizeof(char), 6, f_ptr);
     if (fread_size != 6 || strcmp(magic, "RLG327") != 0) {
         printf("Invalid magic bytes: %s\n", magic);
+        free(path);
         return false;
     }
 
@@ -55,6 +61,7 @@ bool map_read(map_t* current, char* path)
     version = be32toh(version);
     if (fread_size != 1 || version != 0) {
         printf("Invalid version number: %u\n", version);
+        free(path);
         return false;
     }
 
@@ -63,6 +70,7 @@ bool map_read(map_t* current, char* path)
     file_size = be32toh(file_size);
     if (fread_size != 1) {
         printf("Unable to read file size: %u\n", file_size);
+        free(path);
         return false;
     }
 
@@ -128,6 +136,7 @@ bool map_read(map_t* current, char* path)
     fclose(f_ptr);
 
     map_layers_rooms(current);
+    free(path);
     return true;
 }
 
@@ -297,11 +306,15 @@ void map_print(map_t* current)
     }
 }
 
-void map_write(map_t* current, char* path)
+void map_write(map_t* current, char* basepath)
 {
     char magic[7] = "RLG327";
     uint32_t version = htobe32(0);
     uint32_t file_size = htobe32(6+4+4+1482+(4*current->room_count));
+
+    char* path = (char *) malloc(sizeof(char) * 1100);
+    strncat(path, basepath, 1024);
+    strcat(path, "/dungeon");
 
     FILE* f_ptr;
     int fwrite_size = 0;
@@ -309,24 +322,28 @@ void map_write(map_t* current, char* path)
     f_ptr = fopen(path, "w");
     if (f_ptr == NULL) {
         printf("Opening file for writing failed with code %d, %s\n", errno, strerror(errno));
+        free(path);
         return;
     }
 
     fwrite_size = fwrite(&magic, sizeof(char), 6, f_ptr);
     if (fwrite_size != 6) {
         printf("Unable to write magic bytes: %i != 6\n", fwrite_size);
+        free(path);
         return;
     }
 
     fwrite_size = fwrite(&version, sizeof(version), 1, f_ptr);
     if (fwrite_size != 1) {
         printf("Unable to write version: %i != 1\n", fwrite_size);
+        free(path);
         return;
     }
 
     fwrite_size = fwrite(&file_size, sizeof(file_size), 1, f_ptr);
     if (fwrite_size != 1) {
         printf("Unable to write file size: %i != 1\n", fwrite_size);
+        free(path);
         return;
     }
 
@@ -335,6 +352,7 @@ void map_write(map_t* current, char* path)
             fwrite_size = fwrite(&current->rock_hardness[y][x], sizeof(current->rock_hardness[y][x]), 1, f_ptr);
             if (fwrite_size != 1) {
                 printf("Unable to write hardness[%i][%i]: %i != 1\n", y, x, fwrite_size);
+                free(path);
                 return;
             }
         }
@@ -349,29 +367,34 @@ void map_write(map_t* current, char* path)
         fwrite_size = fwrite(&r_pos_x, sizeof(r_pos_x), 1, f_ptr);
         if (fwrite_size != 1) {
             printf("Unable to write r_pos_x[%i]: %i != 1\n", room_counter, fwrite_size);
+            free(path);
             return;
         }
 
         fwrite_size = fwrite(&r_pos_y, sizeof(r_pos_y), 1, f_ptr);
         if (fwrite_size != 1) {
             printf("Unable to write r_pos_y[%i]: %i != 1\n", room_counter, fwrite_size);
+            free(path);
             return;
         }
 
         fwrite_size = fwrite(&r_width, sizeof(r_width), 1, f_ptr);
         if (fwrite_size != 1) {
             printf("Unable to write r_width[%i]: %i != 1\n", room_counter, fwrite_size);
+            free(path);
             return;
         }
 
         fwrite_size = fwrite(&r_height, sizeof(r_height), 1, f_ptr);
         if (fwrite_size != 1) {
             printf("Unable to write r_height[%i]: %i != 1\n", room_counter, fwrite_size);
+            free(path);
             return;
         }
     }
 
     fclose(f_ptr);
+    free(path);
 }
 
 void map_deinit(map_t* current)

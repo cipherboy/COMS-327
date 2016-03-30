@@ -10,6 +10,7 @@
 #include <stdbool.h>
 
 #include "map.h"
+#include "map_monster_reader.h"
 
 int main(int argc, char* argv[])
 {
@@ -18,11 +19,13 @@ int main(int argc, char* argv[])
     bool load = false;
     bool save = false;
     bool other = false;
+    bool monsters = false;
+    bool items = false;
     int nummon = -1;
 
-    char* path;
-    path = (char *) malloc(sizeof(char *) * 1024);
-    snprintf(path, 1024, "%s/.rlg327/dungeon", getenv("HOME"));
+    char* basepath;
+    basepath = (char *) malloc(sizeof(char *) * 1024);
+    snprintf(basepath, 1024, "%s/.rlg327/", getenv("HOME"));
 
     // Argument parsing
     for (int i = 1; i < argc; i++) {
@@ -30,11 +33,15 @@ int main(int argc, char* argv[])
             load = true;
         } else if (strcmp(argv[i], "--save") == 0) {
             save = true;
+        } else if (strcmp(argv[i], "--monsters") == 0) {
+            monsters = true;
+        } else if (strcmp(argv[i], "--items") == 0) {
+            items = true;
         } else if (strcmp(argv[i], "--nummon") == 0) {
             nummon = atoi(argv[++i]);
             if (nummon < 0 || nummon > 100) {
                 printf("Invalid number of monsters: %i ; 0 <= nummon <= 100\n", nummon);
-                free(path);
+                free(basepath);
                 return 1;
             }
         } else {
@@ -44,17 +51,29 @@ int main(int argc, char* argv[])
 
     if (other) {
         printf("Usage: %s [--save] [--load] [--nummon int]\n\t--save\t\tcreate a new world and save state\n\t--load\t\tload an existing world\n\t--nummon\tspecify number of monsters\n", argv[0]);
-        free(path);
+        free(basepath);
         return 1;
     }
 
     if (load) {
-        if (!map_read(&r, path)) {
-            printf("Error reading path: %s. Are you sure it exists and is readable?\n", path);
+        if (!map_read(&r, basepath)) {
+            printf("Error reading basepath: %s. Are you sure it exists and is readable?\n", basepath);
             return 0;
         }
     } else {
         map_init(&r);
+    }
+
+    if (monsters) {
+        map_monster_parse_file(&r, basepath);
+    }
+
+    if (items) {
+        map_monster_parse_file(&r, basepath);
+    }
+
+    if (monsters || items) {
+        return 0;
     }
 
     if (nummon != -1) {
@@ -90,13 +109,13 @@ int main(int argc, char* argv[])
     }
 
     if (save) {
-        map_write(&r, path);
+        map_write(&r, basepath);
     }
 
     map_enemy_deinit(&r);
     map_player_deinit(&r);
     map_deinit(&r);
-    free(path);
+    free(basepath);
 
     return 0;
 }

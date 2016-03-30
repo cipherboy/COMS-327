@@ -8,6 +8,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <string>
+
 unsigned int utils_genseed();
 int ipow(int base, int exp);
 int raw_distances(int x1, int y1, int x2, int y2);
