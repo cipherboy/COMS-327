@@ -82,7 +82,7 @@ string dice_t::print()
     std::ostringstream output;
 
     output << this->base;
-    output << " + ";
+    output << "+";
     output << this->dice;
     output << "d";
     output << this->sides;

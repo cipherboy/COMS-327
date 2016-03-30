@@ -22,8 +22,8 @@ public:
     int pos_x;
     int pos_y;
 
-    int hp;
-    int attack_damage;
+    dice_t hp;
+    dice_t attack_damage;
 
     bool is_alive;
 
@@ -38,7 +38,6 @@ public:
     dice_t speed_dice;
 
     character_t(map_t* current);
-    ~character_t();
 };
 
 #endif

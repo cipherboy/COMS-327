@@ -131,7 +131,7 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
             results[current_monster]->description = "";
         }
 
-        if (!has_error && in_monster && (line.substr(0, 5) == "COLOR" || line.substr(0, 4) == "color")) {
+        if (!has_error && in_monster && (line.substr(0, 5) == "COLOR" || line.substr(0, 5) == "color")) {
             if (in_description) {
                 has_error = true;
                 cout << "Error: description not terminated" << endl;
@@ -220,7 +220,8 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
                 has_error = true;
                 cout << "Error: missing HP value" << endl;
             } else {
-                results[current_monster]->hp = atoi(hp.c_str());
+                results[current_monster]->hp = dice_t();
+                results[current_monster]->hp.parse(strndup(hp.c_str(), hp.length()));
             }
         }
 
@@ -243,7 +244,8 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
                 has_error = true;
                 cout << "Error: missing DAM value" << endl;
             } else {
-                results[current_monster]->attack_damage = atoi(dam.c_str());
+                results[current_monster]->attack_damage = dice_t();
+                results[current_monster]->attack_damage.parse(strndup(dam.c_str(), dam.length()));
             }
         }
 
@@ -285,8 +287,8 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
         cout << m.color << endl;
         cout << m.speed_dice.print() << endl;
         cout << m.abilities << endl;
-        cout << m.hp << endl;
-        cout << m.attack_damage << endl << endl;
+        cout << m.hp.print() << endl;
+        cout << m.attack_damage.print() << endl << endl;
     }
 
     f.close();

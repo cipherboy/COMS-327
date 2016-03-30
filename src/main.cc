@@ -11,6 +11,7 @@
 
 #include "map.h"
 #include "map_monster_reader.h"
+#include "map_item_reader.h"
 
 int main(int argc, char* argv[])
 {
@@ -50,7 +51,7 @@ int main(int argc, char* argv[])
     }
 
     if (other) {
-        printf("Usage: %s [--save] [--load] [--nummon int]\n\t--save\t\tcreate a new world and save state\n\t--load\t\tload an existing world\n\t--nummon\tspecify number of monsters\n", argv[0]);
+        printf("Usage: %s [--save] [--load] [--nummon int]\n\t--save\t\tcreate a new world and save state\n\t--load\t\tload an existing world\n\t--nummon\tspecify number of monsters\n\t--monsters\tparse the monsters definition file\n\t--items\t\tparse the items definition file\n\n", argv[0]);
         free(basepath);
         return 1;
     }
@@ -69,7 +70,7 @@ int main(int argc, char* argv[])
     }
 
     if (items) {
-        map_monster_parse_file(&r, basepath);
+        map_item_parse_file(&r, basepath);
     }
 
     if (monsters || items) {

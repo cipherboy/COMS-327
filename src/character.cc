@@ -25,5 +25,3 @@ character_t::character_t(map_t* current)
     this->is_alive = true;
     this->representation = '@';
 }
-
-character_t::~character_t(void) { }
