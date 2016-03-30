@@ -402,6 +402,16 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
         }
     }
 
+    if (in_monster && !has_error) {
+        cout << "Not keeping last object even though no error" << endl;
+        delete results[current_object];
+        current_object -= 1;
+    } else if (has_error) {
+        cout << "Discarding last object due to previous errors" << endl;
+        delete results[current_object];
+        current_object -= 1;
+    }
+
     cout << endl << endl << endl << "Parsed monster results:" << endl;
 
     for (int j = 0; j <= current_object; j++) {

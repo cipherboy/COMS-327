@@ -271,6 +271,16 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
         }
     }
 
+    if (in_monster && !has_error) {
+        cout << "Not keeping last monster even though no error" << endl;
+        delete results[current_monster];
+        current_monster -= 1;
+    } else if (has_error) {
+        cout << "Discarding last monster due to previous errors" << endl;
+        delete results[current_monster];
+        current_monster -= 1;
+    }
+
     cout << endl << endl << endl << "Parsed monster results:" << endl;
 
     for (int j = 0; j <= current_monster; j++) {
