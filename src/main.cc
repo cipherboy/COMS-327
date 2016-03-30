@@ -59,6 +59,7 @@ int main(int argc, char* argv[])
     if (load) {
         if (!map_read(&r, basepath)) {
             printf("Error reading basepath: %s. Are you sure it exists and is readable?\n", basepath);
+            free(basepath);
             return 0;
         }
     } else {
@@ -74,6 +75,8 @@ int main(int argc, char* argv[])
     }
 
     if (monsters || items) {
+        map_deinit(&r);
+        free(basepath);
         return 0;
     }
 

@@ -23,36 +23,27 @@ using namespace std;
 
 character_t** map_monster_parse_file(map_t* current, char* basepath)
 {
-    char* path = (char *) malloc(sizeof(char) * 1100);
-    strncat(path, basepath, 1024);
-    strcat(path, "/monster_desc.txt");
+    string path = basepath;
+    path += "/monster_desc.txt";
 
-    cout << path << endl;
-
-    ifstream f (path);
+    ifstream f (path.c_str());
     if (!f) {
         cout << "Error reading file." << endl;
-        free(path);
         return NULL;
     }
 
     character_t** results = (character_t**) malloc(sizeof(character_t*) * 1);
-    results[0] = new character_t(current);
 
     string real_line;
     if (!getline(f, real_line)) {
         cout << "Error reading first line of file." << endl;
-        free(path);
         return NULL;
     }
 
     if (real_line != "RLG327 MONSTER DESCRIPTION 1") {
         cout << "First line of file mismatch." << endl;
-        free(path);
         return NULL;
     }
-
-    free(path);
 
     int current_monster = -1;
     bool in_description = false;
@@ -72,9 +63,11 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
         if (line == "BEGIN MONSTER" || line == "begin monster") {
             if (in_monster && !has_error) {
                 cout << "Not keeping old monster even though no error" << endl;
+                delete results[current_monster];
                 current_monster -= 1;
             } else if (has_error) {
                 cout << "Discarding current monster due to previous errors" << endl;
+                delete results[current_monster];
                 current_monster -= 1;
             }
 
@@ -174,7 +167,7 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
                 cout << "Error: missing SPEED value" << endl;
             } else {
                 results[current_monster]->speed_dice = dice_t();
-                results[current_monster]->speed_dice.parse(strndup(speed.c_str(), speed.length()));
+                results[current_monster]->speed_dice.parse((char *) speed.c_str());
             }
         }
 
@@ -221,7 +214,7 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
                 cout << "Error: missing HP value" << endl;
             } else {
                 results[current_monster]->hp = dice_t();
-                results[current_monster]->hp.parse(strndup(hp.c_str(), hp.length()));
+                results[current_monster]->hp.parse((char *) hp.c_str());
             }
         }
 
@@ -245,7 +238,7 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
                 cout << "Error: missing DAM value" << endl;
             } else {
                 results[current_monster]->attack_damage = dice_t();
-                results[current_monster]->attack_damage.parse(strndup(dam.c_str(), dam.length()));
+                results[current_monster]->attack_damage.parse((char *) dam.c_str());
             }
         }
 
@@ -280,7 +273,7 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
 
     cout << endl << endl << endl << "Parsed monster results:" << endl;
 
-    for (int j = 0; j < current_monster; j++) {
+    for (int j = 0; j <= current_monster; j++) {
         character_t m = *results[j];
         cout << m.name << endl;
         cout << m.description;
@@ -289,11 +282,11 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
         cout << m.abilities << endl;
         cout << m.hp.print() << endl;
         cout << m.attack_damage.print() << endl << endl;
+        delete results[j];
     }
 
     f.close();
 
-    free(path);
     free(results);
 
     return NULL;

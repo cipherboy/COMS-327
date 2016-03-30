@@ -23,36 +23,27 @@ using namespace std;
 
 object_t** map_item_parse_file(map_t* current, char* basepath)
 {
-    char* path = (char *) malloc(sizeof(char) * 1100);
-    strncat(path, basepath, 1024);
-    strcat(path, "/object_desc.txt");
+    string path = basepath;
+    path += "/object_desc.txt";
 
-    cout << path << endl;
-
-    ifstream f (path);
+    ifstream f (path.c_str());
     if (!f) {
         cout << "Error reading file." << endl;
-        free(path);
         return NULL;
     }
 
     object_t** results = (object_t**) malloc(sizeof(object_t*) * 1);
-    results[0] = new object_t();
 
     string real_line;
     if (!getline(f, real_line)) {
         cout << "Error reading first line of file." << endl;
-        free(path);
         return NULL;
     }
 
     if (real_line != "RLG327 OBJECT DESCRIPTION 1") {
         cout << "First line of file mismatch." << endl;
-        free(path);
         return NULL;
     }
-
-    free(path);
 
     int current_object = -1;
     bool in_description = false;
@@ -77,9 +68,11 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
         if (line == "BEGIN OBJECT" || line == "begin object") {
             if (in_monster && !has_error) {
                 cout << "Not keeping old object even though no error" << endl;
+                delete results[current_object];
                 current_object -= 1;
             } else if (has_error) {
                 cout << "Discarding current object due to previous errors" << endl;
+                delete results[current_object];
                 current_object -= 1;
             }
 
@@ -208,7 +201,7 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
                 cout << "Error: missing SPEED value" << endl;
             } else {
                 results[current_object]->speed = dice_t();
-                results[current_object]->speed.parse(strndup(speed.c_str(), speed.length()));
+                results[current_object]->speed.parse((char *) speed.c_str());
             }
         }
 
@@ -232,7 +225,7 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
                 cout << "Error: missing HIT value" << endl;
             } else {
                 results[current_object]->hit = dice_t();
-                results[current_object]->hit.parse(strndup(hit.c_str(), hit.length()));
+                results[current_object]->hit.parse((char *) hit.c_str());
             }
         }
 
@@ -256,7 +249,7 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
                 cout << "Error: missing DAM value" << endl;
             } else {
                 results[current_object]->damage = dice_t();
-                results[current_object]->damage.parse(strndup(damage.c_str(), damage.length()));
+                results[current_object]->damage.parse((char *) damage.c_str());
             }
         }
 
@@ -280,7 +273,7 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
                 cout << "Error: missing DODGE value" << endl;
             } else {
                 results[current_object]->dodge = dice_t();
-                results[current_object]->dodge.parse(strndup(dodge.c_str(), dodge.length()));
+                results[current_object]->dodge.parse((char *) dodge.c_str());
             }
         }
 
@@ -304,7 +297,7 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
                 cout << "Error: missing DEF value" << endl;
             } else {
                 results[current_object]->defense = dice_t();
-                results[current_object]->defense.parse(strndup(defense.c_str(), defense.length()));
+                results[current_object]->defense.parse((char *) defense.c_str());
             }
         }
 
@@ -328,7 +321,7 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
                 cout << "Error: missing WEIGHT value" << endl;
             } else {
                 results[current_object]->weight = dice_t();
-                results[current_object]->weight.parse(strndup(weight.c_str(), weight.length()));
+                results[current_object]->weight.parse((char *) weight.c_str());
             }
         }
 
@@ -352,7 +345,7 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
                 cout << "Error: missing ATTR value" << endl;
             } else {
                 results[current_object]->attr = dice_t();
-                results[current_object]->attr.parse(strndup(attr.c_str(), attr.length()));
+                results[current_object]->attr.parse((char *) attr.c_str());
             }
         }
 
@@ -376,7 +369,7 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
                 cout << "Error: missing VAL value" << endl;
             } else {
                 results[current_object]->value = dice_t();
-                results[current_object]->value.parse(strndup(val.c_str(), val.length()));
+                results[current_object]->value.parse((char *) val.c_str());
             }
         }
 
@@ -411,7 +404,7 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
 
     cout << endl << endl << endl << "Parsed monster results:" << endl;
 
-    for (int j = 0; j < current_object; j++) {
+    for (int j = 0; j <= current_object; j++) {
         object_t m = *results[j];
         cout << m.name << endl;
         cout << m.description;
@@ -425,11 +418,11 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
         cout << m.speed.print() << endl;
         cout << m.attr.print() << endl;
         cout << m.value.print() << endl << endl;
+        delete results[j];
     }
 
     f.close();
 
-    free(path);
     free(results);
 
     return NULL;
