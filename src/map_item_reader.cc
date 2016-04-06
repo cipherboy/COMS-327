@@ -21,7 +21,7 @@
 
 using namespace std;
 
-object_t** map_item_parse_file(map_t* current, char* basepath)
+object_f** map_item_parse_file(map_c* current, char* basepath, int* count)
 {
     string path = basepath;
     path += "/object_desc.txt";
@@ -32,7 +32,7 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
         return NULL;
     }
 
-    object_t** results = (object_t**) malloc(sizeof(object_t*) * 1);
+    object_f** results = (object_f**) malloc(sizeof(object_f*) * 1);
 
     string real_line;
     if (!getline(f, real_line)) {
@@ -94,8 +94,8 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
             has_value = false;
 
             current_object += 1;
-            results = (object_t **) realloc(results, sizeof(object_t*) * (current_object+2));
-            results[current_object] = new object_t();
+            results = (object_f **) realloc(results, sizeof(object_f*) * (current_object+2));
+            results[current_object] = new object_f();
         }
 
         if (!has_error && in_monster && (line.substr(0, 4) == "NAME" || line.substr(0, 4) == "name")) {
@@ -339,7 +339,7 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
 
             has_attr = true;
 
-            string attr = line.substr(6);
+            string attr = line.substr(5);
             if (attr == "") {
                 has_error = true;
                 cout << "Error: missing ATTR value" << endl;
@@ -412,28 +412,9 @@ object_t** map_item_parse_file(map_t* current, char* basepath)
         current_object -= 1;
     }
 
-    cout << endl << endl << endl << "Parsed monster results:" << endl;
-
-    for (int j = 0; j <= current_object; j++) {
-        object_t m = *results[j];
-        cout << m.name << endl;
-        cout << m.description;
-        cout << m.type << endl;
-        cout << m.color << endl;
-        cout << m.hit.print() << endl;
-        cout << m.damage.print() << endl;
-        cout << m.dodge.print() << endl;
-        cout << m.defense.print() << endl;
-        cout << m.weight.print() << endl;
-        cout << m.speed.print() << endl;
-        cout << m.attr.print() << endl;
-        cout << m.value.print() << endl << endl;
-        delete results[j];
-    }
-
     f.close();
 
-    free(results);
+    *count = current_object+1;
 
-    return NULL;
+    return results;
 }

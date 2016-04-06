@@ -29,15 +29,19 @@ dice_t::dice_t(int base, int dice, int sides)
 bool dice_t::parse(char* line)
 {
     int max_line_length = 1000;
-
     int which = 0;
     char* base = NULL;
     char* dice = NULL;
     char* sides = NULL;
+    bool number = false;
 
-    while (*(line++) != '\0' && max_line_length--) {
+    do {
         int diff = (*line) - '0';
         if (diff >= 0 && diff <= 9) {
+            if (number) {
+                continue;
+            }
+
             switch (which) {
             case 0:
                 base = line;
@@ -52,8 +56,12 @@ bool dice_t::parse(char* line)
                 which++;
                 break;
             }
+
+            number = true;
+        } else {
+            number = false;
         }
-    }
+    } while (*(line++) != '\0' && max_line_length--);
 
     if (which != 3) {
         return false;

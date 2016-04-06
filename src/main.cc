@@ -15,13 +15,11 @@
 
 int main(int argc, char* argv[])
 {
-    map_t r;
+    map_c r;
 
     bool load = false;
     bool save = false;
     bool other = false;
-    bool monsters = false;
-    bool items = false;
     int nummon = -1;
 
     char* basepath;
@@ -35,9 +33,11 @@ int main(int argc, char* argv[])
         } else if (strcmp(argv[i], "--save") == 0) {
             save = true;
         } else if (strcmp(argv[i], "--monsters") == 0) {
-            monsters = true;
+            printf("Depricated flag.\n");
+            other = true;
         } else if (strcmp(argv[i], "--items") == 0) {
-            items = true;
+            printf("Depricated flag.\n");
+            other = true;
         } else if (strcmp(argv[i], "--nummon") == 0) {
             nummon = atoi(argv[++i]);
             if (nummon < 0 || nummon > 100) {
@@ -66,19 +66,8 @@ int main(int argc, char* argv[])
         map_init(&r);
     }
 
-    if (monsters) {
-        map_monster_parse_file(&r, basepath);
-    }
-
-    if (items) {
-        map_item_parse_file(&r, basepath);
-    }
-
-    if (monsters || items) {
-        map_deinit(&r);
-        free(basepath);
-        return 0;
-    }
+    r.monster_factories = map_monster_parse_file(&r, basepath,  &(r.monster_factory_count));
+    r.object_factories = map_item_parse_file(&r, basepath, &(r.object_factory_count));
 
     if (nummon != -1) {
         r.enemy_count = nummon;

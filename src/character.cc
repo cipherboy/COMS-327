@@ -9,7 +9,7 @@
 #include "character.h"
 #include "map.h"
 
-character_t::character_t(map_t* current)
+character_t::character_t(map_c* current)
 {
     this->current = current;
 
@@ -24,4 +24,10 @@ character_t::character_t(map_t* current)
 
     this->is_alive = true;
     this->representation = '@';
+}
+
+character_f::character_f(map_c* current)
+{
+    this->current = current;
+    this->representation = '`';
 }

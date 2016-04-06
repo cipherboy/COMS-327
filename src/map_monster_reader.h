@@ -11,6 +11,6 @@
 #include "character.h"
 #include "map.h"
 
-character_t** map_monster_parse_file(map_t* current, char* basepath);
+character_f** map_monster_parse_file(map_c* current, char* basepath, int* count);
 
 #endif

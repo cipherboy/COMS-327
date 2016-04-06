@@ -17,7 +17,7 @@
 #include "binheap.h"
 #include "node_moveable.h"
 
-int map_main(map_t* current, bool splash)
+int map_main(map_c* current, bool splash)
 {
     if (splash) {
         map_render_splash();
@@ -305,7 +305,7 @@ int map_main(map_t* current, bool splash)
     return 0;
 }
 
-void map_display_enemies(map_t* current)
+void map_display_enemies(map_c* current)
 {
     WINDOW *subwin;
     int offset = 0;

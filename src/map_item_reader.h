@@ -11,6 +11,6 @@
 #include "object.h"
 #include "map.h"
 
-object_t** map_item_parse_file(map_t* current, char* basepath);
+object_f** map_item_parse_file(map_c* current, char* basepath, int* count);
 
 #endif

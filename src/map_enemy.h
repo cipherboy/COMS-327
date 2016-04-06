@@ -11,10 +11,10 @@
 
 #include "map.h"
 
-void map_enemy_init(map_t* current);
-void map_enemy_render(map_t* current);
-void map_enemy_update_last_seen(map_t* current, int enemy);
-void map_enemy_move(map_t* current, int enemy);
-void map_enemy_deinit(map_t* current);
+void map_enemy_init(map_c* current);
+void map_enemy_render(map_c* current);
+void map_enemy_update_last_seen(map_c* current, int enemy);
+void map_enemy_move(map_c* current, int enemy);
+void map_enemy_deinit(map_c* current);
 
 #endif

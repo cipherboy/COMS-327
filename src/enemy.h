@@ -29,6 +29,6 @@ public:
     int main_character_last_x;
     int main_character_last_y;
 
-    enemy_t(map_t* current);
+    enemy_t(map_c* current);
 };
 #endif

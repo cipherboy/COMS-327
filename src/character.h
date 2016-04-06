@@ -17,12 +17,12 @@ using namespace std;
 class character_t
 {
 protected:
-    map_t* current;
+    map_c* current;
 public:
     int pos_x;
     int pos_y;
 
-    dice_t hp;
+    int hp;
     dice_t attack_damage;
 
     bool is_alive;
@@ -35,9 +35,30 @@ public:
     string abilities;
 
     int speed;
+
+    character_t(map_c* current);
+};
+
+class character_f
+{
+protected:
+    map_c* current;
+public:
+    dice_t hp;
+    dice_t attack_damage;
+
+    char representation;
+
+    string name;
+    string description;
+    string color;
+    string abilities;
+
     dice_t speed_dice;
 
-    character_t(map_t* current);
+    character_f(map_c* current);
+
+    character_t make_widget();
 };
 
 #endif

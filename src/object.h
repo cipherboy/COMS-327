@@ -21,6 +21,24 @@ public:
     string description;
     string type;
     string color;
+
+    int hit;
+    dice_t damage;
+    int dodge;
+    int defense;
+    int weight;
+    int speed;
+    int attr;
+    int value;
+};
+
+class object_f
+{
+public:
+    string name;
+    string description;
+    string type;
+    string color;
     dice_t hit;
     dice_t damage;
     dice_t dodge;

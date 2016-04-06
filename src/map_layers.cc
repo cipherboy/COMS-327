@@ -7,13 +7,13 @@
 #include <stdlib.h>
 #include "map.h"
 
-void map_layers(map_t* current)
+void map_layers(map_c* current)
 {
     map_layers_rooms(current);
     map_layers_hallways(current);
 }
 
-void map_layers_rooms(map_t* current)
+void map_layers_rooms(map_c* current)
 {
     for (int i = 0; i < current->room_count; i++) {
         room current_room = current->rooms[i];
@@ -27,7 +27,7 @@ void map_layers_rooms(map_t* current)
     }
 }
 
-void map_layers_hallways(map_t* current)
+void map_layers_hallways(map_c* current)
 {
     // Adjacency matrix for rooms...
     bool connected[current->room_count][current->room_count];

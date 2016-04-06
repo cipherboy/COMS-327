@@ -11,7 +11,7 @@
 #include "character.h"
 #include "map.h"
 
-enemy_t::enemy_t(map_t* current) : character_t(current)
+enemy_t::enemy_t(map_c* current) : character_t(current)
 {
 
 }

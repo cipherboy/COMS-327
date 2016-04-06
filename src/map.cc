@@ -23,15 +23,17 @@
 #include "map.h"
 #include "utils.h"
 #include "player.h"
+#include "character.h"
+#include "object.h"
 
-void map_init(map_t* current)
+void map_init(map_c* current)
 {
     map_blank(current);
     map_fill(current);
     map_layers(current);
 }
 
-bool map_read(map_t* current, char* basepath)
+bool map_read(map_c* current, char* basepath)
 {
     char magic[7];
     magic[6] = '\0';
@@ -140,7 +142,7 @@ bool map_read(map_t* current, char* basepath)
     return true;
 }
 
-void map_blank(map_t* current)
+void map_blank(map_c* current)
 {
     current->cols = 80;
     current->rows = 21;
@@ -173,7 +175,7 @@ void map_blank(map_t* current)
     }
 }
 
-void map_fill(map_t* current)
+void map_fill(map_c* current)
 {
     for (int y = 1; y < current->rows-1; y++) {
         for (int x = 1; x < current->cols-1; x++) {
@@ -264,7 +266,7 @@ void map_fill(map_t* current)
     }
 }
 
-void map_stairs(map_t* current)
+void map_stairs(map_c* current)
 {
     int uproom = map_rooms_find_contains_point(current, current->main_character->pos_x, current->main_character->pos_y);
     if (uproom == -1) {
@@ -285,7 +287,7 @@ void map_stairs(map_t* current)
     current->rooms_layer[current->rooms[downroom].pos_y + dy][current->rooms[downroom].pos_x + dx] = '>';
 }
 
-void map_print(map_t* current)
+void map_print(map_c* current)
 {
     for (int y = 0; y < current->rows; y++) {
         for (int x = 0; x < current->cols; x++) {
@@ -306,7 +308,7 @@ void map_print(map_t* current)
     }
 }
 
-void map_write(map_t* current, char* basepath)
+void map_write(map_c* current, char* basepath)
 {
     char magic[7] = "RLG327";
     uint32_t version = htobe32(0);
@@ -397,7 +399,7 @@ void map_write(map_t* current, char* basepath)
     free(path);
 }
 
-void map_deinit(map_t* current)
+void map_deinit(map_c* current)
 {
     for (int y = 0; y < current->rows; y++) {
         free(current->rock_hardness[y]);
@@ -415,4 +417,14 @@ void map_deinit(map_t* current)
     free(current->characters_location);
     free(current->char_buffer);
     free(current->rooms);
+
+    for (int j = 0; j < current->monster_factory_count; j++) {
+        delete current->monster_factories[j];
+    }
+    free(current->monster_factories);
+
+    for (int j = 0; j < current->object_factory_count; j++) {
+        delete current->object_factories[j];
+    }
+    free(current->object_factories);
 }

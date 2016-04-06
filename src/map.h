@@ -17,12 +17,20 @@
 class player_t;
 class enemy_t;
 class character_t;
+class character_f;
+class object_t;
+class object_f;
 
-class map_t
+class map_c
 {
 public:
     int rows; // max_x
     int cols; // max_y
+
+    int monster_factory_count;
+    int object_factory_count;
+    character_f** monster_factories;
+    object_f** object_factories;
 
     player_t* main_character;
 
@@ -50,13 +58,13 @@ public:
 #include "map_enemy_move.h"
 #include "map_movement.h"
 
-void map_init(map_t* current);
-bool map_read(map_t* current, char* path);
-void map_blank(map_t* current);
-void map_fill(map_t* current);
-void map_stairs(map_t* current);
-void map_print(map_t* current);
-void map_write(map_t* current, char* path);
-void map_deinit(map_t* current);
+void map_init(map_c* current);
+bool map_read(map_c* current, char* path);
+void map_blank(map_c* current);
+void map_fill(map_c* current);
+void map_stairs(map_c* current);
+void map_print(map_c* current);
+void map_write(map_c* current, char* path);
+void map_deinit(map_c* current);
 
 #endif

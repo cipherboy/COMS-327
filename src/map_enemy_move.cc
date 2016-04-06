@@ -13,7 +13,7 @@
 #include "utils.h"
 #include "player.h"
 
-void map_enemy_move_random(map_t* current, int enemy_loc)
+void map_enemy_move_random(map_c* current, int enemy_loc)
 {
 
     int dx = rand() % 3 - 1;
@@ -104,7 +104,7 @@ void map_enemy_move_random(map_t* current, int enemy_loc)
     }
 }
 
-void map_enemy_move_erratic(map_t* current, int enemy_loc)
+void map_enemy_move_erratic(map_c* current, int enemy_loc)
 {
     if (rand() % 2 == 0) {
         map_enemy_move_random(current, enemy_loc);
@@ -115,7 +115,7 @@ void map_enemy_move_erratic(map_t* current, int enemy_loc)
     }
 }
 
-void map_enemy_move_intelligent_telepathic(map_t* current, int enemy_loc)
+void map_enemy_move_intelligent_telepathic(map_c* current, int enemy_loc)
 {
     int tunneling = current->enemies[enemy_loc]->attributes & ENEMY_ATTRIBUTE_TUNNELING;
 
@@ -213,7 +213,7 @@ void map_enemy_move_intelligent_telepathic(map_t* current, int enemy_loc)
     }
 }
 
-void map_enemy_move_intelligent_not_telepathic(map_t* current, int enemy_loc)
+void map_enemy_move_intelligent_not_telepathic(map_c* current, int enemy_loc)
 {
     map_enemy_update_last_seen(current, enemy_loc);
 
@@ -224,7 +224,7 @@ void map_enemy_move_intelligent_not_telepathic(map_t* current, int enemy_loc)
     }
 }
 
-void map_enemy_move_not_intelligent_telepathic(map_t* current, int enemy_loc)
+void map_enemy_move_not_intelligent_telepathic(map_c* current, int enemy_loc)
 {
     map_enemy_update_last_seen(current, enemy_loc);
 
@@ -330,7 +330,7 @@ void map_enemy_move_not_intelligent_telepathic(map_t* current, int enemy_loc)
 }
 
 
-void map_enemy_move_not_intelligent_not_telepathic(map_t* current, int enemy_loc)
+void map_enemy_move_not_intelligent_not_telepathic(map_c* current, int enemy_loc)
 {
     current->enemies[enemy_loc]->has_seen_main_character = false;
     map_enemy_update_last_seen(current, enemy_loc);

@@ -17,7 +17,7 @@ public:
     char** all_distances;
     char** seen_map;
 
-    player_t(map_t* current);
+    player_t(map_c* current);
     ~player_t();
 };
 

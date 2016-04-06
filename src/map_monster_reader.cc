@@ -21,7 +21,7 @@
 
 using namespace std;
 
-character_t** map_monster_parse_file(map_t* current, char* basepath)
+character_f** map_monster_parse_file(map_c* current, char* basepath, int* count)
 {
     string path = basepath;
     path += "/monster_desc.txt";
@@ -32,7 +32,7 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
         return NULL;
     }
 
-    character_t** results = (character_t**) malloc(sizeof(character_t*) * 1);
+    character_f** results = (character_f**) malloc(sizeof(character_f*) * 1);
 
     string real_line;
     if (!getline(f, real_line)) {
@@ -55,6 +55,7 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
     bool has_speed = false;
     bool has_abilities = false;
     bool has_hp = false;
+    bool has_symbol = false;
     bool has_damages = false;
 
     while (getline(f, real_line)) {
@@ -80,11 +81,12 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
             has_speed = false;
             has_abilities = false;
             has_hp = false;
+            has_symbol = false;
             has_damages = false;
 
             current_monster += 1;
-            results = (character_t **) realloc(results, sizeof(character_t*) * (current_monster+2));
-            results[current_monster] = new character_t(current);
+            results = (character_f **) realloc(results, sizeof(character_f*) * (current_monster+2));
+            results[current_monster] = new character_f(current);
         }
 
         if (!has_error && in_monster && (line.substr(0, 4) == "NAME" || line.substr(0, 4) == "name")) {
@@ -194,6 +196,30 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
             }
         }
 
+        if (!has_error && in_monster && (line.substr(0, 4) == "SYMB" || line.substr(0, 4) == "symb")) {
+            if (in_description) {
+                has_error = true;
+                cout << "Error: description not terminated" << endl;
+            }
+
+            if (has_symbol) {
+                has_error = true;
+                cout << "Duplicate SYMB token" << endl;
+                continue;
+            }
+
+            has_symbol = true;
+
+            string symbol = line.substr(5);
+            symbol = symbol.substr(0, 1);
+            if (symbol == "") {
+                has_error = true;
+                cout << "Error: missing ABILITIES value" << endl;
+            } else {
+                results[current_monster]->representation = *((char *) symbol.c_str());
+            }
+        }
+
         if (!has_error && in_monster && (line.substr(0, 2) == "HP" || line.substr(0, 2) == "hp")) {
             if (in_description) {
                 has_error = true;
@@ -264,7 +290,7 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
 
             in_monster = false;
 
-            if (!has_name || !has_color || !has_description || !has_speed || !has_abilities || !has_hp || !has_damages) {
+            if (!has_name || !has_color || !has_description || !has_speed || !has_abilities || !has_symbol || !has_hp || !has_damages) {
                 cout << "Error: missing required field." << endl;
                 has_error = true;
             }
@@ -281,23 +307,9 @@ character_t** map_monster_parse_file(map_t* current, char* basepath)
         current_monster -= 1;
     }
 
-    cout << endl << endl << endl << "Parsed monster results:" << endl;
-
-    for (int j = 0; j <= current_monster; j++) {
-        character_t m = *results[j];
-        cout << m.name << endl;
-        cout << m.description;
-        cout << m.color << endl;
-        cout << m.speed_dice.print() << endl;
-        cout << m.abilities << endl;
-        cout << m.hp.print() << endl;
-        cout << m.attack_damage.print() << endl << endl;
-        delete results[j];
-    }
-
     f.close();
 
-    free(results);
+    *count = current_monster+1;
 
-    return NULL;
+    return results;
 }
