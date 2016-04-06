@@ -4,6 +4,8 @@ configure
 autom4te.cache/
 bin/*
 
+valgrind.log
+
 # Object files
 *.slo
 *.lo
