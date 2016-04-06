@@ -18,11 +18,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <math.h>
+#include <ncurses.h>
 
 #include "room.h"
 #include "map.h"
 #include "utils.h"
 #include "player.h"
+#include "enemy.h"
 #include "character.h"
 #include "object.h"
 
@@ -149,7 +151,7 @@ void map_blank(map_c* current)
 
     srand(utils_genseed());
 
-    current->enemy_count = rand() % 15;
+    current->enemy_count = 1 + rand() % 15;
 
     current->rock_hardness = (uint8_t**) malloc(sizeof(uint8_t*) * current->rows * current->cols);
     current->characters_layer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
@@ -291,21 +293,67 @@ void map_print(map_c* current)
 {
     for (int y = 0; y < current->rows; y++) {
         for (int x = 0; x < current->cols; x++) {
+            current->characters_location[y][x] = NULL;
+            current->characters_layer[y][x] = ' ';
+        }
+    }
+
+    if (current->main_character->is_alive ) {
+        current->characters_location[current->main_character->pos_y][current->main_character->pos_x] = current->main_character;
+        current->characters_layer[current->main_character->pos_y][current->main_character->pos_x] = current->main_character->representation;
+    }
+
+    for (int dy = -3; dy <= 3; dy++) {
+        for (int dx = -3; dx <= 3; dx++) {
+            int y = current->main_character->pos_y + dy;
+            int x = current->main_character->pos_x + dx;
+
+            if (y < 0 || x < 0 || y >= current->rows || x >= current->cols) {
+                continue;
+            }
+
+            if (current->rooms_layer[y][x] != ' ') {
+                current->main_character->seen_map[y][x] = current->rooms_layer[y][x];
+            } else if (current->hallways_layer[y][x] != ' ') {
+                current->main_character->seen_map[y][x] = current->hallways_layer[y][x];
+            }
+        }
+    }
+
+    for (int i = 0; i < current->enemy_count; i++) {
+        if (current->enemies[i]->is_alive ) {
+
+            if (current->characters_location[current->enemies[i]->pos_y][current->enemies[i]->pos_x] != NULL) {
+                FILE* fp = fopen("/tmp/test.txt", "a");
+                fprintf(fp, "Uncaught collision: x: %i y: %i\n", current->enemies[i]->pos_x, current->enemies[i]->pos_y);
+                fclose(fp);
+            }
+            current->characters_location[current->enemies[i]->pos_y][current->enemies[i]->pos_x] = current->enemies[i];
+            current->characters_layer[current->enemies[i]->pos_y][current->enemies[i]->pos_x] =  current->enemies[i]->representation;
+        }
+    }
+
+    for (int y = 0; y < current->rows; y++) {
+        for (int x = 0; x < current->cols; x++) {
             int dx = current->main_character->pos_y - y;
             int dy = current->main_character->pos_x - x;
 
             if (current->characters_layer[y][x] != ' ' && dx >= -3 && dx <= 3 && dy >= -3 && dy <= 3) {
                 current->char_buffer[y][x] = current->characters_layer[y][x];
-                FILE* fp = fopen("/tmp/test.txt", "a");
-                fprintf(fp, "dx: %i dy: %i :: %c\n", dx, dy, current->characters_layer[y][x]);
-                fclose(fp);
+                attron(COLOR_PAIR(current->characters_location[y][x]->color));
+                mvaddch(y, x, current->char_buffer[y][x]);
+                attroff(COLOR_PAIR(current->characters_location[y][x]->color));
             } else if ((current->main_character->seen_map[y][x]) != ' ') {
                 current->char_buffer[y][x] = (current->main_character->seen_map[y][x]);
+                mvaddch(y, x, current->char_buffer[y][x]);
             } else {
                 current->char_buffer[y][x] = ' ';
+                mvaddch(y, x, current->char_buffer[y][x]);
             }
         }
     }
+
+    refresh();
 }
 
 void map_write(map_c* current, char* basepath)

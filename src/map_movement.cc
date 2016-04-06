@@ -38,6 +38,13 @@ int map_main(map_c* current, bool splash)
         return -1;
     }
 
+    if (has_colors() == FALSE) {
+        printw("\nPlease make sure your console supports colors.\n");
+        getch();
+        endwin();
+        return -1;
+    }
+
     binheap_t queue;
     binheap_init(&queue, moveables_moveable, NULL);
 
@@ -284,15 +291,7 @@ int map_main(map_c* current, bool splash)
             }
         }
 
-        map_enemy_render(current);
-
         map_print(current);
-        for (int y = 0; y < current->rows; y++) {
-            for (int x = 0; x < current->cols; x++) {
-                mvaddch(y, x, current->char_buffer[y][x]);
-            }
-        }
-        refresh();
     }
 
     getch();
@@ -378,36 +377,69 @@ void map_display_enemies(map_c* current)
 
 void map_render_splash()
 {
+
     initscr();
     int row, col;
     getmaxyx(stdscr,row,col);
     if (col < 79 || row < 23) {
         return;
     }
+
+    if (has_colors() == FALSE) {
+        return;
+    }
+
+    start_color();
+    init_pair(COLOR_BLACK+1, COLOR_BLACK, COLOR_WHITE);
+    init_pair(COLOR_RED+1, COLOR_RED, COLOR_BLACK);
+    init_pair(COLOR_GREEN+1, COLOR_GREEN, COLOR_BLACK);
+    init_pair(COLOR_YELLOW+1, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(COLOR_MAGENTA+1, COLOR_MAGENTA, COLOR_WHITE);
+    init_pair(COLOR_BLUE+1, COLOR_BLUE, COLOR_WHITE);
+    init_pair(COLOR_CYAN+1, COLOR_CYAN, COLOR_BLACK);
+    init_pair(COLOR_WHITE+1, COLOR_WHITE, COLOR_BLACK);
+
+    attron(COLOR_PAIR(COLOR_BLACK+1));
     printw("*-----------------------------------------------------------------------------*\n");
     printw("|                                                                             |\n");
     printw("|                                                                             |\n");
+    attroff(COLOR_PAIR(COLOR_BLACK)+1);
+    attron(COLOR_PAIR(COLOR_RED+1));
     printw("|                                                                             |\n");
     printw("|                           |_|_|_  |_|_|_  |_                                |\n");
     printw("|                           |_      |_      |_                                |\n");
+
+    attroff(COLOR_PAIR(COLOR_RED+1));
+    attron(COLOR_PAIR(COLOR_GREEN+1));
     printw("|                           |_      |_|_    |_                                |\n");
     printw("|                           |_      |_      |_                                |\n");
+    attroff(COLOR_PAIR(COLOR_GREEN+1));
+    attron(COLOR_PAIR(COLOR_YELLOW+1));
     printw("|                           |_|_|_  |_|_|_  |_|_|_                            |\n");
     printw("|                                                                             |\n");
     printw("|                           cipherboy~                                        |\n");
+    attroff(COLOR_PAIR(COLOR_YELLOW+1));
+    attron(COLOR_PAIR(COLOR_MAGENTA+1));
     printw("|                                entertainment                                |\n");
     printw("|                                          limited                            |\n");
     printw("|                                                                             |\n");
-    printw("|                           v1.0%i ~ \"LoP\"                                     |\n", 6);
+    attroff(COLOR_PAIR(COLOR_MAGENTA+1));
+    attron(COLOR_PAIR(COLOR_BLUE+1));
+    printw("|                           v1.0%i ~ \"LoP\"                                     |\n", 8);
     printw("|                                                                             |\n");
     printw("|                         Optimized for POWER7+/POWER 8                       |\n");
     printw("|                                                                             |\n");
     printw("|                                                                             |\n");
     printw("|                                                                             |\n");
+    attroff(COLOR_PAIR(COLOR_BLUE+1));
+    attron(COLOR_PAIR(COLOR_CYAN+1));
     printw("|                                                     COPYRIGHT (C) 2016      |\n");
     printw("|                                                     ALL RIGHTS RESERVED     |\n");
+    attroff(COLOR_PAIR(COLOR_CYAN+1));
+    attron(COLOR_PAIR(COLOR_WHITE+1));
     printw("|                                                     (see LICENSE for terms) |\n");
     printw("*-----------------------------------------------------------------------------*\n");
+    attroff(COLOR_PAIR(COLOR_WHITE+1));
     refresh();
     sleep(3);
     endwin();

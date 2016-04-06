@@ -88,6 +88,9 @@ int main(int argc, char* argv[])
 
         map_init(&r);
 
+        r.monster_factories = map_monster_parse_file(&r, basepath,  &(r.monster_factory_count));
+        r.object_factories = map_item_parse_file(&r, basepath, &(r.object_factory_count));
+
         if (nummon != -1) {
             r.enemy_count = nummon;
         }

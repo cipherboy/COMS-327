@@ -20,7 +20,8 @@ public:
     string name;
     string description;
     string type;
-    string color;
+
+    int color;
 
     int hit;
     dice_t damage;
@@ -47,6 +48,8 @@ public:
     dice_t speed;
     dice_t attr;
     dice_t value;
+
+    object_t* make_widget();
 };
 
 #endif

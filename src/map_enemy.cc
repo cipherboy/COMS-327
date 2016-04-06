@@ -19,7 +19,8 @@ void map_enemy_init(map_c* current)
 {
     current->enemies = (enemy_t**) malloc(sizeof(enemy_t*) * current->enemy_count);
     for (int i = 0; i < current->enemy_count; i++) {
-        current->enemies[i] = new enemy_t(current);
+        int factory = rand() % current->monster_factory_count;
+        current->enemies[i] = current->monster_factories[factory]->make_widget();
     }
 
     for (int i = 0; i < current->enemy_count; i++) {
@@ -57,67 +58,15 @@ void map_enemy_init(map_c* current)
             }
         }
 
-        int attributes = rand() % ENEMY_ATTRIBUTE_MAX;
-        int speed = rand() % 15 + 5;
-        char representation = '?';
-
-        // Yeah, yeah...
-        if (attributes < 10) {
-            representation = '0' + attributes;
-        } else {
-            representation = 'a' + attributes-10;
-        }
-
         current->enemies[i]->pos_x = pos_x;
         current->enemies[i]->pos_y = pos_y;
-
-        current->enemies[i]->attributes = attributes;
-        current->enemies[i]->speed = speed;
-        current->enemies[i]->representation = representation;
-        current->enemies[i]->is_alive = true;
-        current->enemies[i]->has_seen_main_character = false;
-        current->enemies[i]->main_character_last_x = 2;
-        current->enemies[i]->main_character_last_y = 2;
         map_enemy_update_last_seen(current, i);
     }
 }
 
 void map_enemy_render(map_c* current)
 {
-    for (int y = 0; y < current->rows; y++) {
-        for (int x = 0; x < current->cols; x++) {
-            current->characters_location[y][x] = NULL;
-            current->characters_layer[y][x] = ' ';
-        }
-    }
-
-    if (current->main_character->is_alive ) {
-        current->characters_location[current->main_character->pos_y][current->main_character->pos_x] = current->main_character;
-        current->characters_layer[current->main_character->pos_y][current->main_character->pos_x] = current->main_character->representation;
-    }
-
-    for (int dy = -3; dy <= 3; dy++) {
-        for (int dx = -3; dx <= 3; dx++) {
-            int y = current->main_character->pos_y + dy;
-            int x = current->main_character->pos_x + dx;
-            if (current->rooms_layer[y][x] != ' ') {
-                current->main_character->seen_map[y][x] = current->rooms_layer[y][x];
-            } else if (current->hallways_layer[y][x] != ' ') {
-                current->main_character->seen_map[y][x] = current->hallways_layer[y][x];
-            }
-        }
-    }
-
-    for (int i = 0; i < current->enemy_count; i++) {
-        if (current->enemies[i]->is_alive ) {
-
-            if (current->characters_location[current->enemies[i]->pos_y][current->enemies[i]->pos_x] != NULL) {
-                printf("Uncaught collision!");
-            }
-            current->characters_location[current->enemies[i]->pos_y][current->enemies[i]->pos_x] = current->enemies[i];
-            current->characters_layer[current->enemies[i]->pos_y][current->enemies[i]->pos_x] =  current->enemies[i]->representation;
-        }
-    }
+    // Turned into no-op.
 }
 
 void map_enemy_update_last_seen(map_c* current, int enemy_loc)
@@ -214,7 +163,7 @@ void map_enemy_update_last_seen(map_c* current, int enemy_loc)
 
 void map_enemy_move(map_c* current, int enemy_loc)
 {
-    if (!current->enemies[enemy_loc]->is_alive ) {
+    if (!current->enemies[enemy_loc]->is_alive) {
         return;
     }
 

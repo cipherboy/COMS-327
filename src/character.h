@@ -23,6 +23,8 @@ public:
     int pos_y;
 
     int hp;
+    int speed;
+    int color;
     dice_t attack_damage;
 
     bool is_alive;
@@ -31,10 +33,6 @@ public:
 
     string name;
     string description;
-    string color;
-    string abilities;
-
-    int speed;
 
     character_t(map_c* current);
 };
@@ -58,7 +56,7 @@ public:
 
     character_f(map_c* current);
 
-    character_t make_widget();
+    enemy_t* make_widget();
 };
 
 #endif
