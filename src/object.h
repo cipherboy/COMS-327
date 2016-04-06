@@ -21,7 +21,11 @@ public:
     string description;
     string type;
 
+    int pos_x;
+    int pos_y;
+
     int color;
+    char representation;
 
     int hit;
     dice_t damage;

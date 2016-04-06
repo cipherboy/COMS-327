@@ -20,6 +20,52 @@ object_t* object_f::make_widget()
     object->description = this->description;
     object->type = this->type;
 
+    if (this->type == "WEAPON") {
+        object->representation = '|';
+    } else if (this->type == "OFFHAND") {
+        object->representation = ')';
+    } else if (this->type == "RANGED") {
+        object->representation = '}';
+    } else if (this->type == "ARMOR") {
+        object->representation = '[';
+    } else if (this->type == "HELMET") {
+        object->representation = ']';
+    } else if (this->type == "CLOAK") {
+        object->representation = '(';
+    } else if (this->type == "GLOVES") {
+        object->representation = '{';
+    } else if (this->type == "BOOTS") {
+        object->representation = '\\';
+    } else if (this->type == "RING") {
+        object->representation = '=';
+    } else if (this->type == "AMULET") {
+        object->representation = '"';
+    } else if (this->type == "LIGHT") {
+        object->representation = '_';
+    } else if (this->type == "SCROLL") {
+        object->representation = '~';
+    } else if (this->type == "BOOK") {
+        object->representation = '?';
+    } else if (this->type == "FLASK") {
+        object->representation = '!';
+    } else if (this->type == "GOLD") {
+        object->representation = '$';
+    } else if (this->type == "AMMUNITION") {
+        object->representation = '/';
+    } else if (this->type == "FOOD") {
+        object->representation = ',';
+    } else if (this->type == "WAND") {
+        object->representation = '-';
+    } else if (this->type == "CONTAINER") {
+        object->representation = '%';
+    } else if (this->type == "STACK") {
+        object->representation = '&';
+    } else {
+        object->representation = '*';
+    }
+
+    printf("Object: %c\n", object->representation);
+
     int color_i = 0;
 
     char * token = strtok((char *) this->color.c_str(), " ");

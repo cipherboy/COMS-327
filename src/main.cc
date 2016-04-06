@@ -10,8 +10,6 @@
 #include <stdbool.h>
 
 #include "map.h"
-#include "map_monster_reader.h"
-#include "map_item_reader.h"
 
 int main(int argc, char* argv[])
 {
@@ -79,9 +77,12 @@ int main(int argc, char* argv[])
 
     map_enemy_init(&r);
 
+    map_objects_init(&r);
+
     int rval = map_main(&r, true);
 
     while (rval != 0 && rval != -1) {
+        map_objects_deinit(&r);
         map_enemy_deinit(&r);
         map_deinit(&r);
         map_player_deinit(&r);
@@ -100,6 +101,7 @@ int main(int argc, char* argv[])
         map_stairs(&r);
 
         map_enemy_init(&r);
+        map_objects_init(&r);
 
         rval = map_main(&r, false);
     }
@@ -108,6 +110,7 @@ int main(int argc, char* argv[])
         map_write(&r, basepath);
     }
 
+    map_objects_deinit(&r);
     map_enemy_deinit(&r);
     map_player_deinit(&r);
     map_deinit(&r);

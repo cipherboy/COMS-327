@@ -159,6 +159,7 @@ void map_blank(map_c* current)
     current->rooms_layer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
     current->hallways_layer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
     current->char_buffer = (char**) malloc(sizeof(char*) * current->rows * current->cols);
+    current->objects_location = (object_t***) malloc(sizeof(object_t**) * current->rows * current->cols);
     for (int y = 0; y < current->rows; y++) {
         current->rock_hardness[y] = (uint8_t*) malloc(sizeof(uint8_t) * current->cols);
         current->characters_layer[y] = (char*) malloc(sizeof(char) * current->cols);
@@ -166,6 +167,7 @@ void map_blank(map_c* current)
         current->rooms_layer[y] = (char*) malloc(sizeof(char) * current->cols);
         current->hallways_layer[y] = (char*) malloc(sizeof(char) * current->cols);
         current->char_buffer[y] = (char*) malloc(sizeof(char) * current->cols);
+        current->objects_location[y] = (object_t**) malloc(sizeof(object_t*) * current->rows * current->cols);
         for (int x = 0; x < current->cols; x++) {
             current->rock_hardness[y][x] = 255;
             current->characters_layer[y][x] = ' ';
@@ -173,6 +175,7 @@ void map_blank(map_c* current)
             current->characters_location[y][x] = NULL;
             current->rooms_layer[y][x] = ' ';
             current->hallways_layer[y][x] = ' ';
+            current->objects_location[y][x] = NULL;
         }
     }
 }
@@ -456,6 +459,7 @@ void map_deinit(map_c* current)
         free(current->characters_location[y]);
         free(current->hallways_layer[y]);
         free(current->char_buffer[y]);
+        free(current->objects_location[y]);
     }
 
     free(current->rock_hardness);
@@ -465,6 +469,7 @@ void map_deinit(map_c* current)
     free(current->characters_location);
     free(current->char_buffer);
     free(current->rooms);
+    free(current->objects_location);
 
     for (int j = 0; j < current->monster_factory_count; j++) {
         delete current->monster_factories[j];

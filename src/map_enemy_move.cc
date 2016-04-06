@@ -1,7 +1,7 @@
 /**
  * Copyright 2016 Alexander Scheel
  *
- * Map enemy move header file
+ * Map enemy move implementation file
 **/
 
 #include <stdlib.h>

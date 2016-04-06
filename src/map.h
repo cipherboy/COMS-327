@@ -42,6 +42,10 @@ public:
     int enemy_count;
     enemy_t** enemies;
 
+    int object_count;
+    object_t** objects;
+
+    object_t*** objects_location;
     character_t*** characters_location;
 
     char** characters_layer;
@@ -56,7 +60,10 @@ public:
 #include "map_player.h"
 #include "map_enemy.h"
 #include "map_enemy_move.h"
+#include "map_object.h"
 #include "map_movement.h"
+#include "map_monster_reader.h"
+#include "map_item_reader.h"
 
 void map_init(map_c* current);
 bool map_read(map_c* current, char* path);
