@@ -64,8 +64,6 @@ object_t* object_f::make_widget()
         object->representation = '*';
     }
 
-    printf("Object: %c\n", object->representation);
-
     int color_i = 0;
 
     char * token = strtok((char *) this->color.c_str(), " ");

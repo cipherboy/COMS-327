@@ -68,12 +68,6 @@ int map_main(map_c* current, bool splash)
     map_enemy_render(current);
 
     map_print(current);
-    for (int y = 0; y < current->rows; y++) {
-        for (int x = 0; x < current->cols; x++) {
-            mvaddch(y, x, current->char_buffer[y][x]);
-        }
-    }
-    refresh();
 
     moveable* c;
 
@@ -99,12 +93,6 @@ int map_main(map_c* current, bool splash)
                     map_enemy_render(current);
 
                     map_print(current);
-                    for (int y = 0; y < current->rows; y++) {
-                        for (int x = 0; x < current->cols; x++) {
-                            mvaddch(y, x, current->char_buffer[y][x]);
-                        }
-                    }
-                    refresh();
                     valid_key = false;
                     break;
                 case '7':
@@ -205,29 +193,18 @@ int map_main(map_c* current, bool splash)
                 map_enemy_render(current);
 
                 map_print(current);
-                for (int y = 0; y < current->rows; y++) {
-                    for (int x = 0; x < current->cols; x++) {
-                        mvaddch(y, x, current->char_buffer[y][x]);
-                    }
-                }
-                refresh();
             }
 
             map_enemy_render(current);
 
             map_print(current);
-            for (int y = 0; y < current->rows; y++) {
-                for (int x = 0; x < current->cols; x++) {
-                    mvaddch(y, x, current->char_buffer[y][x]);
-                }
-            }
-            refresh();
 
             bh_ptr[c->order] = binheap_insert(&queue, &objects[c->order]);
         }
 
         if (!current->main_character->is_alive ) {
             clear();
+            attron(COLOR_PAIR(COLOR_BLACK+1));
             printw("*-----------------------------------------------------------------------------*\n");
             printw("|                                                                             |\n");
             printw("|                          _______________________                            |\n");
@@ -252,6 +229,7 @@ int map_main(map_c* current, bool splash)
             printw("|wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww|\n");
             printw("|wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww|\n");
             printw("*-----------------------------------------------------------------------------*\n");
+            attroff(COLOR_PAIR(COLOR_BLACK+1));
             break;
         } else {
             bool has_enemies = false;;
@@ -263,6 +241,7 @@ int map_main(map_c* current, bool splash)
 
             if (!has_enemies) {
                 clear();
+                attron(COLOR_PAIR(COLOR_YELLOW+1));
                 printw("*-----------------------------------------------------------------------------*\n");
                 printw("|                                                                             |\n");
                 printw("|                                                                             |\n");
@@ -287,6 +266,7 @@ int map_main(map_c* current, bool splash)
                 printw("|                                                                             |\n");
                 printw("|                                                                             |\n");
                 printw("*-----------------------------------------------------------------------------*\n");
+                attroff(COLOR_PAIR(COLOR_YELLOW+1));
                 break;
             }
         }

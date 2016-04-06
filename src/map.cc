@@ -341,11 +341,16 @@ void map_print(map_c* current)
             int dx = current->main_character->pos_y - y;
             int dy = current->main_character->pos_x - x;
 
-            if (current->characters_layer[y][x] != ' ' && dx >= -3 && dx <= 3 && dy >= -3 && dy <= 3) {
-                current->char_buffer[y][x] = current->characters_layer[y][x];
+            if (current->characters_location[y][x] != NULL && dx >= -3 && dx <= 3 && dy >= -3 && dy <= 3) {
+                current->char_buffer[y][x] = current->characters_location[y][x]->representation;
                 attron(COLOR_PAIR(current->characters_location[y][x]->color));
                 mvaddch(y, x, current->char_buffer[y][x]);
                 attroff(COLOR_PAIR(current->characters_location[y][x]->color));
+            } else if (current->objects_location[y][x] != NULL && dx >= -3 && dx <= 3 && dy >= -3 && dy <= 3) {
+                current->char_buffer[y][x] = current->objects_location[y][x]->representation;
+                attron(COLOR_PAIR(current->objects_location[y][x]->color));
+                mvaddch(y, x, current->char_buffer[y][x]);
+                attroff(COLOR_PAIR(current->objects_location[y][x]->color));
             } else if ((current->main_character->seen_map[y][x]) != ' ') {
                 current->char_buffer[y][x] = (current->main_character->seen_map[y][x]);
                 mvaddch(y, x, current->char_buffer[y][x]);
