@@ -20,6 +20,10 @@ CSOURCES = $(wildcard src/*.c)
 CXXSOURCES = $(wildcard src/*.cc)
 COBJECTS = $(CSOURCES:.c=.o)
 CXXOBJECTS = $(CXXSOURCES:.cc=.o)
+CXXMAINSOURCES = $(wildcard main/*.cc)
+CXXMAINOBJECTS = $(CXXTESTSOURCES:.cc=.o)
+CXXTESTSOURCES = $(wildcard tests/*.cc)
+CXXTESTOBJECTS = $(CXXTESTSOURCES:.cc=.o)
 
 # Default target
 run: all execute
@@ -27,7 +31,7 @@ run: all execute
 all: format changelog build
 
 clean:
-	rm -rf ./src/*.o ./bin/*.dSYM ./autom4te.cache ./configure ./bin/$(NAME)
+	rm -rf ./*/*.o ./bin/*.dSYM ./autom4te.cache ./configure ./bin/tests-$(NAME) ./bin/$(NAME)
 
 format:
 	astyle --style=linux ./src/*.c || true
@@ -40,10 +44,11 @@ changelog: .git
 		--date-order --show-notes --relative-date  --abbrev-commit --children \
 		--stat --no-color > CHANGELOG
 
-build: main
+build: main tests
 
-main: $(COBJECTS) $(CXXOBJECTS)
-	$(CXX) $(LFLAGS) $(COBJECTS) $(CXXOBJECTS) -o bin/$(NAME)
+main: $(COBJECTS) $(CXXOBJECTS) $(CXXTESTOBJECTS) $(CXXMAINOBJECTS)
+	$(CXX) $(LFLAGS) $(COBJECTS) $(CXXOBJECTS) $(CXXMAINOBJECTS) -o bin/$(NAME)
+	$(CXX) $(LFLAGS) $(COBJECTS) $(CXXOBJECTS) $(CXXTESTOBJECTS) -o bin/tests-$(NAME)
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
@@ -56,4 +61,4 @@ gzip:
 	gzip ../$(VERSION).tar
 
 execute:
-	./bin/$(NAME) --error || true
+	./bin/tests-$(NAME) || true
