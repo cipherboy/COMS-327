@@ -7,6 +7,7 @@
 #include "dice.h"
 #include "object.h"
 #include "ncurses.h"
+#include "stdlib.h"
 #include <cstring>
 #include <string>
 
@@ -101,5 +102,117 @@ object_t* object_f::make_widget()
     object->attr = this->attr.roll();
     object->value = this->value.roll();
 
+    object->stack_size = 0;
+    object->display = true;
+
     return object;
+}
+
+void object_t::convert_to_stack()
+{
+    this->stack_size = 1;
+    this->stack = (object_t**) malloc(sizeof(object_t *) * this->stack_size);
+
+    object_t* object = new object_t();
+
+
+    object->pos_x = this->pos_x;
+    object->pos_y = this->pos_y;
+
+    object->name = this->name;
+    object->description = this->description;
+    object->type = this->type;
+    object->color = this->color;
+    object->hit = this->hit;
+    object->damage = this->damage;
+    object->dodge = this->dodge;
+    object->defense = this->defense;
+    object->weight = this->weight;
+    object->speed = this->speed;
+    object->attr = this->attr;
+    object->value = this->value;
+    object->representation = this->representation;
+
+    object->stack_size = 0;
+    object->display = false;
+
+    this->name = "Stack";
+    this->description = "Just an ordinary stack of magical objects.";
+    this->representation = '&';
+
+    this->stack[0] = object;
+}
+
+bool object_t::convert_from_stack()
+{
+    if (this->stack_size == 1) {
+        object_t* object = this->stack[0];
+
+        this->stack_size = 0;
+
+        this->pos_x = object->pos_x;
+        this->pos_y = object->pos_y;
+
+        this->name = object->name;
+        this->description = object->description;
+        this->type = object->type;
+        this->color = object->color;
+        this->hit = object->hit;
+        this->damage = object->damage;
+        this->dodge = object->dodge;
+        this->defense = object->defense;
+        this->weight = object->weight;
+        this->speed = object->speed;
+        this->attr = object->attr;
+        this->value = object->value;
+        this->representation = object->representation;
+
+        this->stack_size = 0;
+
+        delete object;
+        free(object->stack);
+
+        return true;
+    }
+
+    return false;
+}
+
+bool object_t::add_to_stack(object_t* obj)
+{
+    if (this->stack_size == 0 && this->type != "stack") {
+        return false;
+    }
+
+    obj->display = false;
+
+    this->stack_size += 1;
+    this->stack = (object_t**) realloc(this->stack, sizeof(object_t *) * this->stack_size);
+
+    this->stack[stack_size - 1] = obj;
+    this->color = obj->color;
+
+    return true;
+}
+
+object_t* object_t::pick_from_top_of_stack()
+{
+    if (this->stack_size == 0 || this->type != "stack") {
+        return NULL;
+    }
+
+    this->stack_size -= 1;
+
+    return this->stack[stack_size];
+}
+
+object_t::~object_t()
+{
+    for (int j = 0; j < this->stack_size; j++) {
+        delete this->stack[j];
+    }
+
+    if (this->type == "stack") {
+        free(this->stack);
+    }
 }

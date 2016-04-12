@@ -17,6 +17,8 @@ public:
     char** all_distances;
     char** seen_map;
 
+    object* inventory;
+
     player_t(map_c* current);
     ~player_t();
 };

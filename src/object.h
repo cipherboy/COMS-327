@@ -27,6 +27,11 @@ public:
     int color;
     char representation;
 
+    bool display;
+
+    int stack_size;
+    object_t** stack;
+
     int hit;
     dice_t damage;
     int dodge;
@@ -35,6 +40,12 @@ public:
     int speed;
     int attr;
     int value;
+
+    void convert_to_stack();
+    bool convert_from_stack();
+    bool add_to_stack(object_t* obj);
+    object_t* pick_from_top_of_stack();
+    ~object_t();
 };
 
 class object_f
