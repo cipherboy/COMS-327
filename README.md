@@ -1,19 +1,43 @@
-# Project 1.08
+# Project 1.09
 
     u: Alexander Scheel
     e: <scheel@iastate.edu>
     l: BSD: 2-clause
 
-## Overview=
-This part of the project creates factories and places them into the map city,
-allowing the creation of monsters from the factory classes via the
-make_widgets() function call. This rolls the specific dice, creating new
-instances of the designated types. In particular, the city has two main
-factories: monsters and object. As the monsters are rampantly out of control,
-the object factory has had to step up, producing over 15 items per map! With
-good luck, you can reach the One Ring before the monsters reach you...
+## Overview
+This part of the project provides item pickup and advanced combat scoring for
+the game. In addition, more user input choices have been created:
 
-...now presenting, rlg327 ::v1.08:: with 3-bit TRUECOLOR(C)(R)(TM) technology!
+### Movement
+
+     ---------- ---------- ---------------
+    | 7/y/home |  8/k/up  |  9/u/page up  |
+    |----------|----------|---------------|
+    | 4/h/left |  5/space |   6/l/right   |
+    |----------|----------|---------------|
+    | 1/b/end  | 2/j/down | 3/n/page down |
+     ---------- ---------- ---------------
+
+    > - down
+    < - up
+
+### HUD
+
+    m - View all monsters
+    i - List PC Inventory
+    e - List PC Equipment
+    I - Inspects a particular
+
+### Items
+
+    w - Wear an item
+    t - Take off an item
+    d - Drop an item
+    e - Expunge an item
+
+### Quitting
+
+    s - Quit
 
 ## Running
 To compile and run:  

@@ -405,7 +405,7 @@ void map_render_splash()
     printw("|                                                                             |\n");
     attroff(COLOR_PAIR(COLOR_MAGENTA+1));
     attron(COLOR_PAIR(COLOR_BLUE+1));
-    printw("|                           v1.0%i ~ \"LoP\"                                     |\n", 8);
+    printw("|                           v1.0%i ~ \"LoP\"                                     |\n", 9);
     printw("|                                                                             |\n");
     printw("|                         Optimized for POWER7+/POWER 8                       |\n");
     printw("|                                                                             |\n");
