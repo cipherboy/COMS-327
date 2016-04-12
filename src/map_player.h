@@ -9,7 +9,10 @@
 #ifndef MAP_PLAYER_H
 #define MAP_PLAYER_H
 
-void map_player_init(map_c* current);
+class player_t;
+class character_t;
+
+void map_player_init(map_c* current, player_t* player);
 void map_player_distances(map_c* current);
 void map_player_distances_blank(map_c* current);
 void map_player_distances_bounded(map_c* current);

@@ -9,6 +9,7 @@
 #define PLAYER_H
 
 #include "character.h"
+#include "object.h"
 
 class player_t : public character_t
 {
@@ -17,7 +18,7 @@ public:
     char** all_distances;
     char** seen_map;
 
-    object* inventory;
+    object_t* inventory;
 
     player_t(map_c* current);
     ~player_t();

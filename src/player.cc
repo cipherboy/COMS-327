@@ -8,6 +8,7 @@
 #include "player.h"
 #include "character.h"
 #include "map.h"
+#include "object.h"
 
 player_t::player_t(map_c* current) : character_t(current)
 {
@@ -22,6 +23,13 @@ player_t::player_t(map_c* current) : character_t(current)
             this->seen_map[y][x] = ' ';
         }
     }
+
+    this->inventory = new object_t();
+    this->inventory->display = false;
+    this->inventory->name = "Player Inventory";
+    this->inventory->description = "This is the stack containing the player's inventory.";
+    this->inventory->type = "stack";
+    this->inventory->representation = '&';
 }
 
 player_t::~player_t()
@@ -34,4 +42,6 @@ player_t::~player_t()
     free(this->player_distances);
     free(this->all_distances);
     free(this->seen_map);
+    
+    delete this->inventory;
 }

@@ -9,14 +9,15 @@
 #include <stdio.h>
 
 #include "player.h"
+#include "character.h"
 #include "map.h"
 #include "utils.h"
 #include "node_distances.h"
 #include "binheap.h"
 
-void map_player_init(map_c* current)
+void map_player_init(map_c* current, player_t* player)
 {
-    current->main_character = new player_t(current);
+    current->main_character = player;
 }
 
 void map_player_distances(map_c* current)

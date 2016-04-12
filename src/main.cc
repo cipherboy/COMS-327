@@ -10,6 +10,8 @@
 #include <stdbool.h>
 
 #include "map.h"
+#include "player.h"
+#include "character.h"
 
 int main(int argc, char* argv[])
 {
@@ -71,7 +73,9 @@ int main(int argc, char* argv[])
         r.enemy_count = nummon;
     }
 
-    map_player_init(&r);
+    player_t* player = new player_t(&r);
+
+    map_player_init(&r, player);
     map_player_distances(&r);
     map_stairs(&r);
 
@@ -85,7 +89,6 @@ int main(int argc, char* argv[])
         map_objects_deinit(&r);
         map_enemy_deinit(&r);
         map_deinit(&r);
-        map_player_deinit(&r);
 
         map_init(&r);
 
@@ -96,7 +99,7 @@ int main(int argc, char* argv[])
             r.enemy_count = nummon;
         }
 
-        map_player_init(&r);
+        r.main_character = player;
         map_player_distances(&r);
         map_stairs(&r);
 
