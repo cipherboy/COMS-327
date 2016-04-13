@@ -52,6 +52,9 @@ public:
     char** rooms_layer;
     char** hallways_layer;
     char** char_buffer;
+
+    int display_turn;
+    char* display_message;
 };
 
 // Method declarations

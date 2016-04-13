@@ -24,6 +24,8 @@ player_t::player_t(map_c* current) : character_t(current)
         }
     }
 
+    this->hp = 10000;
+
     this->inventory = new object_t();
     this->inventory->display = false;
     this->inventory->name = "Player Inventory";

@@ -171,6 +171,8 @@ bool object_t::convert_from_stack()
         delete object;
         free(this->stack);
 
+        this->stack = NULL;
+
         this->stack_size = 0;
 
         return true;
@@ -204,17 +206,27 @@ object_t* object_t::pick_from_top_of_stack()
 
     this->stack_size -= 1;
 
-    return this->stack[stack_size];
+    object_t* tmp = this->stack[stack_size];
+
+    this->stack[stack_size] = NULL;
+
+    return tmp;
+}
+
+object_t::object_t()
+{
+    this->stack_size = 0;
+    this->stack = NULL;
+    this->representation = '*';
 }
 
 object_t::~object_t()
 {
-    for (int j = 0; j < this->stack_size; j++) {
-        printf("Deleting: %i\n", j);
-        delete this->stack[j];
-    }
-
-    if (this->type == "stack") {
+    if (!(this->stack == NULL) && this->representation == '&') {
+        for (int j = 0; j < this->stack_size; j++) {
+            delete this->stack[j];
+            this->stack[j] = NULL;
+        }
         free(this->stack);
     }
 }

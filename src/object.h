@@ -45,6 +45,7 @@ public:
     bool convert_from_stack();
     bool add_to_stack(object_t* obj);
     object_t* pick_from_top_of_stack();
+    object_t();
     ~object_t();
 };
 

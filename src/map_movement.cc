@@ -202,7 +202,7 @@ int map_main(map_c* current, bool splash)
             bh_ptr[c->order] = binheap_insert(&queue, &objects[c->order]);
         }
 
-        if (!current->main_character->is_alive ) {
+        if (current->main_character->hp <= 0) {
             clear();
             attron(COLOR_PAIR(COLOR_BLACK+1));
             printw("*-----------------------------------------------------------------------------*\n");
@@ -234,8 +234,10 @@ int map_main(map_c* current, bool splash)
         } else {
             bool has_enemies = false;;
             for (int i = 0; i < current->enemy_count; i++) {
-                if (current->enemies[i]->is_alive ) {
+                if (current->enemies[i]->hp > 0) {
                     has_enemies = true;
+                } else {
+                    current->enemies[i]->is_alive = false;
                 }
             }
 
@@ -421,6 +423,6 @@ void map_render_splash()
     printw("*-----------------------------------------------------------------------------*\n");
     attroff(COLOR_PAIR(COLOR_WHITE+1));
     refresh();
-    sleep(3);
+    sleep(1);
     endwin();
 }

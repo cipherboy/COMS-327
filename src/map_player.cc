@@ -185,7 +185,24 @@ void map_player_move(map_c* current, int dx, int dy)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->main_character->pos_x!= pos_x || current->main_character->pos_y!= pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                current->characters_location[pos_y][pos_x]->is_alive = false;
+                int player_damage = current->main_character->attack_damage.roll();
+
+                if (current->display_message != NULL) {
+                    free(current->display_message);
+                }
+
+                current->display_message = (char *) malloc(sizeof(char) * 75);
+                snprintf(current->display_message, 74, "Attacked monster at %i, %i: %c for %i HP.", pos_x, pos_y, current->characters_location[pos_y][pos_x]->representation, player_damage);
+                current->display_turn = 0;
+
+                current->characters_location[pos_y][pos_x]->hp -= player_damage;
+
+                if (current->characters_location[pos_y][pos_x]->hp <= 0) {
+                    current->characters_location[pos_y][pos_x]->is_alive = false;
+                }
+
+                pos_x = current->main_character->pos_x;
+                pos_y = current->main_character->pos_y;
             }
 
             current->main_character->pos_x = pos_x;
@@ -197,7 +214,24 @@ void map_player_move(map_c* current, int dx, int dy)
         current->hallways_layer[pos_y][pos_x] = '#';
 
         if ((current->main_character->pos_x!= pos_x || current->main_character->pos_y!= pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-            current->characters_location[pos_y][pos_x]->is_alive = false;
+            int player_damage = current->main_character->attack_damage.roll();
+
+            if (current->display_message != NULL) {
+                free(current->display_message);
+            }
+
+            current->display_message = (char *) malloc(sizeof(char) * 75);
+            snprintf(current->display_message, 74, "Attacked monster at %i, %i: %c for %i HP.", pos_x, pos_y, current->characters_location[pos_y][pos_x]->representation, player_damage);
+            current->display_turn = 0;
+
+            current->characters_location[pos_y][pos_x]->hp -= player_damage;
+
+            if (current->characters_location[pos_y][pos_x]->hp <= 0) {
+                current->characters_location[pos_y][pos_x]->is_alive = false;
+            }
+
+            pos_x = current->main_character->pos_x;
+            pos_y = current->main_character->pos_y;
         }
 
         current->main_character->pos_x = pos_x;

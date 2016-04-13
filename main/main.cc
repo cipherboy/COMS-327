@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     int nummon = -1;
 
     char* basepath;
-    basepath = (char *) malloc(sizeof(char *) * 1024);
+    basepath = (char *) malloc(sizeof(char) * 1024);
     snprintf(basepath, 1024, "%s/.rlg327/", getenv("HOME"));
 
     // Argument parsing

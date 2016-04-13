@@ -46,13 +46,16 @@ void map_objects_init(map_c* current)
         }
     }
 
-    current->object_count = added;
+    current->object_count = added-1;
 }
 
 void map_objects_deinit(map_c* current)
 {
     for (int i = 0; i < current->object_count; i++) {
-        delete current->objects[i];
+        if (current->objects[i] != NULL) {
+            delete current->objects[i];
+        }
     }
+
     free(current->objects);
 }

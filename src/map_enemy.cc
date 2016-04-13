@@ -163,8 +163,32 @@ void map_enemy_update_last_seen(map_c* current, int enemy_loc)
 
 void map_enemy_move(map_c* current, int enemy_loc)
 {
-    if (!current->enemies[enemy_loc]->is_alive) {
+    if (!current->enemies[enemy_loc]->is_alive || current->enemies[enemy_loc]->hp <= 0) {
         return;
+    }
+
+    // Default: if player is right next to the enemy, attack!
+    for (int dy = -1; dy <= 1; dy++) {
+        for (int dx = -1; dx <= 1; dx++) {
+            int ny = current->enemies[enemy_loc]->pos_y + dy;
+            int nx = current->enemies[enemy_loc]->pos_x + dx;
+
+            if ((dx != 0 || dy != 0) && ny == current->main_character->pos_y && nx == current->main_character->pos_x) {
+                int monster_damage = current->enemies[enemy_loc]->attack_damage.roll();
+
+                if (current->display_message != NULL) {
+                    free(current->display_message);
+                }
+
+                current->display_message = (char *) malloc(sizeof(char) * 75);
+                snprintf(current->display_message, 74, "Attacked by monster at %i, %i: %c for %i HP.", current->enemies[enemy_loc]->pos_x, current->enemies[enemy_loc]->pos_y, current->enemies[enemy_loc]->representation, monster_damage);
+                current->display_turn = 0;
+
+                current->main_character->hp -= monster_damage;
+
+                return;
+            }
+        }
     }
 
     func_table_element func_table[] = {

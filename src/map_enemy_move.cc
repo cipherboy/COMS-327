@@ -47,11 +47,8 @@ void map_enemy_move_random(map_c* current, int enemy_loc)
                 current->hallways_layer[pos_y][pos_x] = '#';
 
                 if ((current->enemies[enemy_loc]->pos_x != pos_x || current->enemies[enemy_loc]->pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                    if (current->main_character->pos_x == pos_x && current->main_character->pos_y == pos_y) {
-                        current->main_character->is_alive = false;
-                    }
-
-                    current->characters_location[pos_y][pos_x]->is_alive = false;
+                    pos_x = current->enemies[enemy_loc]->pos_x;
+                    pos_y = current->enemies[enemy_loc]->pos_y;
                 }
                 current->enemies[enemy_loc]->pos_x = pos_x;
                 current->enemies[enemy_loc]->pos_y = pos_y;
@@ -62,11 +59,8 @@ void map_enemy_move_random(map_c* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc]->pos_x != pos_x || current->enemies[enemy_loc]->pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->main_character->pos_x == pos_x && current->main_character->pos_y == pos_y) {
-                    current->main_character->is_alive = false;
-                }
-
-                current->characters_location[pos_y][pos_x]->is_alive = false;
+                pos_x = current->enemies[enemy_loc]->pos_x;
+                pos_y = current->enemies[enemy_loc]->pos_y;
             }
 
             current->enemies[enemy_loc]->pos_x = pos_x;
@@ -92,11 +86,8 @@ void map_enemy_move_random(map_c* current, int enemy_loc)
         }
 
         if ((current->enemies[enemy_loc]->pos_x != pos_x || current->enemies[enemy_loc]->pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-            if (current->main_character->pos_x == pos_x && current->main_character->pos_y == pos_y) {
-                current->main_character->is_alive = false;
-            }
-
-            current->characters_location[pos_y][pos_x]->is_alive = false;
+            pos_x = current->enemies[enemy_loc]->pos_x;
+            pos_y = current->enemies[enemy_loc]->pos_y;
         }
 
         current->enemies[enemy_loc]->pos_x = pos_x;
@@ -146,11 +137,8 @@ void map_enemy_move_intelligent_telepathic(map_c* current, int enemy_loc)
                 current->hallways_layer[pos_y][pos_x] = '#';
 
                 if ((current->enemies[enemy_loc]->pos_x != pos_x || current->enemies[enemy_loc]->pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                    if (current->main_character->pos_x == pos_x && current->main_character->pos_y == pos_y) {
-                        current->main_character->is_alive = false;
-                    }
-
-                    current->characters_location[pos_y][pos_x]->is_alive = false;
+                    pos_x = current->enemies[enemy_loc]->pos_x;
+                    pos_y = current->enemies[enemy_loc]->pos_y;
                 }
                 current->enemies[enemy_loc]->pos_x = pos_x;
                 current->enemies[enemy_loc]->pos_y = pos_y;
@@ -163,11 +151,8 @@ void map_enemy_move_intelligent_telepathic(map_c* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc]->pos_x != pos_x || current->enemies[enemy_loc]->pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->main_character->pos_x == pos_x && current->main_character->pos_y == pos_y) {
-                    current->main_character->is_alive = false;
-                }
-
-                current->characters_location[pos_y][pos_x]->is_alive = false;
+                pos_x = current->enemies[enemy_loc]->pos_x;
+                pos_y = current->enemies[enemy_loc]->pos_y;
             }
 
             current->enemies[enemy_loc]->pos_x = pos_x;
@@ -200,11 +185,8 @@ void map_enemy_move_intelligent_telepathic(map_c* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc]->pos_x != pos_x || current->enemies[enemy_loc]->pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->main_character->pos_x == pos_x && current->main_character->pos_y == pos_y) {
-                    current->main_character->is_alive = false;
-                }
-
-                current->characters_location[pos_y][pos_x]->is_alive = false;
+                pos_x = current->enemies[enemy_loc]->pos_x;
+                pos_y = current->enemies[enemy_loc]->pos_y;
             }
 
             current->enemies[enemy_loc]->pos_x = pos_x;
@@ -259,11 +241,8 @@ void map_enemy_move_not_intelligent_telepathic(map_c* current, int enemy_loc)
                 current->hallways_layer[pos_y][pos_x] = '#';
 
                 if ((current->enemies[enemy_loc]->pos_x != pos_x || current->enemies[enemy_loc]->pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                    if (current->main_character->pos_x == pos_x && current->main_character->pos_y == pos_y) {
-                        current->main_character->is_alive = false;
-                    }
-
-                    current->characters_location[pos_y][pos_x]->is_alive = false;
+                    pos_x = current->enemies[enemy_loc]->pos_x;
+                    pos_y = current->enemies[enemy_loc]->pos_y;
                 }
                 current->enemies[enemy_loc]->pos_x = pos_x;
                 current->enemies[enemy_loc]->pos_y = pos_y;
@@ -276,11 +255,8 @@ void map_enemy_move_not_intelligent_telepathic(map_c* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc]->pos_x != pos_x || current->enemies[enemy_loc]->pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->main_character->pos_x == pos_x && current->main_character->pos_y == pos_y) {
-                    current->main_character->is_alive = false;
-                }
-
-                current->characters_location[pos_y][pos_x]->is_alive = false;
+                pos_x = current->enemies[enemy_loc]->pos_x;
+                pos_y = current->enemies[enemy_loc]->pos_y;
             }
 
             current->enemies[enemy_loc]->pos_x = pos_x;
@@ -316,11 +292,8 @@ void map_enemy_move_not_intelligent_telepathic(map_c* current, int enemy_loc)
             current->hallways_layer[pos_y][pos_x] = '#';
 
             if ((current->enemies[enemy_loc]->pos_x != pos_x || current->enemies[enemy_loc]->pos_y != pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
-                if (current->main_character->pos_x == pos_x && current->main_character->pos_y == pos_y) {
-                    current->main_character->is_alive = false;
-                }
-
-                current->characters_location[pos_y][pos_x]->is_alive = false;
+                pos_x = current->enemies[enemy_loc]->pos_x;
+                pos_y = current->enemies[enemy_loc]->pos_y;
             }
 
             current->enemies[enemy_loc]->pos_x = pos_x;

@@ -30,6 +30,8 @@
 
 void map_init(map_c* current)
 {
+    current->display_turn = -1;
+    current->display_message = NULL;
     map_blank(current);
     map_fill(current);
     map_layers(current);
@@ -294,6 +296,7 @@ void map_stairs(map_c* current)
 
 void map_print(map_c* current)
 {
+
     for (int y = 0; y < current->rows; y++) {
         for (int x = 0; x < current->cols; x++) {
             current->characters_location[y][x] = NULL;
@@ -336,6 +339,20 @@ void map_print(map_c* current)
         }
     }
 
+    clear();
+    refresh();
+
+    if (current->display_message != NULL) {
+        mvprintw(0, 5, "%s", current->display_message);
+        current->display_turn += 1;
+
+        if (current->display_turn > 5) {
+            current->display_turn = -1;
+            free(current->display_message);
+            current->display_message = NULL;
+        }
+    }
+
     for (int y = 0; y < current->rows; y++) {
         for (int x = 0; x < current->cols; x++) {
             int dx = current->main_character->pos_y - y;
@@ -344,19 +361,19 @@ void map_print(map_c* current)
             if (current->characters_location[y][x] != NULL && dx >= -3 && dx <= 3 && dy >= -3 && dy <= 3) {
                 current->char_buffer[y][x] = current->characters_location[y][x]->representation;
                 attron(COLOR_PAIR(current->characters_location[y][x]->color));
-                mvaddch(y, x, current->char_buffer[y][x]);
+                mvaddch(y+1, x, current->char_buffer[y][x]);
                 attroff(COLOR_PAIR(current->characters_location[y][x]->color));
             } else if (current->objects_location[y][x] != NULL && dx >= -3 && dx <= 3 && dy >= -3 && dy <= 3) {
                 current->char_buffer[y][x] = current->objects_location[y][x]->representation;
                 attron(COLOR_PAIR(current->objects_location[y][x]->color));
-                mvaddch(y, x, current->char_buffer[y][x]);
+                mvaddch(y+1, x, current->char_buffer[y][x]);
                 attroff(COLOR_PAIR(current->objects_location[y][x]->color));
             } else if ((current->main_character->seen_map[y][x]) != ' ') {
                 current->char_buffer[y][x] = (current->main_character->seen_map[y][x]);
-                mvaddch(y, x, current->char_buffer[y][x]);
+                mvaddch(y+1, x, current->char_buffer[y][x]);
             } else {
                 current->char_buffer[y][x] = ' ';
-                mvaddch(y, x, current->char_buffer[y][x]);
+                mvaddch(y+1, x, current->char_buffer[y][x]);
             }
         }
     }
@@ -475,6 +492,10 @@ void map_deinit(map_c* current)
     free(current->char_buffer);
     free(current->rooms);
     free(current->objects_location);
+
+    if (current->display_message != NULL) {
+        free(current->display_message);
+    }
 
     for (int j = 0; j < current->monster_factory_count; j++) {
         delete current->monster_factories[j];
