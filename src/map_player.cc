@@ -216,6 +216,12 @@ void map_player_move(map_c* current, int dx, int dy)
         if ((current->main_character->pos_x!= pos_x || current->main_character->pos_y!= pos_y) && current->characters_location[pos_y][pos_x] != NULL) {
             int player_damage = current->main_character->attack_damage.roll();
 
+            for (int i = 0; i < 12; i++) {
+                if (current->main_character->equipment[i] != NULL) {
+                    player_damage += current->main_character->equipment[i]->damage.roll();
+                }
+            }
+
             if (current->display_message != NULL) {
                 free(current->display_message);
             }
@@ -244,7 +250,10 @@ void map_player_move(map_c* current, int dx, int dy)
         if (obj->display == true) {
             while (current->main_character->inventory->stack_size < 10) {
                 if (obj->representation == '&') {
-                    current->main_character->inventory->add_to_stack(obj->pick_from_top_of_stack());
+                    object_t* tmp = obj->pick_from_top_of_stack();
+                    if (tmp->representation != '&') {
+                        current->main_character->inventory->add_to_stack(tmp);
+                    }
                 } else {
                     current->main_character->inventory->add_to_stack(obj);
                     current->objects_location[current->main_character->pos_y][current->main_character->pos_x] = NULL;

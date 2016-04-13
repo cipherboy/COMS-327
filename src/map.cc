@@ -346,7 +346,7 @@ void map_print(map_c* current)
         mvprintw(0, 5, "%s", current->display_message);
         current->display_turn += 1;
 
-        if (current->display_turn > 5) {
+        if (current->display_turn > 50) {
             current->display_turn = -1;
             free(current->display_message);
             current->display_message = NULL;

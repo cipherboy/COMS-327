@@ -524,7 +524,10 @@ void map_wear_item(map_c* current)
             }
 
             while (inventory_2->stack_size > 0) {
-                current->main_character->inventory->add_to_stack(inventory_2->pick_from_top_of_stack());
+                object_t* tmp = inventory_2->pick_from_top_of_stack();
+                if (tmp->representation != '&') {
+                    current->main_character->inventory->add_to_stack(tmp);
+                }
             }
 
             wprintw(subwin, "Equiped item!\n");
@@ -607,30 +610,18 @@ void map_drop_item(map_c* current)
             item_from_inventory->pos_y = current->main_character->pos_y;
 
             if (current->objects_location[current->main_character->pos_y][current->main_character->pos_x] == NULL) {
-                wprintw(subwin, "Hmm, that space is empty...\n");
-
-                wnoutrefresh(stdscr);
-                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
-                doupdate();
                 current->objects_location[current->main_character->pos_y][current->main_character->pos_x] = item_from_inventory;
             } else {
-                wprintw(subwin, "Hmm, that space is not empty...\n");
-
-                wnoutrefresh(stdscr);
-                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
-                doupdate();
                 item_from_inventory->pos_x = current->main_character->pos_x;
                 item_from_inventory->pos_y = current->main_character->pos_y;
                 current->objects_location[current->main_character->pos_y][current->main_character->pos_x]->add_to_stack(item_from_inventory);
             }
 
             while (inventory_2->stack_size > 0) {
-                wprintw(subwin, "Adding item back to stack...\n");
-
-                wnoutrefresh(stdscr);
-                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
-                doupdate();
-                current->main_character->inventory->add_to_stack(inventory_2->pick_from_top_of_stack());
+                object_t* tmp = inventory_2->pick_from_top_of_stack();
+                if (tmp->representation != '&') {
+                    current->main_character->inventory->add_to_stack(tmp);
+                }
             }
 
             wprintw(subwin, "Dropped item!\n");
@@ -708,7 +699,10 @@ void map_remove_item(map_c* current)
             inventory_2->pick_from_top_of_stack();
 
             while (inventory_2->stack_size > 0) {
-                current->main_character->inventory->add_to_stack(inventory_2->pick_from_top_of_stack());
+                object_t* tmp = inventory_2->pick_from_top_of_stack();
+                if (tmp->representation != '&') {
+                    current->main_character->inventory->add_to_stack(tmp);
+                }
             }
 
             wprintw(subwin, "Removed item!\n");
