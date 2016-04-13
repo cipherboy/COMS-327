@@ -210,6 +210,7 @@ object_t* object_t::pick_from_top_of_stack()
 object_t::~object_t()
 {
     for (int j = 0; j < this->stack_size; j++) {
+        printf("Deleting: %i\n", j);
         delete this->stack[j];
     }
 

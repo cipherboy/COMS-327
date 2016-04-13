@@ -21,7 +21,7 @@ CXXSOURCES = $(wildcard src/*.cc)
 COBJECTS = $(CSOURCES:.c=.o)
 CXXOBJECTS = $(CXXSOURCES:.cc=.o)
 CXXMAINSOURCES = $(wildcard main/*.cc)
-CXXMAINOBJECTS = $(CXXTESTSOURCES:.cc=.o)
+CXXMAINOBJECTS = $(CXXMAINSOURCES:.cc=.o)
 CXXTESTSOURCES = $(wildcard tests/*.cc)
 CXXTESTOBJECTS = $(CXXTESTSOURCES:.cc=.o)
 
@@ -61,4 +61,5 @@ gzip:
 	gzip ../$(VERSION).tar
 
 execute:
-	./bin/tests-$(NAME) || true
+	./bin/tests-$(NAME) && echo && echo && echo || true
+	./bin/$(NAME) --help || true

@@ -9,9 +9,9 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "map.h"
-#include "player.h"
-#include "character.h"
+#include "../src/map.h"
+#include "../src/player.h"
+#include "../src/character.h"
 
 int main(int argc, char* argv[])
 {
