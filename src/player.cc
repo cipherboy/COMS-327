@@ -42,6 +42,6 @@ player_t::~player_t()
     free(this->player_distances);
     free(this->all_distances);
     free(this->seen_map);
-    
+
     delete this->inventory;
 }

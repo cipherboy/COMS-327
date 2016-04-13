@@ -10,6 +10,7 @@
 #include "stdlib.h"
 #include <cstring>
 #include <string>
+#include "stdio.h"
 
 using namespace std;
 
@@ -115,7 +116,6 @@ void object_t::convert_to_stack()
 
     object_t* object = new object_t();
 
-
     object->pos_x = this->pos_x;
     object->pos_y = this->pos_y;
 
@@ -139,6 +139,7 @@ void object_t::convert_to_stack()
     this->name = "Stack";
     this->description = "Just an ordinary stack of magical objects.";
     this->representation = '&';
+    this->type = "stack";
 
     this->stack[0] = object;
 }
@@ -167,10 +168,10 @@ bool object_t::convert_from_stack()
         this->value = object->value;
         this->representation = object->representation;
 
-        this->stack_size = 0;
-
         delete object;
-        free(object->stack);
+        free(this->stack);
+
+        this->stack_size = 0;
 
         return true;
     }

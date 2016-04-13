@@ -13,16 +13,7 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    object_t* inventory = new object_t();
-
-    inventory->display = false;
-    inventory->name = "Player Inventory";
-    inventory->description = "This is the stack containing the player's inventory.";
-    inventory->type = "stack";
-    inventory->representation = '&';
-    inventory->stack_size = 0;
-
-    cout << "Starting stack size: " << inventory->stack_size << endl;
+    object_t* inventory = NULL;
 
     object_t* item_1 = new object_t();
     item_1->display = true;
@@ -30,6 +21,15 @@ int main(int argc, char* argv[])
     item_1->description = "Item in player's inventory.";
     item_1->type = "magical";
     item_1->representation = '1';
+
+    item_1->convert_to_stack();
+
+    inventory = item_1;
+
+    cout << "Converted item_1 to stack:" << endl;
+    cout << inventory->name << endl;
+    cout << inventory->type << endl;
+    cout << inventory->stack_size << endl;
 
     object_t* item_2 = new object_t();
     item_2->display = true;
@@ -68,7 +68,6 @@ int main(int argc, char* argv[])
 
     cout << true << " " << false << endl;
 
-    cout << "Adding item 1: " << inventory->add_to_stack(item_1) << endl;
     cout << "Adding item 2: " << inventory->add_to_stack(item_2) << endl;
     cout << "Adding item 3: " << inventory->add_to_stack(item_3) << endl;
 
@@ -96,6 +95,14 @@ int main(int argc, char* argv[])
     object_t* removed_5 = inventory->pick_from_top_of_stack();
     cout << "Removing fifth item: " << removed_5->name << endl;
     delete removed_5;
+
+    cout << "Converting last item from stack:" << endl;
+
+    cout << "pre-Inventory stack_size: " << inventory->stack_size << endl;
+    cout << inventory->convert_from_stack() << endl;
+    cout << "Item name: " << inventory->name << endl;
+    cout << "Item type: " << inventory->type << endl;
+    cout << "Item stack_size: " << inventory->stack_size << endl;
 
     delete inventory;
 
