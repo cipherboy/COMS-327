@@ -133,6 +133,8 @@ void object_t::convert_to_stack()
     object->value = this->value;
     object->representation = this->representation;
 
+    this->no_recursive = false;
+
     object->stack_size = 0;
     object->display = false;
 
@@ -227,7 +229,7 @@ object_t::object_t()
 
 object_t::~object_t()
 {
-    if (!(this->stack == NULL) && this->representation == '&') {
+    if (this->representation == '&') {
         if (this->no_recursive == false) {
             for (int j = 0; j < this->stack_size; j++) {
                 delete this->stack[j];

@@ -451,6 +451,7 @@ void map_wear_item(map_c* current)
                 wnoutrefresh(stdscr);
                 pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
                 doupdate();
+                delete inventory_2;
                 continue;
             }
 
@@ -474,6 +475,7 @@ void map_wear_item(map_c* current)
                 wnoutrefresh(stdscr);
                 pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
                 doupdate();
+                delete inventory_2;
                 continue;
             }
 
@@ -530,6 +532,8 @@ void map_wear_item(map_c* current)
                 }
             }
 
+            delete inventory_2;
+
             wprintw(subwin, "Equiped item!\n");
 
             wnoutrefresh(stdscr);
@@ -577,6 +581,7 @@ void map_drop_item(map_c* current)
                 wnoutrefresh(stdscr);
                 pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
                 doupdate();
+                delete inventory_2;
                 continue;
             }
 
@@ -600,6 +605,7 @@ void map_drop_item(map_c* current)
                 wnoutrefresh(stdscr);
                 pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
                 doupdate();
+                delete inventory_2;
                 continue;
             }
 
@@ -623,6 +629,8 @@ void map_drop_item(map_c* current)
                     current->main_character->inventory->add_to_stack(tmp);
                 }
             }
+
+            delete inventory_2;
 
             wprintw(subwin, "Dropped item!\n");
 
@@ -671,6 +679,7 @@ void map_remove_item(map_c* current)
                 wnoutrefresh(stdscr);
                 pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
                 doupdate();
+                delete inventory_2;
                 continue;
             }
 
@@ -704,6 +713,8 @@ void map_remove_item(map_c* current)
                     current->main_character->inventory->add_to_stack(tmp);
                 }
             }
+
+            delete inventory_2;
 
             wprintw(subwin, "Removed item!\n");
 

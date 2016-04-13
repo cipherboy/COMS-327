@@ -18,6 +18,7 @@ void map_objects_init(map_c* current)
     current->object_count = 35 + (rand() % 15);
 
     current->objects = (object_t**) malloc(sizeof(object_t*) * 1);
+    current->objects[0] = NULL;
 
     int added = 1;
     for (int i = 0; i < current->object_count; i++) {
@@ -38,15 +39,15 @@ void map_objects_init(map_c* current)
 
             added += 1;
             current->objects = (object_t**) realloc(current->objects, sizeof(object_t*) * (added));
+            current->objects[added-1] = NULL;
         } else {
-            current->objects_location[pos_y][pos_x]->convert_to_stack();
             if (!current->objects_location[pos_y][pos_x]->add_to_stack(object)) {
                 printf("Error adding object to stack...\n");
             }
         }
     }
 
-    current->object_count = added-1;
+    current->object_count = added;
 }
 
 void map_objects_deinit(map_c* current)
