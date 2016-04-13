@@ -184,7 +184,7 @@ bool object_t::convert_from_stack()
 bool object_t::add_to_stack(object_t* obj)
 {
     if (this->stack_size == 0 && this->type != "stack") {
-        return false;
+        this->convert_to_stack();
     }
 
     obj->display = false;
@@ -210,6 +210,10 @@ object_t* object_t::pick_from_top_of_stack()
 
     this->stack[stack_size] = NULL;
 
+    if (this->stack_size == 1) {
+        this->convert_from_stack();
+    }
+
     return tmp;
 }
 
@@ -218,14 +222,17 @@ object_t::object_t()
     this->stack_size = 0;
     this->stack = NULL;
     this->representation = '*';
+    this->no_recursive = false;
 }
 
 object_t::~object_t()
 {
     if (!(this->stack == NULL) && this->representation == '&') {
-        for (int j = 0; j < this->stack_size; j++) {
-            delete this->stack[j];
-            this->stack[j] = NULL;
+        if (this->no_recursive == false) {
+            for (int j = 0; j < this->stack_size; j++) {
+                delete this->stack[j];
+                this->stack[j] = NULL;
+            }
         }
         free(this->stack);
     }

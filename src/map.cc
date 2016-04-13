@@ -363,7 +363,7 @@ void map_print(map_c* current)
                 attron(COLOR_PAIR(current->characters_location[y][x]->color));
                 mvaddch(y+1, x, current->char_buffer[y][x]);
                 attroff(COLOR_PAIR(current->characters_location[y][x]->color));
-            } else if (current->objects_location[y][x] != NULL && dx >= -3 && dx <= 3 && dy >= -3 && dy <= 3) {
+            } else if (current->objects_location[y][x] != NULL && dx >= -3 && dx <= 3 && dy >= -3 && dy <= 3 && current->objects_location[y][x]->display == true) {
                 current->char_buffer[y][x] = current->objects_location[y][x]->representation;
                 attron(COLOR_PAIR(current->objects_location[y][x]->color));
                 mvaddch(y+1, x, current->char_buffer[y][x]);

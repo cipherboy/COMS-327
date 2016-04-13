@@ -31,6 +31,7 @@ public:
 
     int stack_size;
     object_t** stack;
+    bool no_recursive;
 
     int hit;
     dice_t damage;

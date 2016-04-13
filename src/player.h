@@ -19,6 +19,7 @@ public:
     char** seen_map;
 
     object_t* inventory;
+    object_t** equipment;
 
     player_t(map_c* current);
     ~player_t();
