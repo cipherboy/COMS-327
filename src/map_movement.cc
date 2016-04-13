@@ -119,6 +119,22 @@ int map_main(map_c* current, bool splash)
                     map_print(current);
                     valid_key = false;
                     break;
+                case 'w':
+                    map_wear_item(current);
+
+                    map_enemy_render(current);
+
+                    map_print(current);
+                    valid_key = false;
+                    break;
+                case 't':
+                    map_take_off_item(current);
+
+                    map_enemy_render(current);
+
+                    map_print(current);
+                    valid_key = false;
+                    break;
                 case '7':
                 case 'y':
                 case 'Y':
@@ -381,6 +397,196 @@ void map_display_enemies(map_c* current)
     delwin(subwin);
 }
 
+void map_wear_item(map_c* current)
+{
+    WINDOW *subwin;
+    subwin = newpad(24, 80);
+
+    wprintw(subwin, "What item would you like to wear?\nUse 0-9 to select item.\n");
+
+    wnoutrefresh(stdscr);
+    pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+    doupdate();
+
+    bool has_item = false;
+    int ch = 0;
+    while (true) {
+        ch = getch();
+        if (ch == 27 || has_item) {
+            delwin(subwin);
+            doupdate();
+            refresh();
+            clear();
+            return;
+        } else if (!has_item && (ch - 'a' >= 0) && (ch - 'l' <= 0)) {
+            wprintw(subwin, "We will decide where it goes, thank you very much.\n");
+
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+            doupdate();
+        } else if (!has_item && (ch - '0' >= 0) && (ch - '9' <= 0)) {
+            int i = ch - '0';
+            object_t* inventory_2 = new object_t();
+
+            if (i >= current->main_character->inventory->stack_size) {
+                has_item = false;
+                wprintw(subwin, "Hmm, that slot is empty. Try again.\n");
+
+                wnoutrefresh(stdscr);
+                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+                doupdate();
+
+                break;
+            }
+
+            has_item = true;
+
+            inventory_2->display = false;
+            inventory_2->name = "Player Inventory";
+            inventory_2->description = "This is the stack containing the player's inventory.\n";
+            inventory_2->type = "stack";
+            inventory_2->representation = '&';
+            inventory_2->no_recursive = true;
+
+            while (current->main_character->inventory->stack_size > i) {
+                inventory_2->add_to_stack(current->main_character->inventory->pick_from_top_of_stack());
+            }
+
+            if (inventory_2->stack_size == 0) {
+                has_item = false;
+                wprintw(subwin, "Hmm, that slot has an error. Try again?\n");
+
+                wnoutrefresh(stdscr);
+                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+                doupdate();
+
+                break;
+            }
+
+            object_t* item_from_inventory = inventory_2->pick_from_top_of_stack();
+            object_t* swap = NULL;
+
+            if (item_from_inventory->type == "WEAPON") {
+                swap = current->main_character->equipment[0];
+                current->main_character->equipment[0] = item_from_inventory;
+            } else if (item_from_inventory->type == "OFFHAND") {
+                swap = current->main_character->equipment[1];
+                current->main_character->equipment[1] = item_from_inventory;
+            } else if (item_from_inventory->type == "RANGED") {
+                swap = current->main_character->equipment[2];
+                current->main_character->equipment[2] = item_from_inventory;
+            } else if (item_from_inventory->type == "ARMOR") {
+                swap = current->main_character->equipment[3];
+                current->main_character->equipment[3] = item_from_inventory;
+            } else if (item_from_inventory->type == "HELMET") {
+                swap = current->main_character->equipment[4];
+                current->main_character->equipment[4] = item_from_inventory;
+            } else if (item_from_inventory->type == "CLOAK") {
+                swap = current->main_character->equipment[5];
+                current->main_character->equipment[5] = item_from_inventory;
+            } else if (item_from_inventory->type == "GLOVES") {
+                swap = current->main_character->equipment[6];
+                current->main_character->equipment[6] = item_from_inventory;
+            } else if (item_from_inventory->type == "BOOTS") {
+                swap = current->main_character->equipment[7];
+                current->main_character->equipment[7] = item_from_inventory;
+            } else if (item_from_inventory->type == "AMULET") {
+                swap = current->main_character->equipment[8];
+                current->main_character->equipment[8] = item_from_inventory;
+            } else if (item_from_inventory->type == "LIGHT") {
+                swap = current->main_character->equipment[9];
+                current->main_character->equipment[9] = item_from_inventory;
+            } else if (item_from_inventory->type == "RING") {
+                if (current->main_character->equipment[10] == NULL) {
+                    current->main_character->equipment[10] = item_from_inventory;
+                } else {
+                    swap = current->main_character->equipment[11];
+                    current->main_character->equipment[11] = item_from_inventory;
+                }
+            }
+
+            if (swap != NULL) {
+                current->main_character->inventory->add_to_stack(swap);
+            }
+
+            while (inventory_2->stack_size > 0) {
+                current->main_character->inventory->add_to_stack(inventory_2->pick_from_top_of_stack());
+            }
+
+            wprintw(subwin, "Equiped item!\n");
+
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+            doupdate();
+        }
+    }
+}
+
+void map_take_off_item(map_c* current)
+{
+    WINDOW *subwin;
+    subwin = newpad(24, 80);
+
+    wprintw(subwin, "What item would you like to take off?\nUse a-l to select equipment slot.\n");
+
+    wnoutrefresh(stdscr);
+    pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+    doupdate();
+
+    bool has_item = false;
+    int ch = 0;
+    while (true) {
+        ch = getch();
+        if (ch == 27 || has_item) {
+            delwin(subwin);
+            doupdate();
+            refresh();
+            clear();
+            return;
+        } else if (!has_item && (ch - 'a' >= 0) && (ch - 'l' <= 0)) {
+            int i = ch - 'a';
+
+            if (current->main_character->equipment[i] == NULL) {
+                has_item = false;
+                wprintw(subwin, "Hmm, that slot is empty. Try again.\n");
+
+                wnoutrefresh(stdscr);
+                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+                doupdate();
+
+                break;
+            }
+
+            has_item = true;
+
+            if (current->main_character->inventory->stack_size >= 10) {
+                wprintw(subwin, "Hmm, not enough slots in inventory. Try again after discarding some items.\n");
+
+                wnoutrefresh(stdscr);
+                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+                doupdate();
+
+                break;
+            }
+
+            current->main_character->inventory->add_to_stack(current->main_character->equipment[i]);
+            current->main_character->equipment[i] = NULL;
+
+            wprintw(subwin, "Took off item!\n");
+
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+            doupdate();
+        } else if (!has_item && (ch - '0' >= 0) && (ch - '9' <= 0)) {
+            wprintw(subwin, "We will decide where it goes, thank you very much.\n");
+
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+            doupdate();
+        }
+    }
+}
+
 void map_display_item_description(map_c* current)
 {
     WINDOW *subwin;
@@ -396,7 +602,7 @@ void map_display_item_description(map_c* current)
     int ch = 0;
     while (true) {
         ch = getch();
-        if (ch == 27) {
+        if (ch == 27 || has_description) {
             delwin(subwin);
             doupdate();
             refresh();
@@ -447,7 +653,7 @@ void map_display_equipment(map_c* current)
 
     for (int i = 0; i < 12; i++) {
         if (current->main_character->equipment[i] != NULL) {
-            wprintw(subwin, "[%i:%s] - %s: %s - %s\n", i, player_equipment_slot_names[i], current->main_character->equipment[i]->representation, current->main_character->equipment[i]->name.c_str(), current->main_character->equipment[i]->type.c_str());
+            wprintw(subwin, "[%i:%s]: %s - %s\n", i, player_equipment_slot_names[i], current->main_character->equipment[i]->name.c_str(), current->main_character->equipment[i]->type.c_str());
         } else {
             wprintw(subwin, "[%i:%s] - <EMPTY>\n", i, player_equipment_slot_names[i]);
         }

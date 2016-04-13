@@ -32,7 +32,6 @@ player_t::player_t(map_c* current) : character_t(current)
     this->inventory->description = "This is the stack containing the player's inventory.";
     this->inventory->type = "stack";
     this->inventory->representation = '&';
-
     this->inventory->no_recursive = true;
 
     this->equipment = (object_t **) malloc(sizeof(object_t *) * 12);
