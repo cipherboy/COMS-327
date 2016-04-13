@@ -9,7 +9,11 @@
 #define PLAYER_H
 
 #include "character.h"
-#include "object.h"
+
+class object_t;
+
+const char player_equipment_slot_names[][8] = {"WEAPON", "OFFHAND", "RANGED", "ARMOR", "HELMET", "CLOAK", "GLOVES", "BOOTS", "AMULET", "LIGHT", "RING", "RING"};
+
 
 class player_t : public character_t
 {

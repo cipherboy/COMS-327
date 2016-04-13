@@ -13,5 +13,7 @@
 int map_main(map_c* current, bool splash);
 void map_render_splash();
 void map_display_enemies(map_c* current);
+void map_display_inventory(map_c* current);
+void map_display_equipment(map_c* current);
 
 #endif

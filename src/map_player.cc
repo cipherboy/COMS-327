@@ -195,8 +195,6 @@ void map_player_move(map_c* current, int dx, int dy)
                 snprintf(current->display_message, 74, "Attacked monster at %i, %i: %c for %i HP.", pos_x, pos_y, current->characters_location[pos_y][pos_x]->representation, player_damage);
                 current->display_turn = 0;
 
-                printf("%s\n", current->display_message);
-
                 current->characters_location[pos_y][pos_x]->hp -= player_damage;
 
                 if (current->characters_location[pos_y][pos_x]->hp <= 0) {
@@ -226,8 +224,6 @@ void map_player_move(map_c* current, int dx, int dy)
             snprintf(current->display_message, 74, "Attacked monster at %i, %i: %c for %i HP.", pos_x, pos_y, current->characters_location[pos_y][pos_x]->representation, player_damage);
             current->display_turn = 0;
 
-            printf("%s\n", current->display_message);
-
             current->characters_location[pos_y][pos_x]->hp -= player_damage;
 
             if (current->characters_location[pos_y][pos_x]->hp <= 0) {
@@ -248,10 +244,8 @@ void map_player_move(map_c* current, int dx, int dy)
         if (obj->display == true) {
             while (current->main_character->inventory->stack_size < 10) {
                 if (obj->representation == '&') {
-                    printf("Adding object from stack...\n");
                     current->main_character->inventory->add_to_stack(obj->pick_from_top_of_stack());
                 } else {
-                    printf("Adding object...\n");
                     current->main_character->inventory->add_to_stack(obj);
                     break;
                 }

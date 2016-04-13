@@ -35,7 +35,10 @@ player_t::player_t(map_c* current) : character_t(current)
 
     this->inventory->no_recursive = true;
 
-    this->equipment = (object_t **) malloc(sizeof(object_t *) * 13);
+    this->equipment = (object_t **) malloc(sizeof(object_t *) * 12);
+    for (int i = 0; i < 12; i++) {
+        this->equipment[i] = NULL;
+    }
 }
 
 player_t::~player_t()

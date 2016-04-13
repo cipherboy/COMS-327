@@ -26,6 +26,8 @@ int main(int argc, char* argv[])
 
     inventory = item_1;
 
+    inventory->no_recursive = true;
+
     cout << "Converted item_1 to stack:" << endl;
     cout << inventory->name << endl;
     cout << inventory->type << endl;

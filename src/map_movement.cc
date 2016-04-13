@@ -95,6 +95,22 @@ int map_main(map_c* current, bool splash)
                     map_print(current);
                     valid_key = false;
                     break;
+                case 'i':
+                    map_display_inventory(current);
+
+                    map_enemy_render(current);
+
+                    map_print(current);
+                    valid_key = false;
+                    break;
+                case 'e':
+                    map_display_equipment(current);
+
+                    map_enemy_render(current);
+
+                    map_print(current);
+                    valid_key = false;
+                    break;
                 case '7':
                 case 'y':
                 case 'Y':
@@ -345,6 +361,70 @@ void map_display_enemies(map_c* current)
             pnoutrefresh(subwin, offset, 0, (LINES-15)/2, (COLS-50)/2, (LINES+15)/2, (COLS+50)/2);
             doupdate();
             break;
+        case 27:
+            delwin(subwin);
+            doupdate();
+            refresh();
+            clear();
+            return;
+        }
+    }
+
+    delwin(subwin);
+}
+
+void map_display_equipment(map_c* current)
+{
+    WINDOW *subwin;
+    subwin = newpad(30, 50);
+
+    for (int i = 0; i < 12; i++) {
+        if (current->main_character->equipment[i] != NULL) {
+            wprintw(subwin, "[%i:%s] - %s: %s - %s\n", i, player_equipment_slot_names[i], current->main_character->equipment[i]->representation, current->main_character->equipment[i]->name.c_str(), current->main_character->equipment[i]->type.c_str());
+        } else {
+            wprintw(subwin, "[%i:%s] - <EMPTY>\n", i, player_equipment_slot_names[i]);
+        }
+    }
+
+    wnoutrefresh(stdscr);
+    pnoutrefresh(subwin, 0, 0, (LINES-12)/2, (COLS-50)/2, (LINES+12)/2, (COLS+50)/2);
+    doupdate();
+
+    int ch = 0;
+    while (true) {
+        ch = getch();
+        switch (ch) {
+        case 27:
+            delwin(subwin);
+            doupdate();
+            refresh();
+            clear();
+            return;
+        }
+    }
+
+    delwin(subwin);
+}
+
+
+void map_display_inventory(map_c* current)
+{
+    WINDOW *subwin;
+    subwin = newpad(30, 50);
+    for (int i = 0; i < current->main_character->inventory->stack_size; i++) {
+        wprintw(subwin, "[%i] - %c: %s - %s\n", i, current->main_character->inventory->stack[i]->representation, current->main_character->inventory->stack[i]->name.c_str(), current->main_character->inventory->stack[i]->type.c_str());
+    }
+    for (int i = current->main_character->inventory->stack_size; i < 10; i++) {
+        wprintw(subwin, "[%i] - <empty>\n", i);
+    }
+    wnoutrefresh(stdscr);
+    pnoutrefresh(subwin, 0, 0, (LINES-10)/2, (COLS-50)/2, (LINES+10)/2, (COLS+50)/2);
+    doupdate();
+
+    int ch = 0;
+    while (true) {
+        ch = getch();
+        switch (ch) {
         case 27:
             delwin(subwin);
             doupdate();

@@ -201,7 +201,7 @@ bool object_t::add_to_stack(object_t* obj)
 object_t* object_t::pick_from_top_of_stack()
 {
     if (this->stack_size == 0 || this->type != "stack") {
-        return NULL;
+        return this;
     }
 
     this->stack_size -= 1;
@@ -210,7 +210,7 @@ object_t* object_t::pick_from_top_of_stack()
 
     this->stack[stack_size] = NULL;
 
-    if (this->stack_size == 1) {
+    if (this->stack_size == 1 && this->no_recursive == false) {
         this->convert_from_stack();
     }
 
