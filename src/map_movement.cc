@@ -111,6 +111,14 @@ int map_main(map_c* current, bool splash)
                     map_print(current);
                     valid_key = false;
                     break;
+                case 'I':
+                    map_display_item_description(current);
+
+                    map_enemy_render(current);
+
+                    map_print(current);
+                    valid_key = false;
+                    break;
                 case '7':
                 case 'y':
                 case 'Y':
@@ -373,6 +381,65 @@ void map_display_enemies(map_c* current)
     delwin(subwin);
 }
 
+void map_display_item_description(map_c* current)
+{
+    WINDOW *subwin;
+    subwin = newpad(24, 80);
+
+    wprintw(subwin, "What item would you like to display the description of?\nUse 0-9 for inventory, a-l for equipment.\n");
+
+    wnoutrefresh(stdscr);
+    pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+    doupdate();
+
+    bool has_description = false;
+    int ch = 0;
+    while (true) {
+        ch = getch();
+        if (ch == 27) {
+            delwin(subwin);
+            doupdate();
+            refresh();
+            clear();
+            return;
+        } else if (!has_description && (ch - 'a' >= 0) && (ch - 'l' <= 0)) {
+            int i = ch - 'a';
+
+            if (current->main_character->equipment[i] != NULL) {
+                wprintw(subwin, "[%i:%s] - %s: %s - %s\n", i, player_equipment_slot_names[i], current->main_character->equipment[i]->representation, current->main_character->equipment[i]->name.c_str(), current->main_character->equipment[i]->type.c_str());
+                wprintw(subwin, "%s", current->main_character->equipment[i]->description.c_str());
+            } else {
+                wprintw(subwin, "[%i:%s] - <EMPTY>\n", i, player_equipment_slot_names[i]);
+            }
+
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+            doupdate();
+
+            has_description = true;
+        } else if (!has_description && (ch - '0' >= 0) && (ch - '9' <= 0)) {
+            int i = ch - '0';
+            if (i < current->main_character->inventory->stack_size) {
+                wprintw(subwin, "[%i] - %c: %s - %s\n", i, current->main_character->inventory->stack[i]->representation, current->main_character->inventory->stack[i]->name.c_str(), current->main_character->inventory->stack[i]->type.c_str());
+                wprintw(subwin, "%s", current->main_character->inventory->stack[i]->description.c_str());
+            } else {
+                wprintw(subwin, "[%i] - <EMPTY>\n", i, player_equipment_slot_names[i]);
+            }
+
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, 2, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+            doupdate();
+
+            has_description = true;
+        }
+    }
+
+    delwin(subwin);
+    doupdate();
+    refresh();
+    clear();
+}
+
 void map_display_equipment(map_c* current)
 {
     WINDOW *subwin;
@@ -404,6 +471,9 @@ void map_display_equipment(map_c* current)
     }
 
     delwin(subwin);
+    doupdate();
+    refresh();
+    clear();
 }
 
 
@@ -435,6 +505,9 @@ void map_display_inventory(map_c* current)
     }
 
     delwin(subwin);
+    doupdate();
+    refresh();
+    clear();
 }
 
 void map_render_splash()
