@@ -18,5 +18,7 @@ void map_display_equipment(map_c* current);
 void map_display_item_description(map_c* current);
 void map_wear_item(map_c* current);
 void map_take_off_item(map_c* current);
+void map_drop_item(map_c* current);
+void map_remove_item(map_c* current);
 
 #endif

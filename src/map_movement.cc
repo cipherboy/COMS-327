@@ -135,6 +135,22 @@ int map_main(map_c* current, bool splash)
                     map_print(current);
                     valid_key = false;
                     break;
+                case 'd':
+                    map_drop_item(current);
+
+                    map_enemy_render(current);
+
+                    map_print(current);
+                    valid_key = false;
+                    break;
+                case 'x':
+                    map_remove_item(current);
+
+                    map_enemy_render(current);
+
+                    map_print(current);
+                    valid_key = false;
+                    break;
                 case '7':
                 case 'y':
                 case 'Y':
@@ -435,8 +451,7 @@ void map_wear_item(map_c* current)
                 wnoutrefresh(stdscr);
                 pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
                 doupdate();
-
-                break;
+                continue;
             }
 
             has_item = true;
@@ -459,8 +474,7 @@ void map_wear_item(map_c* current)
                 wnoutrefresh(stdscr);
                 pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
                 doupdate();
-
-                break;
+                continue;
             }
 
             object_t* item_from_inventory = inventory_2->pick_from_top_of_stack();
@@ -522,6 +536,190 @@ void map_wear_item(map_c* current)
     }
 }
 
+void map_drop_item(map_c* current)
+{
+    WINDOW *subwin;
+    subwin = newpad(24, 80);
+
+    wprintw(subwin, "What item would you like to drop?\nUse 0-9 to select item.\n");
+
+    wnoutrefresh(stdscr);
+    pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+    doupdate();
+
+    bool has_item = false;
+    int ch = 0;
+    while (true) {
+        ch = getch();
+        if (ch == 27 || has_item) {
+            delwin(subwin);
+            doupdate();
+            refresh();
+            clear();
+            return;
+        } else if (!has_item && (ch - 'a' >= 0) && (ch - 'l' <= 0)) {
+            wprintw(subwin, "Please take off items before dropping them.\n");
+
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+            doupdate();
+        } else if (!has_item && (ch - '0' >= 0) && (ch - '9' <= 0)) {
+            int i = ch - '0';
+            object_t* inventory_2 = new object_t();
+
+            if (i >= current->main_character->inventory->stack_size) {
+                has_item = false;
+                wprintw(subwin, "Hmm, that slot is empty. Try again.\n");
+
+                wnoutrefresh(stdscr);
+                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+                doupdate();
+                continue;
+            }
+
+            has_item = true;
+
+            inventory_2->display = false;
+            inventory_2->name = "Player Inventory";
+            inventory_2->description = "This is the stack containing the player's inventory.\n";
+            inventory_2->type = "stack";
+            inventory_2->representation = '&';
+            inventory_2->no_recursive = true;
+
+            while (current->main_character->inventory->stack_size > i) {
+                inventory_2->add_to_stack(current->main_character->inventory->pick_from_top_of_stack());
+            }
+
+            if (inventory_2->stack_size == 0) {
+                has_item = false;
+                wprintw(subwin, "Hmm, that slot has an error. Try again?\n");
+
+                wnoutrefresh(stdscr);
+                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+                doupdate();
+                continue;
+            }
+
+            object_t* item_from_inventory = inventory_2->pick_from_top_of_stack();
+
+            item_from_inventory->display = true;
+            item_from_inventory->pos_x = current->main_character->pos_x;
+            item_from_inventory->pos_y = current->main_character->pos_y;
+
+            if (current->objects_location[current->main_character->pos_y][current->main_character->pos_x] == NULL) {
+                wprintw(subwin, "Hmm, that space is empty...\n");
+
+                wnoutrefresh(stdscr);
+                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+                doupdate();
+                current->objects_location[current->main_character->pos_y][current->main_character->pos_x] = item_from_inventory;
+            } else {
+                wprintw(subwin, "Hmm, that space is not empty...\n");
+
+                wnoutrefresh(stdscr);
+                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+                doupdate();
+                item_from_inventory->pos_x = current->main_character->pos_x;
+                item_from_inventory->pos_y = current->main_character->pos_y;
+                current->objects_location[current->main_character->pos_y][current->main_character->pos_x]->add_to_stack(item_from_inventory);
+            }
+
+            while (inventory_2->stack_size > 0) {
+                wprintw(subwin, "Adding item back to stack...\n");
+
+                wnoutrefresh(stdscr);
+                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+                doupdate();
+                current->main_character->inventory->add_to_stack(inventory_2->pick_from_top_of_stack());
+            }
+
+            wprintw(subwin, "Dropped item!\n");
+
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+            doupdate();
+        }
+    }
+}
+
+void map_remove_item(map_c* current)
+{
+    WINDOW *subwin;
+    subwin = newpad(24, 80);
+
+    wprintw(subwin, "What item would you like to remove?\nUse 0-9 to select item.\n");
+
+    wnoutrefresh(stdscr);
+    pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+    doupdate();
+
+    bool has_item = false;
+    int ch = 0;
+    while (true) {
+        ch = getch();
+        if (ch == 27 || has_item) {
+            delwin(subwin);
+            doupdate();
+            refresh();
+            clear();
+            return;
+        } else if (!has_item && (ch - 'a' >= 0) && (ch - 'l' <= 0)) {
+            wprintw(subwin, "Please take off items before removing them.\n");
+
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+            doupdate();
+        } else if (!has_item && (ch - '0' >= 0) && (ch - '9' <= 0)) {
+            int i = ch - '0';
+            object_t* inventory_2 = new object_t();
+
+            if (i >= current->main_character->inventory->stack_size) {
+                has_item = false;
+                wprintw(subwin, "Hmm, that slot is empty. Try again.\n");
+
+                wnoutrefresh(stdscr);
+                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+                doupdate();
+                continue;
+            }
+
+            has_item = true;
+
+            inventory_2->display = false;
+            inventory_2->name = "Player Inventory";
+            inventory_2->description = "This is the stack containing the player's inventory.\n";
+            inventory_2->type = "stack";
+            inventory_2->representation = '&';
+            inventory_2->no_recursive = true;
+
+            while (current->main_character->inventory->stack_size > i) {
+                inventory_2->add_to_stack(current->main_character->inventory->pick_from_top_of_stack());
+            }
+
+            if (inventory_2->stack_size == 0) {
+                has_item = false;
+                wprintw(subwin, "Hmm, that slot has an error. Try again?\n");
+
+                wnoutrefresh(stdscr);
+                pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+                doupdate();
+            }
+
+            inventory_2->pick_from_top_of_stack();
+
+            while (inventory_2->stack_size > 0) {
+                current->main_character->inventory->add_to_stack(inventory_2->pick_from_top_of_stack());
+            }
+
+            wprintw(subwin, "Removed item!\n");
+
+            wnoutrefresh(stdscr);
+            pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
+            doupdate();
+        }
+    }
+}
+
 void map_take_off_item(map_c* current)
 {
     WINDOW *subwin;
@@ -553,8 +751,7 @@ void map_take_off_item(map_c* current)
                 wnoutrefresh(stdscr);
                 pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
                 doupdate();
-
-                break;
+                continue;
             }
 
             has_item = true;
@@ -565,8 +762,7 @@ void map_take_off_item(map_c* current)
                 wnoutrefresh(stdscr);
                 pnoutrefresh(subwin, 0, 0, (LINES-24)/2, (COLS-80)/2, (LINES+24)/2, (COLS+80)/2);
                 doupdate();
-
-                break;
+                continue;
             }
 
             current->main_character->inventory->add_to_stack(current->main_character->equipment[i]);

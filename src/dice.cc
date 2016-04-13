@@ -15,8 +15,8 @@ using namespace std;
 dice_t::dice_t()
 {
     this->base = 1;
-    this->dice = rand() % 2;
-    this->sides = rand() % 4;
+    this->dice = 1;
+    this->sides = (rand() % 4) + 1;
 }
 
 dice_t::dice_t(int base, int dice, int sides)

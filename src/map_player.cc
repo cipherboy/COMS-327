@@ -247,6 +247,7 @@ void map_player_move(map_c* current, int dx, int dy)
                     current->main_character->inventory->add_to_stack(obj->pick_from_top_of_stack());
                 } else {
                     current->main_character->inventory->add_to_stack(obj);
+                    current->objects_location[current->main_character->pos_y][current->main_character->pos_x] = NULL;
                     break;
                 }
             }
